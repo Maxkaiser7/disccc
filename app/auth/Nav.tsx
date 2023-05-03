@@ -9,9 +9,10 @@ export default async function  Nav(){
     return(
         <nav className={"flex justify-between items-center py-8"}>
             <Link href={"/"}>
-                <h1 className={"font-bold text-lg"}>Send it</h1>
+                <h1 className={"font-bold text-lg"}>DISCCC</h1>
             </Link>
             <ul className={"flex items-center gap-6"}>
+                <Link href={"/signinartist"}>Devenir artist</Link>
                 {!session?.user && <Login/>}
                 {session?.user && <Logged image={session.user?.image || ""}/>}
             </ul>

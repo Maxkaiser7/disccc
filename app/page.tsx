@@ -1,5 +1,6 @@
 import Link from "next/link"
 import FormPost from "@/app/Form";
+import CreatePost from "../app/components/AddPost"
 async function getPosts(){
     const res = await fetch(`${process.env.BASE_URL}/api/getPosts`)
     if(!res){
@@ -8,11 +9,10 @@ async function getPosts(){
     return res.json()
 }
 export default async function Home() {
-    const data: {id: int; title: string}[] = await getPosts()
-    console.log(data)
+    const data: {id: string, title: string}[] = await getPosts()
   return (
     <main>
-        <h1>hey</h1>
+        <CreatePost/>
     </main>
   )
 }
