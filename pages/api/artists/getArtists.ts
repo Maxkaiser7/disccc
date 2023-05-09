@@ -7,7 +7,10 @@ export default async function handler(
 ){
     try {
         //get prisma to fetch the posts
-        const data = await prisma.post.findMany()
+        const data = await prisma.artist.findMany({
+            orderBy: { createdAt: 'desc' },
+            take: 4,
+        })
         return res.status(200).json(data)
     }catch (error){
         return res.status(500).json(error)

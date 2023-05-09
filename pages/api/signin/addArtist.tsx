@@ -54,7 +54,6 @@ export default async function handler(
 
     const imageName = uploadedFile.image.newFilename;
     const {artistName} = fields;
-    console.log(artistName)
     try {
         await fs.readdir(path.join(process.cwd() + "/public", "/images/artists"));
     } catch (err) {

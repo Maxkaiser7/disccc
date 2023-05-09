@@ -57,6 +57,7 @@ model User {
   sessions      Session[]
   Post          Post[]
   Artist        Artist[]
+  Event         Event[]
 }
 
 model VerificationToken {
@@ -68,9 +69,25 @@ model VerificationToken {
 }
 
 model Artist {
-  id         String  @id @default(cuid())
+  id         String   @id @default(cuid())
   artistName String
   image      String?
-  User       User    @relation(fields: [userId], references: [id])
+  User       User     @relation(fields: [userId], references: [id])
   userId     String
+  createdAt  DateTime @default(now())
+}
+
+model Event {
+  id           String   @id @default(cuid())
+  description  String
+  name         String
+  image        String?
+  User         User     @relation(fields: [userId], references: [id])
+  userId       String
+  createdAt    DateTime @default(now())
+  dateFrom     DateTime
+  dateTo       DateTime
+  price        Float
+  facebookLink String?
+  Address      Json
 }

@@ -1,18 +1,18 @@
 import Link from "next/link"
 import FormPost from "@/app/Form";
 import CreatePost from "../app/components/AddPost"
-async function getPosts(){
-    const res = await fetch(`${process.env.BASE_URL}/api/getPosts`)
-    if(!res){
-        console.log(res)
-    }
-    return res.json()
-}
+import GetArtists from "@/app/components/GetArtists";
+import Hero from "@/app/components/Hero";
+import {SessionProvider} from "next-auth/react";
+import { Azeret_Mono } from "next/font/google"
+import Featured from "@/app/components/Featured";
 export default async function Home() {
-    const data: {id: string, title: string}[] = await getPosts()
+
   return (
     <main>
-        <CreatePost/>
+        <Hero/>
+        <Featured/>
+        <GetArtists/>
     </main>
   )
 }

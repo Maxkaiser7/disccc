@@ -8,6 +8,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     if (req.method === "POST") {
+
         const session = await getServerSession(req, res, authOptions)
         if (!session) return res.status(401).json({message: "Connectez vous pour pouvoir poster"});
         const title: string = req.body.title
