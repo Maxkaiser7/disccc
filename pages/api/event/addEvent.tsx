@@ -56,7 +56,6 @@ export default async function handler(
             // Save image to disk and get its path
             const { fields, files } = await readFile(req, true);
             const uploadedFile = files;
-            console.log(uploadedFile.image)
             if (uploadedFile.image) {
                 const imagePath = uploadedFile.image.filepath;
                 const imageName = uploadedFile.image.newFilename;

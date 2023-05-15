@@ -4,7 +4,7 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import axios from "axios";
 import FormData from "form-data";
 import {getSession, signIn} from "next-auth/react";
-import { useSession } from "next-auth/react"
+import {useSession} from "next-auth/react"
 import Link from "next/link";
 
 export default function SignInArtist() {
@@ -23,15 +23,15 @@ export default function SignInArtist() {
     useEffect(() => {
         const checkArtistRegistration = async () => {
             const session = await getSession()
-            if(!session){
+            if (!session) {
                 setIsConnected(false)
             }
             try {
-                const { data } = await axios.get("/api/signin/artistRegistered");
+                const {data} = await axios.get("/api/signin/artistRegistered");
                 setIsRegistered(data);
             } catch (error) {
                 console.error(error);
-            }finally {
+            } finally {
                 setIsLoading(false);
             }
         };
@@ -58,15 +58,16 @@ export default function SignInArtist() {
                 <p>Chargement en cours...</p>
             ) : isRegistered ? (
                 <h2 className={"flex justify-center text-2xl"}>Vous êtes déjà enregistré en tant qu'artiste</h2>
-            ) :  !isConnected  ? (
+            ) : !isConnected ? (
 
                 <div>
                     <p>Veuillez vous connecter</p>
                     <button className={"text-sm bg-gray-700 text-white py-2 px-6 disabled:opacity-25"}
                             onClick={() => signIn()}>
                         Sign in
-                    </button>                </div>
-                ) : (
+                    </button>
+                </div>
+            ) : (
                 <form
                     onSubmit={submitPost}
                     encType={"multipart/form-data"}
@@ -83,7 +84,7 @@ export default function SignInArtist() {
                     <input
                         type="file"
                         name={"image"}
-                        onChange={({ target }) => {
+                        onChange={({target}) => {
                             if (target.files) {
                                 const file: File = target.files[0];
                                 setSelectedFile(URL.createObjectURL(file));

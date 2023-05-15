@@ -14,7 +14,7 @@ export default async function Events(){
             {session?.user &&<Link href={"/events/new"} className={"bg-gray-800 py-2 px-4 "}>
                + Ajouter un évenement
             </Link>}
-            {events.map((event) => <EventCard name={event.name}/>)}
+            {events.map((event: object ) => <EventCard event={event}/>)}
 
         </main>
     )

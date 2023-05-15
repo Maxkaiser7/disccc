@@ -6,6 +6,7 @@ import Logged from "@/app/auth/Logged";
 import {useState, useEffect} from "react";
 import {useSession} from "next-auth/react";
 import BurgerMenu from "@/app/components/BurgerMenu";
+import {useRouter} from "next/router";
 export async function getServerSideProps() {
     // Récupération des données du serveur ici
     return {
@@ -19,9 +20,6 @@ export default async function  Nav(){
             <Link href={"/"}>
                 <h1 className={"font-bold text-lg"}>DISCCC</h1>
             </Link>
-            <ul className={"flex items-center gap-6"} id={"menu"}>
-
-            </ul>
             <BurgerMenu propsSession={session ?? undefined}/>
         </nav>
     )

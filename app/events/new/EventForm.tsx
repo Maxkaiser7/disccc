@@ -81,7 +81,7 @@ export default function EventForm() {
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
             />
-            <div id={"adresse"}>
+            <div id={"adresse"} className={"grid"}>
                 <label htmlFor="rue">Rue</label>
                 <input
                     name={"rue"}
@@ -89,20 +89,26 @@ export default function EventForm() {
                     value={rue}
                     onChange={(e) => setRue(e.target.value)}
                 />
-                <label htmlFor="cp">Code postal</label>
-                <input
-                    name={"cp"}
-                    type={"string"}
-                    value={cp}
-                    onChange={(e) => setCp(e.target.value)}
-                />
-                <label htmlFor="commune">Commune</label>
+                <div className={"flex gap-4"}>
+                <span>
+                    <label htmlFor="commune">Commune</label>
                 <input
                     name={"commune"}
                     type={"string"}
                     value={commune}
                     onChange={(e) => setCommune(e.target.value)}
                 />
+                </span>
+                <span>
+                                            <label htmlFor="cp">Code postal</label>
+                <input
+                    name={"cp"}
+                    type={"string"}
+                    value={cp}
+                    onChange={(e) => setCp(e.target.value)}
+                />
+                </span>
+                </div>
             </div>
             <label htmlFor="facebookLink">Evenement Facebook</label>
             <input type="string"

@@ -94,6 +94,9 @@ a {
   color: inherit;
   text-decoration: none;
 }
+input{
+  padding: 0.6rem;
+}
 
 @media (prefers-color-scheme: dark) {
   html {
