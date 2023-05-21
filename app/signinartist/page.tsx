@@ -14,7 +14,9 @@ export default function SignInArtist() {
     const [isRegistered, setIsRegistered] = useState();
     const [isConnected, setIsConnected] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
-
+    const [genre, setGenre] = useState("");
+    const [formGenre, setFormGenre] = useState();
+    const [description, setDescription] = useState("");
     const handleFileChange = (event) => {
         const files = event.target.files;
         setSelectedFile(files ? files : null);
@@ -37,6 +39,19 @@ export default function SignInArtist() {
         };
         checkArtistRegistration();
     }, []);
+    useEffect(() => {
+        const fetchGenres = async () => {
+            try {
+                const response = await axios.get("/api/genres/getGenres");
+                setFormGenre(response.data);
+                console.log(formGenre)
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchGenres();
+    }, []);
 
     const submitPost = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -45,6 +60,8 @@ export default function SignInArtist() {
             const formData = new FormData()
             formData.append("image", selectedFile)
             formData.append("artistName", artistName)
+            formData.append("genre", genre )
+            formData.append("description", description )
             const {data} = await axios.post("/api/signin/addArtist", formData)
             setIsDisabled(true)
             //console.log(data)
@@ -71,16 +88,28 @@ export default function SignInArtist() {
                 <form
                     onSubmit={submitPost}
                     encType={"multipart/form-data"}
-                    className={"flex flex-col items-center gap-2"}
+                    className={"flex flex-col  items-center gap-2"}
                 >
-                    <input
-                        type="text"
-                        placeholder={"pseudo"}
-                        name={"artistName"}
-                        className={"w-9/12 py-2 px-4 border-gray-950"}
-                        onChange={(e) => setArtistName(e.target.value)}
-                        value={artistName}
-                    />
+                    <div className={"flex flex-col"}>
+                        <label htmlFor={"pseudo"}>Votre nom d'artiste</label>
+                        <input
+                            type="text"
+                            placeholder={"pseudo"}
+                            name={"artistName"}
+                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            onChange={(e) => setArtistName(e.target.value)}
+                            value={artistName}
+                        />
+                    </div>
+                    <div className={"flex flex-col"}>
+                        <label htmlFor={"description"}>Description</label>
+                        <textarea
+                            name={"description"}
+                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            placeholder={"Décrivez-vous..."}
+                            onChange={(event) => setDescription(event.target.value)}
+                        />
+                    </div>
                     <input
                         type="file"
                         name={"image"}
@@ -92,6 +121,20 @@ export default function SignInArtist() {
                             }
                         }}
                     />
+                    <div className={"flex flex-col w-[70vw]"}>
+                        <label htmlFor={"genre"}>Genre</label>
+                        <select
+                            name="genre"
+                            onChange={(event) => setGenre(event.target.value)}
+                            className={"px-4 py-2"}
+                        >
+                            {formGenre.map((genre) => (
+                                <option key={genre.id} value={genre.id}>
+                                    {genre.nom}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     <button
                         type={"submit"}
                         disabled={isDisabled}

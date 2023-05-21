@@ -48,9 +48,9 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -58,6 +58,7 @@ model User {
   Post          Post[]
   Artist        Artist[]
   Event         Event[]
+  Comments      Comments[]
 }
 
 model VerificationToken {
@@ -69,25 +70,70 @@ model VerificationToken {
 }
 
 model Artist {
-  id         String   @id @default(cuid())
-  artistName String
-  image      String?
-  User       User     @relation(fields: [userId], references: [id])
-  userId     String
-  createdAt  DateTime @default(now())
+  id          String   @id @default(cuid())
+  artistName  String
+  image       String
+  User        User     @relation(fields: [userId], references: [id])
+  userId      String
+  createdAt   DateTime @default(now())
+  description String?
+  genres      Genres   @relation(fields: [genresId], references: [id])
+  genresId    String
+  Likes       Likes[]
+  Songs       Songs[]
 }
 
 model Event {
-  id           String   @id @default(cuid())
+  id           String     @id @default(cuid())
   description  String
   name         String
   image        String?
-  User         User     @relation(fields: [userId], references: [id])
+  User         User       @relation(fields: [userId], references: [id])
   userId       String
-  createdAt    DateTime @default(now())
+  createdAt    DateTime   @default(now())
   dateFrom     DateTime
   dateTo       DateTime
   price        Float
   facebookLink String?
-  Address      Json
+  address      Json
+  Comments     Comments[]
+}
+
+model Genres {
+  id     String   @id @default(cuid())
+  nom    String
+  Artist Artist[]
+}
+
+model Likes {
+  id         String    @id @default(cuid())
+  type       String
+  artist     Artist?   @relation(fields: [artistId], references: [id])
+  comments   Comments? @relation(fields: [commentsId], references: [id])
+  song       Songs     @relation(fields: [songsId], references: [id])
+  artistId   String?
+  commentsId String?
+  songsId    String
+}
+
+model Comments {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  type      String
+  user      User     @relation(fields: [userId], references: [id])
+  event     Event?   @relation(fields: [eventId], references: [id])
+  song      Songs?   @relation(fields: [songsId], references: [id])
+  likes     Likes[]
+  userId    String
+  eventId   String?
+  songsId   String?
+}
+
+model Songs {
+  id       String     @id @default(cuid())
+  link     String
+  artist   Artist     @relation(fields: [artistId], references: [id])
+  comments Comments[]
+  likes    Likes[] // Change the relation to one-to-many
+  artistId String
 }

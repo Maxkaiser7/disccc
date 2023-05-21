@@ -6,6 +6,7 @@ import Hero from "@/app/components/Hero";
 import {SessionProvider} from "next-auth/react";
 import { Azeret_Mono } from "next/font/google"
 import Featured from "@/app/components/Featured";
+import EventsComing from "@/app/components/EventsComing";
 export default async function Home() {
 
   return (
@@ -13,6 +14,7 @@ export default async function Home() {
         <Hero/>
         <Featured/>
         <GetArtists/>
+        <EventsComing/>
     </main>
   )
 }

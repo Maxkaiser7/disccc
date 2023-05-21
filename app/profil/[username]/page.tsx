@@ -24,8 +24,11 @@ export default async function ProfilPage({params, searchParams,}: {
 
         }
     })
+    if (artist){
         const artistNameLower = artist.artistName.toLowerCase()
         const artistName = artistNameLower.replace(/\s+/g, "")
+    }
+
 
 
     return (

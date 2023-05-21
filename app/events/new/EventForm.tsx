@@ -1,5 +1,5 @@
 "use client"
-import React, {FormEvent, useState} from "react";
+import React, {FormEvent, useEffect, useState} from "react";
 import axios from "axios";
 import {useRouter} from "next/router";
 
@@ -16,6 +16,12 @@ export default function EventForm() {
     const [cp, setCp] = useState("");
     const [commune, setCommune] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [resultArtists, setResultArtists] = useState([]);
+    const [searchArtist, setSearchArtist] = useState("");
+    const [query, setQuery] = useState("");
+    const [artistSuggestions, setArtistSuggestions] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -47,7 +53,37 @@ export default function EventForm() {
         }
 
     };
+    const searchArtists = async (query) => {
+        try {
+            const response = await axios.get(`/api/artists/searchArtists?artistName=${query}`);
+            setArtistSuggestions(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
+    useEffect(() => {
+        const fetchArtists = async () => {
+            try {
+                const response = await axios.get("/api/artists/getArtists");
+                setResultArtists(response.data);
+            } catch {
+                console.log("Il y a eu une erreur lors de la récupération des artistes");
+            }
+        };
+
+        fetchArtists();
+    }, []);
+
+    //ouverture ul artiste
+    const handleItemClick = (artistName) => {
+        setQuery(artistName);
+        setIsOpen(false);
+    };
+
+    const handleInputClick = () => {
+        setIsOpen(true);
+    };
     return (
         <form onSubmit={handleSubmit}
               className={"flex flex-col gap-2"}
@@ -60,6 +96,29 @@ export default function EventForm() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
             />
+            <div>
+                <input
+                    type="text"
+                    name="artist"
+                    value={query}
+                    onChange={(event) => {
+                        const value = event.target.value;
+                        setQuery(value);
+                        searchArtists(value);
+                    }}
+                    onClick={handleInputClick}
+                />
+                {isOpen && Array.isArray(artistSuggestions) && artistSuggestions.length > 0 && (
+                    <ul>
+                        {artistSuggestions.map((artist) => (
+                            <li key={artist.id} onClick={() => handleItemClick(artist.artistName)}>
+                                {artist.artistName}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+
             <label htmlFor="dateFrom">Date de début</label>
             <input
                 name={"dateFrom"}

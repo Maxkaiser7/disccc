@@ -54,6 +54,8 @@ export default async function handler(
 
     const imageName = uploadedFile.image.newFilename;
     const {artistName} = fields;
+    const {genre} = fields;
+    const {description} = fields;
     try {
         await fs.readdir(path.join(process.cwd() + "/public", "/images/artists"));
     } catch (err) {
@@ -76,6 +78,10 @@ export default async function handler(
         data: {
             artistName: artistName,
             image: imageName,
+            description: description,
+            genres: {
+                connect: { id: genre }
+            },
             User: {connect: {id: prismaUser.id}},
         },
     });
