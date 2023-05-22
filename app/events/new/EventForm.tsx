@@ -37,8 +37,9 @@ export default function EventForm() {
         formData.append("cp", cp);
         formData.append("facebookLink", facebookLink);
         formData.append("image", image);
+        formData.append("artist", query)
 
-// envoyez la demande à l'API en utilisant FormData
+        // envoyez la demande à l'API en utilisant FormData
         try {
             const response = await axios.post("/api/event/addEvent", formData, {
                 headers: {
@@ -96,28 +97,27 @@ export default function EventForm() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
             />
-            <div>
-                <input
-                    type="text"
-                    name="artist"
-                    value={query}
-                    onChange={(event) => {
-                        const value = event.target.value;
-                        setQuery(value);
-                        searchArtists(value);
-                    }}
-                    onClick={handleInputClick}
-                />
-                {isOpen && Array.isArray(artistSuggestions) && artistSuggestions.length > 0 && (
-                    <ul>
-                        {artistSuggestions.map((artist) => (
-                            <li key={artist.id} onClick={() => handleItemClick(artist.artistName)}>
-                                {artist.artistName}
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
+            <label htmlFor="artist" className={"flex flex-col"}>Artistes</label>
+            <input
+                type="text"
+                name="artist"
+                value={query}
+                onChange={(event) => {
+                    const value = event.target.value;
+                    setQuery(value);
+                    searchArtists(value);
+                }}
+                onClick={handleInputClick}
+            />
+            {isOpen && Array.isArray(artistSuggestions) && artistSuggestions.length > 0 && (
+                <ul>
+                    {artistSuggestions.map((artist) => (
+                        <li key={artist.id} onClick={() => handleItemClick(artist.artistName)}>
+                            {artist.artistName}
+                        </li>
+                    ))}
+                </ul>
+            )}
 
             <label htmlFor="dateFrom">Date de début</label>
             <input
@@ -158,7 +158,7 @@ export default function EventForm() {
                     onChange={(e) => setCommune(e.target.value)}
                 />
                 </span>
-                <span>
+                    <span>
                                             <label htmlFor="cp">Code postal</label>
                 <input
                     name={"cp"}

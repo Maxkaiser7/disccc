@@ -42,8 +42,6 @@ export default function BurgerMenu(props: object) {
                     <li><Link href={"/artists"} onClick={toggleMenu}>Artistes</Link></li>
                     <li><Link href={"/events"} onClick={toggleMenu}>Evenements</Link></li>
                     <li><Link href={"/"} onClick={toggleMenu}>Contact</Link></li>
-                    <li>{session?.user && <Link href={"/signinartist"} onClick={toggleMenu}>Devenir artiste</Link>}
-                    </li>
                     <li>
                         {!session?.user && <Login/>}
                         {session?.user && <Logged image={session.user?.image || ""}/>}

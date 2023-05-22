@@ -21,11 +21,14 @@ export default function EventsComing(){
         };
         fetchEvents();
     }, []);
-    return(
-        <div>
-            <h2>Evenements à venir</h2>
-            {events.map((event: object ) => <EventCard event={event}/>)}
 
+    return(
+        <div className={"mt-8"}>
+            <h3 className={"text-3xl"}>Evenements à venir</h3>
+            {events.length === 0 && (
+                <p>Aucun évènement à venir</p>
+            )}
+            {events.map((event: object ) => <EventCard event={event}/>)}
         </div>
     )
 }

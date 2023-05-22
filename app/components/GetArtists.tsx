@@ -17,7 +17,6 @@ export default function GetArtists() {
                         "Content-Type": "application/json",
                     }
                 })
-                console.log(response)
                 setArtists(response.data)
             } catch (err) {
                 console.log(err);

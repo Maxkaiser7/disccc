@@ -10,11 +10,15 @@ export default async function Events(){
     const events = await prisma.event.findMany()
     return(
         <main>
-               <h1>Evenements</h1>
-            {session?.user &&<Link href={"/events/new"} className={"bg-gray-800 py-2 px-4 "}>
+               <h1 className={"mb-3"}>Evenements</h1>
+            {session?.user &&<Link href={"/events/new"} className={"bg-gray-800 py-2 px-4"}>
                + Ajouter un évenement
             </Link>}
-            {events.map((event: object ) => <EventCard event={event}/>)}
+            {events.length == 0 && <p className={"mt-10"}>Il n'y a aucun évènements à venir</p>}
+            {events.length > 0 &&
+                events.map((event: object ) => <EventCard event={event}/>)
+            }
+
 
         </main>
     )

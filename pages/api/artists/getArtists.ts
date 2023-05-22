@@ -5,6 +5,7 @@ export default async function handler(
     req:NextApiRequest,
     res:NextApiResponse
 ){
+
     try {
         //get prisma to fetch the posts
         const data = await prisma.artist.findMany({

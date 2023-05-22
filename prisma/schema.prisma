@@ -70,33 +70,45 @@ model VerificationToken {
 }
 
 model Artist {
-  id          String   @id @default(cuid())
-  artistName  String
-  image       String
-  User        User     @relation(fields: [userId], references: [id])
-  userId      String
-  createdAt   DateTime @default(now())
-  description String?
-  genres      Genres   @relation(fields: [genresId], references: [id])
-  genresId    String
-  Likes       Likes[]
-  Songs       Songs[]
+  id              String            @id @default(cuid())
+  artistName      String
+  image           String
+  User            User              @relation(fields: [userId], references: [id])
+  userId          String
+  createdAt       DateTime          @default(now())
+  description     String?
+  genres          Genres            @relation(fields: [genresId], references: [id])
+  genresId        String
+  Likes           Likes[]
+  Songs           Songs[]
+  ArtistsOnEvents ArtistsOnEvents[]
 }
 
 model Event {
-  id           String     @id @default(cuid())
-  description  String
-  name         String
-  image        String?
-  User         User       @relation(fields: [userId], references: [id])
-  userId       String
-  createdAt    DateTime   @default(now())
-  dateFrom     DateTime
-  dateTo       DateTime
-  price        Float
-  facebookLink String?
-  address      Json
-  Comments     Comments[]
+  id              String            @id @default(cuid())
+  description     String
+  name            String
+  unsignedArtists String[]
+  image           String?
+  User            User              @relation(fields: [userId], references: [id])
+  userId          String
+  createdAt       DateTime          @default(now())
+  dateFrom        DateTime
+  dateTo          DateTime
+  price           Float
+  facebookLink    String?
+  address         Json
+  Comments        Comments[]
+  ArtistsOnEvents ArtistsOnEvents[]
+}
+
+model ArtistsOnEvents {
+  artists  Artist @relation(fields: [artistId], references: [id])
+  artistId String
+  event    Event  @relation(fields: [eventId], references: [id])
+  eventId  String
+
+  @@id([artistId, eventId])
 }
 
 model Genres {

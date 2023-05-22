@@ -23,7 +23,6 @@ export default async function EventPage({
             <img src={`../images/events/${event.image}`} alt={`${event.name} event`}
                  className={'object-cover w-screen h-60'}/>
             <p>{event.description}</p>
-            <p>Le {dateStr} à {event.Address.commune}</p>
         </div>
     );
 }
