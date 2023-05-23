@@ -56,9 +56,10 @@ model User {
   accounts      Account[]
   sessions      Session[]
   Post          Post[]
-  Artist        Artist[]
   Event         Event[]
   Comments      Comments[]
+  Artist        Artist[]
+  likes         Likes[]
 }
 
 model VerificationToken {
@@ -100,6 +101,8 @@ model Event {
   address         Json
   Comments        Comments[]
   ArtistsOnEvents ArtistsOnEvents[]
+  genres          Genres            @relation(fields: [genresId], references: [id])
+  genresId        String
 }
 
 model ArtistsOnEvents {
@@ -115,6 +118,7 @@ model Genres {
   id     String   @id @default(cuid())
   nom    String
   Artist Artist[]
+  Event  Event[]
 }
 
 model Likes {
@@ -122,10 +126,12 @@ model Likes {
   type       String
   artist     Artist?   @relation(fields: [artistId], references: [id])
   comments   Comments? @relation(fields: [commentsId], references: [id])
-  song       Songs     @relation(fields: [songsId], references: [id])
+  song       Songs?    @relation(fields: [songsId], references: [id])
   artistId   String?
   commentsId String?
-  songsId    String
+  songsId    String?
+  User       User      @relation(fields: [userId], references: [id])
+  userId     String
 }
 
 model Comments {
@@ -146,6 +152,6 @@ model Songs {
   link     String
   artist   Artist     @relation(fields: [artistId], references: [id])
   comments Comments[]
-  likes    Likes[] // Change the relation to one-to-many
+  likes    Likes[]
   artistId String
 }

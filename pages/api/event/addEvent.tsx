@@ -121,6 +121,8 @@ export default async function handler(
                 const {facebookLink} = fields;
                 const jsonAdress = {rue: rue, cp: cp, commune: commune};
                 const {artist} = fields
+                const {genre} = fields
+
 
                 // Check if required fields are provided
                 if (!name || !description || !dateFrom || !dateTo || !price || !jsonAdress) {
@@ -148,6 +150,8 @@ export default async function handler(
                     unsignedArtists: unsignedArtists,
                     facebookLink: facebookLink,
                     image: imageName,
+                    genres: {connect: {id: genre}},
+
                 };
 
                 const result = await prisma.event.create({

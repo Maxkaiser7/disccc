@@ -21,7 +21,8 @@ export default function EventForm() {
     const [query, setQuery] = useState("");
     const [artistSuggestions, setArtistSuggestions] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
-
+    const [formGenre, setFormGenre] = useState([]);
+    const [genre, setGenre] = useState("");
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -38,6 +39,7 @@ export default function EventForm() {
         formData.append("facebookLink", facebookLink);
         formData.append("image", image);
         formData.append("artist", query)
+        formData.append("genre", genre);
 
         // envoyez la demande à l'API en utilisant FormData
         try {
@@ -75,7 +77,17 @@ export default function EventForm() {
 
         fetchArtists();
     }, []);
-
+    useEffect(() => {
+        const fetchGenres = async () => {
+            try {
+                const response = await axios.get("/api/genres/getGenres");
+                setFormGenre(response.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchGenres();
+    }, []);
     //ouverture ul artiste
     const handleItemClick = (artistName) => {
         setQuery(artistName);
@@ -133,6 +145,21 @@ export default function EventForm() {
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
             />
+            <label htmlFor={"genre"}>Genre</label>
+            <select
+                name="genre"
+                onChange={(event) => {
+                    setGenre(event.target.value)
+                }}
+                className={"px-4 py-2"}
+            >
+                <option value="">Choisissez un genre</option>
+                {formGenre.map((genre) => (
+                    <option key={genre.id} value={genre.id}>
+                        {genre.nom}
+                    </option>
+                ))}
+            </select>
             <label htmlFor="price">Prix</label>
             <input
                 name={"price"}

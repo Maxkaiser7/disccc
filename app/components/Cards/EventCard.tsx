@@ -1,5 +1,7 @@
 "use client"
 
+import GenreCard from "@/app/components/Cards/GenreCard";
+
 interface EventCardProps {
     event: {
         id: string,
@@ -41,7 +43,6 @@ export default function EventCard(props: EventCardProps): JSX.Element {
                 <img src={`../images/events/${event.image}`} alt={`${event.name} event`}
                      className={'object-cover w-screen h-60'}/>
             </a>
-
 
         </div>
     )

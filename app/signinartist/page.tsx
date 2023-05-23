@@ -128,6 +128,7 @@ export default function SignInArtist() {
                             onChange={(event) => setGenre(event.target.value)}
                             className={"px-4 py-2"}
                         >
+                            <option value="">Choisissez un genre</option>
                             {formGenre.map((genre) => (
                                 <option key={genre.id} value={genre.id}>
                                     {genre.nom}

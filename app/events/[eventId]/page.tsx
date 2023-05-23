@@ -1,4 +1,5 @@
 import prisma from "@/prisma/client";
+import GenreCard from "@/app/components/Cards/GenreCard";
 
 export default async function EventPage({
                                       params,
@@ -12,7 +13,17 @@ export default async function EventPage({
     const event = await prisma.event.findUnique({
         where: {
             id: params.eventId
-        }
+        },
+    })
+
+    const genres = await prisma.genres.findMany({
+        where: {
+            Event: {
+                some: {
+                    id: event?.id,
+                },
+            },
+        },
     })
     const dateFrom = event.dateFrom
     const options = { day: 'numeric', month: 'long' };
@@ -23,6 +34,7 @@ export default async function EventPage({
             <img src={`../images/events/${event.image}`} alt={`${event.name} event`}
                  className={'object-cover w-screen h-60'}/>
             <p>{event.description}</p>
+            {genres.length > 0 && genres.map((genre: object) => <GenreCard genre={genre}/>)}
         </div>
     );
 }
