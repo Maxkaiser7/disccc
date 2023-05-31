@@ -20,17 +20,26 @@ export default async function ProfilPage({params, searchParams,}: {
     })
     const artist = await prisma.artist.findFirst({
         where: {
-            userId: session?.user?.id
+            userId: user?.id
 
         }
     })
+    let artistName = ""; // Declare artistName with a default value
     if (artist){
         const artistNameLower = artist.artistName.toLowerCase()
-        const artistName = artistNameLower.replace(/\s+/g, "")
+        artistName = artistNameLower.replace(/\s+/g, "")
     }
 
-
-
+    const organisation = await prisma.organisation.findFirst({
+        where: {
+            userId: user?.id
+        }
+    })
+    let organisationName = "";
+    if (organisation){
+        const organisationNameLower = organisation.organisationName.toLowerCase()
+        organisationName = organisationNameLower.replace(/\s+/g, "")
+    }
     return (
         <div className={"flex flex-col content-center flex-wrap items-center"}>
             <h1 className={"text-3xl"}>Profil</h1>
@@ -47,6 +56,11 @@ export default async function ProfilPage({params, searchParams,}: {
                 {artist && (
                     <span className={"bg-slate-800 p-2 flex flex-col items-center border-gray-950 rounded"}>
                         <Link href={`/artist/${artistName}/update`}>Modifier mon profil artiste</Link>
+                    </span>
+                )}
+                {organisation && (
+                    <span className={"bg-slate-800 p-2 flex flex-col items-center border-gray-950 rounded"}>
+                        <Link href={`/organisations/${organisationName}/update`}>Modifier mon profil organisation</Link>
                     </span>
                 )}
             </div>

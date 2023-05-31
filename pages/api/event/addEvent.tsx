@@ -57,6 +57,59 @@ export default async function handler(
             // Save image to disk and get its path
             const {fields, files} = await readFile(req, true);
             const uploadedFile = files;
+            //séparer les noms d'orgas en utilisant la virgule
+            const organisationNames = fields.organisation.split(',');
+            //tableau pour stocker les orgas existants à connecter à l'évenement
+            const existingOrganisations = [];
+            //tableau pour stocker les noms d'orgas enregistrées
+            const unsignedOrganisations = [];
+
+            for (const organisationName of organisationNames){
+                // Recherche de l'organisation existante par nom
+                const existingOrganisation = await prisma.organisation.findFirst({
+                    where: {
+                        organisationName: organisationName.trim(), // Supprime les espaces vides autour du nom
+                    },
+                });
+                if (existingOrganisation) {
+                    // Si l'organisation existe, l'ajouter à la relation organisations de l'évenement
+                    existingOrganisations.push(existingOrganisation);
+                }else{
+                    // Si l'organisation n'existe pas, ajouter le nom à la colonne unsignedOrganisations
+                    unsignedOrganisations.push(organisationName);
+                }
+            }
+            //créer un tableaupour stocker les orgas existantes
+            const existingOrganisationsArray = existingOrganisations.map(
+                (organisation) => organisation.organisationName
+            )
+            //Créer un tableau d'OrganisationWhereUniqueInputs pour les orgas existantes
+            const existingOrganisationWhereUniqueInputs = existingOrganisationsArray.map(
+                (organisationName) => ({
+                    organisationName: organisationName,
+                })
+            )
+            const existingOrganisationPrisma = await prisma.organisation.findFirst({
+                where: {
+                    OR: existingOrganisationWhereUniqueInputs
+                }
+            })
+            const organisationsOnEventsData: Prisma.OrganisationsOnEventsCreateManyInput[] = [];
+            if (existingOrganisationsArray.length > 0) {
+                existingOrganisationsArray.forEach((organisationName) => {
+                    organisationsOnEventsData.push({
+                        organisationName: organisationName,
+                    });
+                });
+            }
+            if (unsignedOrganisations.length > 0) {
+                unsignedOrganisations.forEach((organisationName) => {
+                    organisationsOnEventsData.push({
+                        organisationName: organisationName,
+                    });
+                });
+            }
+
             // Sépare les noms d'artistes en utilisant la virgule
             const artistNames = fields.artist.split(',');
 
@@ -137,6 +190,9 @@ export default async function handler(
                 const prismaUser = await prisma.user.findUnique({
                     where: {email: session?.user?.email || undefined},
                 });
+                const artistConnections = existingArtists.map((artist) => ({
+                    id: artist.id,
+                }));
                 const eventData: Prisma.EventCreateInput = {
                     name: name,
                     description: description,
@@ -154,6 +210,23 @@ export default async function handler(
 
                 };
 
+                // premier artist (a modifier)
+                if (existingArtists.length > 0) {
+                    const artistWhereUniqueInput = {
+                        id: existingArtists[0].id,
+                    };
+
+                    eventData.artist = {
+                        connect: artistWhereUniqueInput,
+                    };
+                }
+                if (existingOrganisationPrisma) {
+                    eventData.organisation = { connect: { id: existingOrganisationPrisma.id } };
+                }
+
+                if (unsignedOrganisations) {
+                    eventData.unsignedOrganisation = unsignedOrganisations;
+                }
                 const result = await prisma.event.create({
                     data: eventData,
                 });
@@ -165,6 +238,7 @@ export default async function handler(
                             eventId: result.id,
                         })),
                     });
+
                 }
 
                 res.json({done: "ok"});

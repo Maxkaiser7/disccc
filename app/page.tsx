@@ -1,6 +1,6 @@
 import Link from "next/link"
 import FormPost from "@/app/Form";
-import CreatePost from "../app/components/AddPost"
+import CreatePost from "@/app/components/AddPost"
 import GetArtists from "@/app/components/GetArtists";
 import Hero from "@/app/components/Hero";
 import {SessionProvider} from "next-auth/react";

@@ -8,54 +8,62 @@ import EventsComing from "@/app/components/EventsComing";
 import {AiOutlineHeart, AiFillHeart} from "react-icons/ai";
 import {getSession} from "next-auth/react";
 import {log} from "util";
+import {response} from "express";
+import LikeButton from "@/app/components/LikeButton";
 
-export default function ArtistPage({
-                                       params,
-                                       searchParams,
-                                   }: {
+interface Props {
     params: { artistName: string };
     searchParams: { [key: string]: string | string[] | undefined };
+}
+
+
+
+export default function ArtistPage<Props>({params}: {
+    params: { artistName: string };
+    artistData: any;
+    genreData: any;
+    eventsData: any;
+    liked: boolean;
 }) {
     const [artist, setArtist] = useState<any>(null);
     const [genre, setGenre] = useState<any>(null);
     const [events, setEvents] = useState<any>(null);
     const [isLiked, setIsLiked] = useState(false);
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const { artistName } = params;
+    const [isLoading, setIsLoading] = useState(true);
 
-                const response = await axios.get("/api/artists/getArtist", {
-                    params: { artistName },
-                });
-                const artistData = response.data.artist[0];
-                const genreData = response.data.genre;
-                const eventsData = response.data.events;
-                const liked = response.data.like
-                if (liked) {
-                    setIsLiked(true)
-                }
-                console.log(isLiked)
-                setArtist(artistData)
-                setGenre(genreData)
-                setEvents(eventsData)
-            } catch (error) {
-                console.error("Erreur lors de la récupération de l'artiste", error);
-            }
-        };
+    const artistName = params.artistName
+    const url = `/api/artists/getArtist?artistName=${encodeURIComponent(artistName)}`;
 
-        fetchData();
-    }, [params.artistName]);
-    const handleLike = async () => {
-        const session = await getSession();
-
-        const response = await axios.post("/api/artists/addLike", {
-            params: { artist, session },
-        });
-        setIsLiked(!isLiked);
+    const fetchData = async () => {
+        const response = await fetch(url);
+        const data = await response.json();
+        const artistData =data.artist[0]
+        const genreData = data.genre;
+        const eventsData = data.events;
+        const liked = data.like
+        if (liked) {
+            setIsLiked(true)
+        }
+        setArtist(artistData);
+        setGenre(genreData);
+        setEvents(eventsData);
+        setIsLoading(false)
     }
-    return <div>
-        {artist && (
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+      const handleLike = async () => {
+            setIsLiked(!isLiked)
+          const session = await getSession();
+          const response = await axios.post("/api/artists/addLike", {
+              params: { artist, session },
+          });
+      }
+    return (<div>
+        {isLoading ? (
+            <div>Chargement...</div>
+        ) : (artist && (
             <div className={"flex flex-col items-center"}>
                 <h1 className={"text-3xl"}>{artist.artistName}</h1>
                 {genre && (
@@ -67,16 +75,16 @@ export default function ArtistPage({
                 <div className={"relative"}>
                     <img src={`../images/artists/${artist.image}`} alt={`photo ${artist.artistName}`}
                          className={'object-cover w-screen h-[70vw]'}/>
-                    <button className={"absolute bottom-2 right-2"} onClick={handleLike}>
-                        {isLiked ? <AiFillHeart style={{"width": "40px", "height": "40px"}}/> : <AiOutlineHeart style={{"width": "40px", "height": "40px"}}/>}
-                    </button>
+                    <div className={"absolute bottom-2 right-2"}>
+                        <LikeButton clickEvent={handleLike} isLiked={isLiked}/>
+                    </div>
                 </div>
                 <p className={"text-xl mt-3"}>{artist.description}</p>
                 {events && (
-                    <EventsComing events={events} />
+                    <EventsComing events={events}/>
                 )} {!events && <p>Aucun évènement à venir</p>}
 
             </div>
-        )}
-    </div>
+        ))}
+    </div>)
 }

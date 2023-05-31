@@ -6,7 +6,7 @@ export default async function handler(
     res:NextApiResponse
 ){
     try {
-        //get artist with spaces in artistName
+        //get artistes with spaces in artistName
         const genre = await prisma.genres.findMany()
 
         return res.status(200).json(genre)

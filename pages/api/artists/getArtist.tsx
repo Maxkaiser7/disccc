@@ -11,7 +11,7 @@ export default async function handler(
 ) {
     try {
         const {artistName} = req.query
-        //get artist with spaces in artistName
+        //get artistes with spaces in artistName
         const artist = await prisma.$queryRaw`
       SELECT * FROM "Artist"
       WHERE LOWER(REPLACE("artistName", ' ', '')) = LOWER(REPLACE(${artistName}, ' ', ''))

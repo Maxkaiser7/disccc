@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
+
 export const config = {
     api: {
         bodyParser: false,
@@ -42,12 +43,12 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const {fields, files} = await readFile(req, true);
-    const uploadedFile = files;
-    const imagePath = uploadedFile.image.filepath;
+    const uploadedFile = files.image;
+    const imagePath = uploadedFile ? uploadedFile.filepath : null;
+    const imageName = uploadedFile ? uploadedFile.newFilename : null;
 
-    const imageName = uploadedFile.image.newFilename;
     const session = await getServerSession(req, res, authOptions)
-    const userMail : string | null | undefined = session?.user?.email
+    const userMail: string | null | undefined = session?.user?.email
     const artist = await prisma.artist.findFirst({
         where: {
             userId: session?.user?.id
@@ -58,32 +59,68 @@ export default async function handler(
         return;
     }
     if (req.method === "POST") {
-        // Save image to disk and get its path
-
         try {
             await fs.readdir(path.join(process.cwd() + "/public", "/images/artists"));
 
             const user = await prisma.user.findFirst({
                 where: {
-                    email : userMail
+                    email: userMail
                 }
             })
-            const artistName = fields.artistName;
+            //const artistName = fields.artistName;
+            const {
+                artistName,
+                genre,
+                description,
+                spotifyLink,
+                instagramLink,
+                soundcloudLink,
+                twitterLink,
+                appleLink,
+                tiktokLink
+            } = fields;
+            if (imagePath && imageName) {
+                const imageDestination = path.join(
+                    process.cwd(),
+                    "/public/images/artists",
+                    imageName
+                );
+                await fs.rename(imagePath, imageDestination);
+            }
+            const updateData: { [key: string]: any } = {};
+            if (artistName) {
+                updateData.artistName = artistName
+            }
+            // Check if the platform links exist and add them to updateData if they are not empty
+            if (spotifyLink) {
+                updateData.spotifyLink = spotifyLink;
+            }
+            if (instagramLink) {
+                updateData.instagramLink = instagramLink;
+            }
+            if (soundcloudLink) {
+                updateData.soundcloudLink = soundcloudLink;
+            }
+            if (twitterLink) {
+                updateData.twitterLink = twitterLink;
+            }
+            if (appleLink) {
+                updateData.appleLink = appleLink;
+            }
+            if (tiktokLink) {
+                updateData.tiktokLink = tiktokLink;
+            }
+            if (imageName) {
+                updateData.image = imageName
+            }
 
-            const imageDestination = path.join(
-                process.cwd(),
-                "/public/images/artists",
-                imageName
-            );
-            await fs.rename(imagePath, imageDestination);
-            const updateArtist : Artist | null = await prisma.artist.update({
+            //await fs.rename(imagePath, imageDestination);
+            const updateArtist: Artist | null = await prisma.artist.update({
                 where: {
                     id: artist?.id
                 },
-                data: {
-                    artistName:artistName,
-                    image: imageName
-                }
+                data: updateData,
+
             });
             return res.status(200).json(updateArtist)
         } catch (error) {

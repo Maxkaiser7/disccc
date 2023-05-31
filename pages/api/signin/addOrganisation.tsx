@@ -21,11 +21,11 @@ const readFile = (
 }> => {
     const options: formidable.Options = {};
     if (saveLocally) {
-        options.uploadDir = path.join(process.cwd(), "/public/images/artists");
+        options.uploadDir = path.join(process.cwd(), "/public/images/organisations");
         options.filename = (name, ext, path, form) => {
-            const imageArtist: string =
+            const imageOrganisation: string =
                 Date.now().toString() + "_" + path.originalFilename;
-            return imageArtist;
+            return imageOrganisation;
         };
     }
 
@@ -37,83 +37,47 @@ const readFile = (
         });
     });
 };
-
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
-) {
+){
     const session = await getServerSession(req, res, authOptions);
     if (!session)
         return res.status(401).json({message: "Connectez vous pour pouvoir poster"});
 
     // Save image to disk and get its path
     const {fields, files} = await readFile(req, true);
+    console.log({fields})
     const uploadedFile = files;
     //console.log(uploadedFile.image);
     const imagePath = uploadedFile.image.filepath;
-
     const imageName = uploadedFile.image.newFilename;
-    const {
-        artistName,
-        genre,
-        description,
-        spotifyLink,
-        instagramLink,
-        soundcloudLink,
-        twitterLink,
-        appleLink,
-        tiktokLink
-    } = fields;
+    const {organisationName} = fields;
+    const {description} = fields;
     try {
-        await fs.readdir(path.join(process.cwd() + "/public", "/images/artists"));
+        await fs.readdir(path.join(process.cwd() + "/public", "/images/organisations"));
     } catch (err) {
-        await fs.mkdir(path.join(process.cwd() + "/public", "/images/artists"));
+        await fs.mkdir(path.join(process.cwd() + "/public", "/images/organisations"));
     }
-
-
     const imageDestination = path.join(
         process.cwd(),
-        "/public/images/artists",
+        "/public/images/organisations",
         imageName
     );
     await fs.rename(imagePath, imageDestination);
+
     // Create a new artistes record and associate it with the user
     const prismaUser = await prisma.user.findUnique({
         where: {email: session?.user?.email || undefined},
     });
-    const artistData = {
-        artistName,
-        image: imageName,
-        description,
-        genres: {
-            connect: { id: genre }
-        },
-        User: { connect: { id: prismaUser.id } },
-    };
+    const newOrganisation = await prisma.organisation.create({
+        data:{
+            organisationName: organisationName,
+            description: description,
+            image: imageName,
+            User: {connect: {id: prismaUser.id}},
 
-    // Check if the platform links exist and add them to artistData if they are not empty
-    if (spotifyLink) {
-        artistData.spotifyLink = spotifyLink;
-    }
-    if (instagramLink) {
-        artistData.instagramLink = instagramLink;
-    }
-    if (soundcloudLink) {
-        artistData.soundcloudLink = soundcloudLink;
-    }
-    if (twitterLink) {
-        artistData.twitterLink = twitterLink;
-    }
-    if (appleLink) {
-        artistData.appleLink = appleLink;
-    }
-    if (tiktokLink) {
-        artistData.tiktokLink = tiktokLink;
-    }
-    // Create a new artistes record and associate it with the user
-    const newArtist = await prisma.artist.create({
-        data: artistData,
-    });
-
-    res.json({done: "ok"});
+        }
+    })
+    res.status(200).json({done:"ok"});
 }

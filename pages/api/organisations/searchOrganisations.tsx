@@ -6,17 +6,17 @@ export default async function handler(
 ){
     try {
         //const search : string= req.body.artistName.toLowerCase()
-        const search : string= req.query.artistName.toLowerCase()
+        const search : string= req.query.organisationName.toLowerCase()
         //get prisma to fetch the posts
         let data;
         if (search === "") {
-            data = await prisma.artist.findMany({
+            data = await prisma.organisation.findMany({
                 orderBy: { createdAt: "desc" },
             });
         } else {
-            data = await prisma.artist.findMany({
+            data = await prisma.organisation.findMany({
                 where: {
-                    artistName: {
+                    organisationName: {
                         contains: search,
                         mode: "insensitive",
                     },

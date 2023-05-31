@@ -48,9 +48,9 @@ model Session {
 }
 
 model User {
-  id            String     @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String?    @unique
+  email         String?        @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -60,6 +60,7 @@ model User {
   Comments      Comments[]
   Artist        Artist[]
   likes         Likes[]
+  Organisation  Organisation[]
 }
 
 model VerificationToken {
@@ -83,33 +84,62 @@ model Artist {
   Likes           Likes[]
   Songs           Songs[]
   ArtistsOnEvents ArtistsOnEvents[]
+  Event           Event[]
+  soundcloudLink  String?
+  instagramLink   String?
+  tiktokLink      String?
+  twitterLink     String?
+  appleLink       String?
+  deezerLink      String?
+  spotifyLink     String?
 }
 
 model Event {
-  id              String            @id @default(cuid())
-  description     String
-  name            String
-  unsignedArtists String[]
-  image           String?
-  User            User              @relation(fields: [userId], references: [id])
-  userId          String
-  createdAt       DateTime          @default(now())
-  dateFrom        DateTime
-  dateTo          DateTime
-  price           Float
-  facebookLink    String?
-  address         Json
-  Comments        Comments[]
-  ArtistsOnEvents ArtistsOnEvents[]
-  genres          Genres            @relation(fields: [genresId], references: [id])
-  genresId        String
+  id                   String            @id @default(cuid())
+  description          String
+  name                 String
+  unsignedArtists      String[]
+  image                String?
+  User                 User              @relation(fields: [userId], references: [id])
+  userId               String
+  createdAt            DateTime          @default(now())
+  dateFrom             DateTime
+  dateTo               DateTime
+  price                Float
+  facebookLink         String?
+  address              Json
+  Comments             Comments[]
+  ArtistsOnEvents      ArtistsOnEvents[]
+  genres               Genres            @relation(fields: [genresId], references: [id])
+  genresId             String
+  unsignedOrganisation String[]
+  artist               Artist?           @relation(fields: [artistId], references: [id])
+  artistId             String?
+  organisation         Organisation?     @relation(fields: [organisationId], references: [id])
+  organisationId       String?
+  Likes                Likes[]
+}
+
+model Organisation {
+  id               String            @id @default(cuid())
+  organisationName String
+  image            String
+  User             User              @relation(fields: [userId], references: [id])
+  userId           String
+  createdAt        DateTime          @default(now())
+  description      String?
+  ArtistsOnEvents  ArtistsOnEvents[]
+  Likes            Likes[]
+  Event            Event[]
 }
 
 model ArtistsOnEvents {
-  artists  Artist @relation(fields: [artistId], references: [id])
-  artistId String
-  event    Event  @relation(fields: [eventId], references: [id])
-  eventId  String
+  artists        Artist        @relation(fields: [artistId], references: [id])
+  artistId       String
+  event          Event         @relation(fields: [eventId], references: [id])
+  eventId        String
+  Organisation   Organisation? @relation(fields: [organisationId], references: [id])
+  organisationId String?
 
   @@id([artistId, eventId])
 }
@@ -122,16 +152,20 @@ model Genres {
 }
 
 model Likes {
-  id         String    @id @default(cuid())
-  type       String
-  artist     Artist?   @relation(fields: [artistId], references: [id])
-  comments   Comments? @relation(fields: [commentsId], references: [id])
-  song       Songs?    @relation(fields: [songsId], references: [id])
-  artistId   String?
-  commentsId String?
-  songsId    String?
-  User       User      @relation(fields: [userId], references: [id])
-  userId     String
+  id             String        @id @default(cuid())
+  type           String
+  artist         Artist?       @relation(fields: [artistId], references: [id])
+  comments       Comments?     @relation(fields: [commentsId], references: [id])
+  song           Songs?        @relation(fields: [songsId], references: [id])
+  event          Event?        @relation(fields: [eventId], references: [id])
+  artistId       String?
+  commentsId     String?
+  songsId        String?
+  User           User          @relation(fields: [userId], references: [id])
+  userId         String
+  organisation   Organisation? @relation(fields: [organisationId], references: [id])
+  organisationId String?
+  eventId        String?
 }
 
 model Comments {

@@ -7,8 +7,16 @@ export default async function handler(
 ){
 
     try {
-        const artist = req.body.params.artist
-        const session = req.body.params.session
+        const eventId = req.body.eventId as string
+        const session = req.body.session as {
+            user: {
+                name: string;
+                email: string;
+                image: string;
+            };
+            expires: string;
+        };
+
         const prismaUser = await prisma.user.findUnique({
             where: {email: session?.user?.email || undefined},
         })
@@ -16,13 +24,13 @@ export default async function handler(
         //récupération des likes
         const like = await prisma.likes.findFirst({
             where: {
-                artistId: artist.id,
-                userId: prismaUser.id
+                eventId: eventId,
+                userId: prismaUser?.id
             },
         });
 
         if (like) {
-            // L'utilisateur a déjà aimé l'artiste, supprimer le like
+            // L'utilisateur a déjà aimé l'event, supprimer le like
             const deleteLike = await prisma.likes.delete({
                 where: {
                     id: like.id
@@ -34,8 +42,8 @@ export default async function handler(
             const newLike = await prisma.likes.create({
                 data: {
                     User: { connect: { id: userId } },
-                    artist: { connect: { id: artist.id } },
-                    type: "artist"
+                    event: { connect: { id: eventId } },
+                    type: "event"
                 }
             });
         }
@@ -45,7 +53,7 @@ export default async function handler(
         return res.status(200).end()
     }
     catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal server error" });
-}
+        console.error(error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
 }

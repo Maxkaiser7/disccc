@@ -17,6 +17,12 @@ export default function SignInArtist() {
     const [genre, setGenre] = useState("");
     const [formGenre, setFormGenre] = useState();
     const [description, setDescription] = useState("");
+    const [instagramLink, setInstagramLink] = useState<string>("");
+    const [spotifyLink, setSpotifyLink] = useState<string>("");
+    const [soundcloudLink, setSoundcloudLink] = useState<string>("");
+    const [twitterLink, setTwitterLink] = useState<string>("");
+    const [appleLink, setAppleLink] = useState<string>("");
+    const [tiktokLink, setTiktokLink] = useState<string>("");
     const handleFileChange = (event) => {
         const files = event.target.files;
         setSelectedFile(files ? files : null);
@@ -60,8 +66,14 @@ export default function SignInArtist() {
             const formData = new FormData()
             formData.append("image", selectedFile)
             formData.append("artistName", artistName)
-            formData.append("genre", genre )
-            formData.append("description", description )
+            formData.append("genre", genre)
+            formData.append("description", description)
+            formData.append("spotifyLink", spotifyLink)
+            formData.append("soundcloudLink", soundcloudLink)
+            formData.append("instagramLink", instagramLink)
+            formData.append("twitterLink", twitterLink)
+            formData.append("appleLink", appleLink)
+            formData.append("tiktokLink", tiktokLink)
             const {data} = await axios.post("/api/signin/addArtist", formData)
             setIsDisabled(true)
             //console.log(data)
@@ -108,6 +120,72 @@ export default function SignInArtist() {
                             className={"w-[70vw] py-2 px-4 border-gray-950"}
                             placeholder={"Décrivez-vous..."}
                             onChange={(event) => setDescription(event.target.value)}
+                        />
+                    </div>
+                    <div className={"flex flex-col"}>
+                        <label htmlFor="spotifyLink">Lien spotify</label>
+                        <input
+                            type="text"
+                            placeholder={"spotify"}
+                            name={"spotifyLink"}
+                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            onChange={(e) => setSpotifyLink(e.target.value)}
+                            value={spotifyLink}
+                        />
+                    </div>
+                    <div className={"flex flex-col"}>
+                        <label htmlFor="instagramLink">Lien instagram</label>
+                        <input
+                            type="text"
+                            placeholder={"instagram"}
+                            name={"instagramLink"}
+                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            onChange={(e) => setInstagramLink(e.target.value)}
+                            value={instagramLink}
+                        />
+                    </div>
+                    <div className={"flex flex-col"}>
+                        <label htmlFor="soundcloudLink">Lien soundcloud</label>
+                        <input
+                            type="text"
+                            placeholder={"soundcloud"}
+                            name={"soundcloudLink"}
+                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            onChange={(e) => setSoundcloudLink(e.target.value)}
+                            value={soundcloudLink}
+                        />
+                    </div>
+                    <div className={"flex flex-col"}>
+                        <label htmlFor="twitterLink">Lien twitter</label>
+                        <input
+                            type="text"
+                            placeholder={"twitter"}
+                            name={"twitterLink"}
+                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            onChange={(e) => setTwitterLink(e.target.value)}
+                            value={twitterLink}
+                        />
+                    </div>
+                    <div className={"flex flex-col"}>
+                        <label htmlFor="appleLink">Lien apple</label>
+                        <input
+                            type="text"
+                            placeholder={"apple"}
+                            name={"appleLink"}
+                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            onChange={(e) => setAppleLink(e.target.value)}
+                            value={appleLink}
+                        />
+                    </div>
+                    <div className={"flex flex-col"}>
+                        <label htmlFor="tiktokLink">Lien tiktok</label>
+                        <input
+                            type="text"
+                            placeholder={"tiktok"}
+                            name={"tiktokLink"}
+                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            onChange={(e) => setTiktokLink(e.target.value)}
+                            value={tiktokLink}
                         />
                     </div>
                     <input

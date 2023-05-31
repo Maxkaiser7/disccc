@@ -1,25 +1,19 @@
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import UpdateUserForm from "@/app/profil/[username]/update/UpdateUserForm";
 import Link from "next/link";
-import UpdateArtistForm from "@/app/artist/[artistName]/update/UpdateArtistForm";
 import prisma from "@/prisma/client";
-
+import UpdateOrganisationForm from "@/app/organisations/[organisationName]/update/UpdateOrganisationForm";
 export default async function UpdateProfilePage (){
     const session = await getServerSession( authOptions)
-    const user = await prisma.user.findUnique({
+    const organisation = await prisma.organisation.findFirst({
         where: {
-            email: session?.user?.email
-        }
-    })
-    const artist = await prisma.artist.findFirst({
-        where: {
-            userId: user?.id
+            userId: session?.user?.id
         },
     })
+
     return(
         <div>
-            <UpdateArtistForm artist={artist}/>
+            <UpdateOrganisationForm organisationName={organisation?.organisationName}/>
             <Link href={`/profil/${session?.user?.name}`}>Retour au profil</Link>
         </div>
     )

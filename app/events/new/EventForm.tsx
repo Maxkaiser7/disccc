@@ -23,6 +23,8 @@ export default function EventForm() {
     const [isOpen, setIsOpen] = useState(false);
     const [formGenre, setFormGenre] = useState([]);
     const [genre, setGenre] = useState("");
+    const [organisation, setOrganisation] = useState<string>("");
+    const [organisationSuggestion, setOrganisationSuggestion] = useState([]);
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -40,6 +42,7 @@ export default function EventForm() {
         formData.append("image", image);
         formData.append("artist", query)
         formData.append("genre", genre);
+        formData.append("organisation", organisation);
 
         // envoyez la demande à l'API en utilisant FormData
         try {
@@ -64,6 +67,15 @@ export default function EventForm() {
             console.error(error);
         }
     };
+    const searchOrganisations = async(organisation)=> {
+        try {
+            const response = await axios.get(`/api/organisations/searchOrganisations?organisationName=${organisation}`);
+            console.log(response)
+            setOrganisationSuggestion(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     useEffect(() => {
         const fetchArtists = async () => {
@@ -92,8 +104,11 @@ export default function EventForm() {
     const handleItemClick = (artistName) => {
         setQuery(artistName);
         setIsOpen(false);
-    };
-
+    }
+    const handleItemClickOrganisation = (organisationName) => {
+        setOrganisation(organisationName);
+        setIsOpen(false);
+    }
     const handleInputClick = () => {
         setIsOpen(true);
     };
@@ -121,6 +136,7 @@ export default function EventForm() {
                 }}
                 onClick={handleInputClick}
             />
+
             {isOpen && Array.isArray(artistSuggestions) && artistSuggestions.length > 0 && (
                 <ul>
                     {artistSuggestions.map((artist) => (
@@ -131,6 +147,24 @@ export default function EventForm() {
                 </ul>
             )}
 
+            <label htmlFor="organisation">Organisation</label>
+            <input type="text"
+                   name={"organisation"}
+                   value={organisation}
+                   onChange={(event) => {
+                       const valueOrga = event.target.value;
+                       setOrganisation(valueOrga);
+                       searchOrganisations(valueOrga)
+                   }}/>
+            {isOpen && Array.isArray(organisationSuggestion) && organisationSuggestion.length > 0 && (
+                <ul>
+                    {organisationSuggestion.map((organisation) => (
+                        <li key={organisation.id} onClick={() => handleItemClickOrganisation(organisation.organisationName)}>
+                            {organisation.organisationName}
+                        </li>
+                    ))}
+                </ul>
+            )}
             <label htmlFor="dateFrom">Date de début</label>
             <input
                 name={"dateFrom"}
