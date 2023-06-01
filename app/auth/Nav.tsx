@@ -7,6 +7,7 @@ import {useState, useEffect} from "react";
 import {useSession} from "next-auth/react";
 import BurgerMenu from "@/app/components/BurgerMenu";
 import {useRouter} from "next/router";
+import prisma from "@/prisma/client";
 export async function getServerSideProps() {
     // Récupération des données du serveur ici
     return {
@@ -15,12 +16,17 @@ export async function getServerSideProps() {
 }
 export default async function  Nav(){
     const session = await getServerSession(authOptions)
+    const user = await prisma.user.findUnique({
+        where: {
+            email: session?.user?.email,
+        },
+    })
     return(
         <nav className={"flex justify-between items-center py-8"}>
             <Link href={"/"}>
                 <h1 className={"font-bold text-lg"}>DISCCC</h1>
             </Link>
-            <BurgerMenu propsSession={session ?? undefined}/>
+            <BurgerMenu propsSession={session ?? undefined} propsUser={user ?? undefined}/>
         </nav>
     )
 }

@@ -48,10 +48,15 @@ export default async function handler(
     const imageName = uploadedFile ? uploadedFile.newFilename : null;
 
     const session = await getServerSession(req, res, authOptions)
+    const user = await prisma.user.findFirst({
+        where: {
+            email: session?.user?.email
+        }
+    })
     const userMail: string | null | undefined = session?.user?.email
     const artist = await prisma.artist.findFirst({
         where: {
-            userId: session?.user?.id
+            userId: user?.id
         },
     })
     if (!userMail) {

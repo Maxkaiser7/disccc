@@ -7,8 +7,9 @@ import {SessionProvider} from "next-auth/react";
 import { Azeret_Mono } from "next/font/google"
 import Featured from "@/app/components/Featured";
 import EventsComing from "@/app/components/EventsComing";
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/pages/api/auth/[...nextauth]";
 export default async function Home() {
-
   return (
     <main>
         <Hero/>

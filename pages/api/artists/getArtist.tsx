@@ -19,15 +19,14 @@ export default async function handler(
         if (!artist) {
             return res.status(404).json("Artiste non trouvé");
         }
-        const session = await getServerSession(req, res, authOptions);
+       /* const session = await getServerSession(req, res, authOptions);
         const prismaUser = await prisma.user.findUnique({
             where: {email: session?.user?.email || undefined},
-        })
+        })*/
         //récupération des likes
         const like = await prisma.likes.findFirst({
             where: {
                 artistId: artist[0].id,
-                User: prismaUser
             },
         });
 
