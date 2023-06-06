@@ -23,12 +23,12 @@ export default function EventsComing(){
     }, []);
 
     return(
-        <div className={"mt-8"}>
+        <div className={"mt-10"}>
             <h3 className={"text-3xl"}>Evenements à venir</h3>
             {events.length === 0 && (
                 <p>Aucun évènement à venir</p>
             )}
-            {events.map((event: object ) => <EventCard event={event}/>)}
+            {events.map((event: object ) => <EventCard event={event} overflow={false}/>)}
         </div>
     )
 }

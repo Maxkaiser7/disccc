@@ -32,8 +32,8 @@ export default function EventCard(props: EventCardProps): JSX.Element {
     const day = dateStr.split(' ')[0].trim();
     const month = dateStr.split(' ')[1].trim();
     return (
-        <div key={event.id} id={event.id} className={"mt-3"}>
-            <a href={`/events/${event.id}`} className={`h-full relative ${props.overflow ? 'w-[18rem] flex' : ""}`}>
+        <div key={event.id} id={event.id}>
+            <a href={`/events/${event.id}`} className={`h-full relative ${props.overflow ? 'w-[18rem] flex' : ""} ${props.featured ? 'w-[6rem] h-[6rem] flex' : ""}`}>
                 <h2 className={`max-[375px]:text-[5vw] ${props.overflow ? 'min-[375px]:text-md' : ""} bg-black bg-opacity-75 absolute top-1 left-1`}>
                     {event.name}</h2>
                 <div className={`flex flex-col absolute p-2 h-60 justify-between w-full`} id="test">
@@ -50,7 +50,7 @@ export default function EventCard(props: EventCardProps): JSX.Element {
 
                 </div>
                 <img src={`../images/events/${event.image}`} alt={`${event.name} event`}
-                     className={'object-cover w-screen h-60'}/>
+                     className={`${props.featured ? "object-cover w-10/12" : "object-cover w-screen h-60"}`}/>
             </a>
 
         </div>

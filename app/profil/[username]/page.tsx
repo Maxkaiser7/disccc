@@ -63,6 +63,9 @@ export default async function ProfilPage({params, searchParams,}: {
                         <Link href={`/organisations/${organisationName}/update`}>Modifier mon profil organisation</Link>
                     </span>
                 )}
+                <span className={"bg-slate-500 p-2 flex flex-col items-center border-gray-950 rounded"}>
+                    <Link href={`/profil/${params.username}/promotion`}>Faire une promotion</Link>
+                </span>
             </div>
         </div>
     )

@@ -42,6 +42,7 @@ export default function SearchArtist(props: string) {
     }, []);
     return (
         <div>
+            <h2 className={"text-3xl"}>Découvrez les artistes</h2>
             <form onSubmit={handleSubmit} className={"flex"}>
                 <input type="text"
                        placeholder={"Recherchez un artiste..."}

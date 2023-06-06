@@ -46,11 +46,11 @@ export default function EventForm() {
 
         // envoyez la demande à l'API en utilisant FormData
         try {
-            const response = await axios.post("/api/event/addEvent", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            });
+                const response = await axios.post("/api/event/addEvent", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                });
         } catch (error) {
             console.error(error);
             // Handle error here

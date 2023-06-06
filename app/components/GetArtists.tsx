@@ -25,8 +25,8 @@ export default function GetArtists() {
         fetchArtists();
     }, []);
     return (
-        <div>
-            <h1>Derniers artistes inscrits</h1>
+        <div className={"mt-10"}>
+            <h2 className={"text-3xl"}>Derniers artistes inscrits</h2>
             {artists.length === 0 ? (
                 <p>Aucun artiste à afficher pour le moment.</p>
             ) : (

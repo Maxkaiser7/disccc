@@ -98,6 +98,8 @@ model Artist {
   appleLink       String?
   deezerLink      String?
   spotifyLink     String?
+  isPromoted      Boolean?          @default(false)
+  endPromotion    DateTime?
 }
 
 model Event {
@@ -124,6 +126,8 @@ model Event {
   organisation         Organisation?     @relation(fields: [organisationId], references: [id])
   organisationId       String?
   Likes                Likes[]
+  isPromoted           Boolean?          @default(false)
+  endPromotion         DateTime?
 }
 
 model Organisation {
@@ -137,6 +141,8 @@ model Organisation {
   ArtistsOnEvents  ArtistsOnEvents[]
   Likes            Likes[]
   Event            Event[]
+  isPromoted       Boolean?          @default(false)
+  endPromotion     DateTime?
 }
 
 model ArtistsOnEvents {

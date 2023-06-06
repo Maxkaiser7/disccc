@@ -8,17 +8,30 @@ import {useSession} from "next-auth/react";
 import BurgerMenu from "@/app/components/BurgerMenu";
 import {useRouter} from "next/router";
 import prisma from "@/prisma/client";
-export async function getServerSideProps() {
-    // Récupération des données du serveur ici
+import SearchBarNav from "@/app/components/SearchBarNav";
+export async function getServerSideProps(context) {
+    const session = await getServerSession(authOptions, context);
+    let user = null;
+
+    if (session?.user?.email) {
+        user = await prisma.user.findUnique({
+            where: {
+                email: session.user.email,
+            },
+        });
+    }
+
     return {
-        props: {},
+        props: {
+            user,
+        },
     };
 }
 export default async function  Nav(){
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
     const user = await prisma.user.findUnique({
         where: {
-            email: session?.user?.email,
+            email: session.user.email,
         },
     })
     return(
@@ -26,6 +39,8 @@ export default async function  Nav(){
             <Link href={"/"}>
                 <h1 className={"font-bold text-lg"}>DISCCC</h1>
             </Link>
+            <SearchBarNav/>
+
             <BurgerMenu propsSession={session ?? undefined} propsUser={user ?? undefined}/>
         </nav>
     )
