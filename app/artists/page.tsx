@@ -6,12 +6,12 @@ import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import {Pagination} from "next-pagination"
 import ArtistsPagination from "@/app/components/ArtistsPagination";
 export default async function getArtists(context: any){
-    const session = await getServerSession(authOptions)
+    const sessionData =  getServerSession(authOptions)
     const page = parseInt(context?.query?.page) || 1;
 
     const size = 10; // number of results per page
     const skip = (page - 1) * size;
-    const artists = await prisma.artist.findMany({
+    const artistsData = prisma.artist.findMany({
         orderBy: {
             createdAt: "desc",
         },
@@ -21,6 +21,9 @@ export default async function getArtists(context: any){
     let user : any = []
     let likes : any = []
     let artistsLiked : any[] = [];
+
+    const artists = await artistsData
+    const session = await sessionData
 
     if (session){
         user = await prisma.user.findUnique({
@@ -57,16 +60,6 @@ export default async function getArtists(context: any){
                     <div className="flex gap-4 overflow-x-scroll justify-center">
                         {artistsLiked.map((artist) => (
                             <ArtistCard artist={artist} key={artist.id} overflow={false} />
-                        ))}
-                    </div>
-                </>
-            )}
-            {artistsLiked && artistsLiked.length > 1 && (
-                <>
-                    <h2>Vos artistes likés</h2>
-                    <div className="flex gap-4 overflow-x-scroll justify-center">
-                        {artistsLiked.map((artist) => (
-                            <ArtistCard artist={artist} key={artist.id} overflow={true} />
                         ))}
                     </div>
                 </>

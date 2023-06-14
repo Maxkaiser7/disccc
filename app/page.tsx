@@ -11,12 +11,16 @@ import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import GetLastOrganisations from "@/app/components/GetLastOrganisations";
 import dynamic from "next/dynamic";
+import {GetServerSideProps} from "next";
+import prisma from "@/prisma/client";
 
 const ComponentFeatured = dynamic(()=> import("@/app/components/Featured"))
 const ComponentHero = dynamic(()=> import("@/app/components/Hero"))
+// @ts-ignore
 const ComponentGetArtists = dynamic(()=> import("@/app/components/GetArtists"))
 const ComponentEventsComing = dynamic(()=> import("@/app/components/EventsComing"))
 const ComponentGetLastOrganisations = dynamic(()=> import("@/app/components/GetLastOrganisations"))
+
 export default async function Home() {
   return (
     <main>

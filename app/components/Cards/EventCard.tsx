@@ -1,10 +1,10 @@
-"use client"
-
 import GenreCard from "@/app/components/Cards/GenreCard";
 import Link from "next/link";
+import Image from "next/image";
 
 interface EventCardProps {
     overflow: boolean;
+    featured: boolean;
     event: {
         id: string,
         name: string,
@@ -21,7 +21,6 @@ interface EventCardProps {
         facebookLink: string
     },
 }
-
 export default function EventCard(props: EventCardProps): JSX.Element {
     const {event} = props
     if (!event) {
@@ -33,6 +32,9 @@ export default function EventCard(props: EventCardProps): JSX.Element {
     const eventAddress = event.address.jsonAdress
     const day = dateStr.split(' ')[0].trim();
     const month = dateStr.split(' ')[1].trim();
+
+    const imageClassname = `${props.featured ? "object-cover w-10/12" : "object-cover w-screen h-60"}`
+    const imageSource = `/./images/events/${event.image}`
     return (
         <div key={event.id} id={event.id} className={"mb-3 max-w-[25rem] lg:max-w-[30rem]"}>
             <a href={`/events/${event.id}`}
@@ -51,8 +53,11 @@ export default function EventCard(props: EventCardProps): JSX.Element {
                         </span>
                     </span>
                 </div>
-                <img src={`../images/events/${event.image}`} alt={`${event.name} event`}
-                     className={`${props.featured ? "object-cover w-10/12" : "object-cover w-screen h-60"}`}/>
+                <Image src={imageSource}
+                       alt={event.name}
+                       className={imageClassname}
+                       width={500} height={500}/>
+
             </a>
         </div>
     )

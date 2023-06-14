@@ -5,7 +5,7 @@ import LikeButton from "@/app/components/LikeButton";
 import LikeEventButton from "@/app/components/LikeEventButton";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import {session} from "next-auth/core/routes";
+import {session} from "next-auth/core/routes"
 import Link from "next/link";
 import ArtistCard from "@/app/components/Cards/ArtistCard";
 interface Artist {
@@ -30,35 +30,31 @@ interface Genre {
     id: string;
     genreName: string;
 }
-export default async function EventPage({
-                                      params,
-                                      searchParams,
-                                  }: {
-    params: { eventId: string };
-    searchParams: { [key: string]: string | string[] | undefined };
-}) {
+async function getEvent(    params: { eventId: string }){
 
-    const session = await getServerSession(authOptions);
-    const event = await prisma.event.findUnique({
+    const eventData =  prisma.event.findUnique({
         where: {
             id: params.eventId
         },
     })
 
-    const genres = await prisma.genres.findMany({
+    const genresData =  prisma.genres.findMany({
         where: {
             Event: {
                 some: {
-                    id: event?.id,
+                    id: eventData?.id,
                 },
             },
         },
     })
-    const artistOnEvent = await prisma.artistsOnEvents.findMany({
+    const artistOnEventData =  prisma.artistsOnEvents.findMany({
         where: {
-            eventId: event?.id
+            eventId: eventData?.id
         },
     })
+    const event = await eventData
+    const artistOnEvent = await artistOnEventData
+    const genres = await genresData
     const artists = await prisma.artist.findMany({
         where: {
             id:{
@@ -66,6 +62,7 @@ export default async function EventPage({
             }
         }
     })
+
     //loop artistOnEvent pour récupérer les artistes
     const dateFrom : Date | undefined = event?.dateFrom
     const options: {day: string, month: string} = { day: 'numeric', month: 'long' };
@@ -74,8 +71,30 @@ export default async function EventPage({
     const eventAddress: { commune: string, rue: string, cp: string } | undefined = event?.address as { commune: string, rue: string, cp: string } | undefined;
     // @ts-ignore
     const jsonAddress: {commune: string, rue: string, cp: string} = eventAddress?.jsonAdress;
-    return (
+
+
+    return {
+        event,
+        genres,
+        artists,
+        dateStr,
+        jsonAddress,
+
+    }
+}
+
+export default async function EventPage({
+                                      params,
+                                  }: {
+    params: { eventId: string };
+}) {
+    const session = await getServerSession(authOptions);
+
+    const {event, genres, artists, dateStr, jsonAddress} = await getEvent(params)
+
+return (
         <div className={"p8  max-w-[45rem] ml-auto mr-auto"}>
+
             <h2 className={"text-3xl"}>{event?.name}</h2>
             <p>le {dateStr} à {jsonAddress?.commune} {jsonAddress?.rue}, {jsonAddress?.cp}</p>
             <img src={`../images/events/${event?.image}`} alt={`${event?.name} event`}
@@ -96,7 +115,6 @@ export default async function EventPage({
                 {session && <LikeEventButton eventId={event?.id || ''} />}
             </div>
             {event?.facebookLink && <Link href={`${event?.facebookLink}`}>Lien vers l'évenement Facebook</Link>}
-
         </div>
     );
 }
