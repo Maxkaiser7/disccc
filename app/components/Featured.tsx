@@ -67,8 +67,8 @@ export default async function Featured(): JSX.Element {
 
     return (
         <div>
-            <h2 className={"text-3xl"}>A la une</h2>
-            <div className={"flex "}>
+            <h2 className={"text-3xl p-8 text-center"}>A la une</h2>
+            <div className={"flex justify-center"}>
                 {eventsWithDates.map((event) => (
                     <div key={event.id}>
                         <a href={`/events/${event.id}`} className={``}>
@@ -78,12 +78,12 @@ export default async function Featured(): JSX.Element {
                                     width={500}
                                     height={500}
                                     src={`/images/events/${event.image}`}
-                                    className={"object-cover h-[17rem] w-60"}
+                                    className={"object-cover h-[17rem]"}
                                 />
-                                <h2 className={"absolute top-0 left-0 max-w-[60%] px-2 py-1 text-white bg-black bg-opacity-50 overflow-hidden text-overflow-ellipsis text-sm"}>
+                                <h2 className={"absolute top-0 left-0 max-w-[60%] px-2 py-1 text-white bg-black bg-opacity-50 overflow-hidden text-overflow-ellipsis text-sm md:text-2xl"}>
                                     {event.name}
                                 </h2>
-                                <span  className="absolute top-0 right-4 rounded-b-md bg-gradient-to-r from-red-600 to-red-700  p-2 grid justify-items-center shadow-lg text-[0.8rem]">
+                                <span  className="absolute top-0 right-0 rounded-b-md bg-gradient-to-r from-red-600 to-red-700  p-2 grid justify-items-center shadow-lg text-[0.8rem] md:right-4">
                                     <p>{event.day}</p>
                                     <p>{event.month}</p>
                                 </span>
@@ -100,9 +100,9 @@ export default async function Featured(): JSX.Element {
                                     width={500}
                                     height={500}
                                     src={`/images/artists/${artist.image}`}
-                                    className={"object-cover h-[17rem] w-60"}
+                                    className={"object-cover h-[17rem]"}
                                 />
-                                <h2 className={"absolute top-0 left-0 max-w-[60%] px-2 py-1 text-white bg-black bg-opacity-50 overflow-hidden text-overflow-ellipsis"}>{artist.originalName}</h2>
+                                <h2 className={"absolute top-0 left-0 max-w-[60%] px-2 py-1 text-white bg-black bg-opacity-50 overflow-hidden text-overflow-ellipsis md:text-2xl"}>{artist.originalName}</h2>
                             </div>
                         </a>
                     </div>
@@ -116,9 +116,9 @@ export default async function Featured(): JSX.Element {
                                     width={500}
                                     height={500}
                                     src={`/images/organisations/${organisation.image}`}
-                                    className={"object-cover h-[17rem] w-60"}
+                                    className={"object-cover h-[17rem]"}
                                 />
-                                <h2 className={"absolute top-0 left-0 max-w-[60%] px-2 py-1 text-white bg-black bg-opacity-50 overflow-hidden text-overflow-ellipsis"}>{organisation.organisationName}</h2>
+                                <h2 className={"absolute top-0 left-0 max-w-[60%] px-2 py-1 text-white bg-black bg-opacity-50 overflow-hidden text-overflow-ellipsis md:text-2xl"}>{organisation.organisationName}</h2>
                             </div>
                         </a>
                     </div>

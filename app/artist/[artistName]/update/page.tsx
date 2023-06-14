@@ -20,7 +20,7 @@ export default async function UpdateProfilePage (){
     return(
         <div>
             <UpdateArtistForm artist={artist}/>
-            <Link href={`/profil/${session?.user?.name}`}>Retour au profil</Link>
+            <Link href={`/profil/${session?.user?.name}`} className={"p-8"}>Retour au profil</Link>
         </div>
     )
 }

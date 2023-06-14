@@ -1,7 +1,10 @@
 "use client"
 import React, {FormEvent, useEffect, useState} from "react";
 import axios from "axios";
-import {useRouter} from "next/router";
+import {useRouter} from "next/navigation";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
+import SubmitButton from "@/app/components/SubmitButton";
 
 export default function EventForm() {
     const [name, setName] = useState("");
@@ -25,6 +28,9 @@ export default function EventForm() {
     const [genre, setGenre] = useState("");
     const [organisation, setOrganisation] = useState<string>("");
     const [organisationSuggestion, setOrganisationSuggestion] = useState([]);
+    const [isDisabled, setIsDisabled] = useState(false);
+    const router = useRouter();
+    const errorDigest = error.digest;
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -46,11 +52,16 @@ export default function EventForm() {
 
         // envoyez la demande à l'API en utilisant FormData
         try {
-                const response = await axios.post("/api/event/addEvent", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                });
+
+            const response = await axios.post("/api/event/addEvent", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+            setIsDisabled(true)
+            const {id} = response.data;
+            router.push(`/events/${id}`);
+
         } catch (error) {
             console.error(error);
             // Handle error here
@@ -70,7 +81,6 @@ export default function EventForm() {
     const searchOrganisations = async(organisation)=> {
         try {
             const response = await axios.get(`/api/organisations/searchOrganisations?organisationName=${organisation}`);
-            console.log(response)
             setOrganisationSuggestion(response.data);
         } catch (error) {
             console.error(error);
@@ -102,9 +112,13 @@ export default function EventForm() {
     }, []);
     //ouverture ul artiste
     const handleItemClick = (artistName) => {
-        setQuery(artistName);
+        if (query === "") {
+            setQuery(artistName);
+        } else {
+            setQuery(prevState => prevState + ", " + artistName);
+        }
         setIsOpen(false);
-    }
+    };
     const handleItemClickOrganisation = (organisationName) => {
         setOrganisation(organisationName);
         setIsOpen(false);
@@ -114,7 +128,7 @@ export default function EventForm() {
     };
     return (
         <form onSubmit={handleSubmit}
-              className={"flex flex-col gap-2"}
+              className={"flex flex-col gap-2 m-auto w-9/12 lg:max-w-[50vw]"}
               encType={"multipart/form-data"}>
             <label htmlFor="name">Nom de l'événement</label>
             <input name={"name"} value={name} onChange={(e) => setName(e.target.value)}/>
@@ -138,9 +152,9 @@ export default function EventForm() {
             />
 
             {isOpen && Array.isArray(artistSuggestions) && artistSuggestions.length > 0 && (
-                <ul>
+                <ul className={""}>
                     {artistSuggestions.map((artist) => (
-                        <li key={artist.id} onClick={() => handleItemClick(artist.artistName)}>
+                        <li key={artist.id} onClick={() => handleItemClick(artist.artistName)} className={"bg-slate-800 hover:bg-slate-500 p-2"}>
                             {artist.artistName}
                         </li>
                     ))}
@@ -201,7 +215,7 @@ export default function EventForm() {
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
             />
-            <div id={"adresse"} className={"grid"}>
+            <div id={"adresse"} className={"grid gap-2"}>
                 <label htmlFor="rue">Rue</label>
                 <input
                     name={"rue"}
@@ -210,7 +224,7 @@ export default function EventForm() {
                     onChange={(e) => setRue(e.target.value)}
                 />
                 <div className={"flex gap-4"}>
-                <span>
+                <span className={"grid"}>
                     <label htmlFor="commune">Commune</label>
                 <input
                     name={"commune"}
@@ -219,8 +233,8 @@ export default function EventForm() {
                     onChange={(e) => setCommune(e.target.value)}
                 />
                 </span>
-                    <span>
-                                            <label htmlFor="cp">Code postal</label>
+                    <span className={"grid"}>
+                        <label htmlFor="cp">Code postal</label>
                 <input
                     name={"cp"}
                     type={"string"}
@@ -247,7 +261,7 @@ export default function EventForm() {
                     }
                 }}
             />
-            <input type="submit"/>
+            <SubmitButton isDisabled={isDisabled} inputValue={"Créer"}/>
         </form>
     );
 }

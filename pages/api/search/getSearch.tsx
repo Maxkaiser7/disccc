@@ -27,7 +27,8 @@ export default async function handler(req: NextApiRequest,
                                 contains: search,
                                 mode: "insensitive"
                             }
-                        }
+                        },
+
                     ]
                 }
             });
@@ -40,12 +41,7 @@ export default async function handler(req: NextApiRequest,
                                 mode: "insensitive"
                             }
                         },
-                        {
-                            description: {
-                                contains: search,
-                                mode: "insensitive"
-                            }
-                        }
+
                     ]
                 }
             });
@@ -67,10 +63,19 @@ export default async function handler(req: NextApiRequest,
                     ]
                 }
             });
+            const genres = await prisma.genres.findMany({
+                where : {
+                    nom:{
+                        contains: search,
+                        mode: "insensitive"
+                    }
+                }
+            });
             const results = {
                 events,
                 artists,
-                organisations
+                organisations,
+                genres
             };
             res.status(200).json({message: "success", data: results});
 

@@ -30,26 +30,25 @@ export default function SearchBarNav() {
         router.push("/search?search=" + encodedQuery);
     }
     return (
-        <>
-            <form className={"absolute right-16 text-xl flex items-center"}
-                  onSubmit={handleSubmit}>
-                {isOpen && <button onClick={() => setIsOpen(!isOpen)} className={"mr-2"}>
-                    <AiOutlineSearch/>
-                </button>}
-                {!isOpen && <div className={"flex items-center"}>
-                    <input type={"text"}
-                           value={search}
-                           onChange={(e) => {
-                               setSearch(e.target.value)
-                           }}
-                           className={` h-[1.8rem] w-[9rem] rounded ${isOpen ? "scale-0" : "scale-100"}`}/>
-                    <button type={"submit"} className={"absolute right-2"}>
-                        <span className="sr-only">Search</span>
-                        <AiOutlineSearch className="text-gray-400" />
-                    </button>
-                </div>}
-
-            </form>
-        </>
+        <form
+            className="text-xl flex items-center justify-center flex-wrap"
+            onSubmit={handleSubmit}
+        >
+            <div className="relative flex items-center">
+                <input
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="pl-10 pr-4 py-2 rounded-md bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                    type="submit"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                >
+                    <span className="sr-only">Search</span>
+                    <AiOutlineSearch className="text-gray-400" />
+                </button>
+            </div>
+        </form>
     )
 }

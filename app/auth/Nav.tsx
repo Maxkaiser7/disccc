@@ -9,7 +9,8 @@ import BurgerMenu from "@/app/components/BurgerMenu";
 import {useRouter} from "next/router";
 import prisma from "@/prisma/client";
 import SearchBarNav from "@/app/components/SearchBarNav";
-export async function getServerSideProps(context) {
+import Notification from "@/app/components/Notification";
+/*export async function getServerSideProps(context) {
     const session = await getServerSession(authOptions, context);
     let user = null;
 
@@ -26,21 +27,23 @@ export async function getServerSideProps(context) {
             user,
         },
     };
-}
+}*/
 export default async function  Nav(){
     const session = await getServerSession(authOptions);
-    const user = await prisma.user.findUnique({
-        where: {
-            email: session.user.email,
-        },
-    })
+    let user =""
+    if (session){
+        user = await prisma.user.findUnique({
+            where: {
+                email: session?.user?.email,
+            },
+        })
+    }
     return(
-        <nav className={"flex justify-between items-center py-8"}>
+        <nav className={"flex justify-between items-center py-8 px-4"}>
             <Link href={"/"}>
                 <h1 className={"font-bold text-lg"}>DISCCC</h1>
             </Link>
-            <SearchBarNav/>
-
+            {session?.user && <Notification/>}
             <BurgerMenu propsSession={session ?? undefined} propsUser={user ?? undefined}/>
         </nav>
     )

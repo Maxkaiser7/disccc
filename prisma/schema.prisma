@@ -11,13 +11,19 @@ datasource db {
 }
 
 model Post {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String
-  published Boolean  @default(false)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  id             String        @id @default(cuid())
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  postContent    String
+  published      Boolean       @default(false)
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  Artist         Artist?       @relation(fields: [artistId], references: [id])
+  artistId       String?
+  Organisation   Organisation? @relation(fields: [organisationId], references: [id])
+  organisationId String?
+  Event          Event?        @relation(fields: [eventId], references: [id])
+  eventId        String?
 }
 
 enum UserRole {
@@ -67,6 +73,7 @@ model User {
   likes         Likes[]
   Organisation  Organisation[]
   role          UserRole       @default(USER)
+  Notification  Notification[]
 }
 
 model VerificationToken {
@@ -85,8 +92,8 @@ model Artist {
   userId          String
   createdAt       DateTime          @default(now())
   description     String?
-  genres          Genres            @relation(fields: [genresId], references: [id])
-  genresId        String
+  genres          Genres?           @relation(fields: [genresId], references: [id], onDelete: SetNull)
+  genresId        String?
   Likes           Likes[]
   Songs           Songs[]
   ArtistsOnEvents ArtistsOnEvents[]
@@ -100,6 +107,8 @@ model Artist {
   spotifyLink     String?
   isPromoted      Boolean?          @default(false)
   endPromotion    DateTime?
+  Notification    Notification[]
+  Post            Post[]
 }
 
 model Event {
@@ -118,8 +127,8 @@ model Event {
   address              Json
   Comments             Comments[]
   ArtistsOnEvents      ArtistsOnEvents[]
-  genres               Genres            @relation(fields: [genresId], references: [id])
-  genresId             String
+  genres               Genres?           @relation(fields: [genresId], references: [id], onDelete: SetNull)
+  genresId             String?
   unsignedOrganisation String[]
   artist               Artist?           @relation(fields: [artistId], references: [id])
   artistId             String?
@@ -128,6 +137,8 @@ model Event {
   Likes                Likes[]
   isPromoted           Boolean?          @default(false)
   endPromotion         DateTime?
+  Notification         Notification[]
+  Post                 Post[]
 }
 
 model Organisation {
@@ -143,14 +154,16 @@ model Organisation {
   Event            Event[]
   isPromoted       Boolean?          @default(false)
   endPromotion     DateTime?
+  Notification     Notification[]
+  Post             Post[]
 }
 
 model ArtistsOnEvents {
-  artists        Artist        @relation(fields: [artistId], references: [id])
+  artists        Artist        @relation(fields: [artistId], references: [id], onDelete: Cascade)
   artistId       String
-  event          Event         @relation(fields: [eventId], references: [id])
+  event          Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId        String
-  Organisation   Organisation? @relation(fields: [organisationId], references: [id])
+  Organisation   Organisation? @relation(fields: [organisationId], references: [id], onDelete: Cascade)
   organisationId String?
 
   @@id([artistId, eventId])
@@ -200,4 +213,18 @@ model Songs {
   comments Comments[]
   likes    Likes[]
   artistId String
+}
+
+model Notification {
+  id             String        @id @default(cuid())
+  User           User          @relation(fields: [userId], references: [id])
+  userId         String
+  read           Boolean       @default(false)
+  Artist         Artist?       @relation(fields: [artistId], references: [id])
+  artistId       String?
+  Event          Event?        @relation(fields: [eventId], references: [id])
+  eventId        String?
+  Organisation   Organisation? @relation(fields: [organisationId], references: [id])
+  organisationId String?
+  createdAt      DateTime      @default(now())
 }

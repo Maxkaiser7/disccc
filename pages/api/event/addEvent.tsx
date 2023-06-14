@@ -5,10 +5,30 @@ import prisma from "@/prisma/client";
 import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
-import { Prisma } from "@prisma/client";
+import {Prisma} from "@prisma/client";
+interface Notification {
+    userId: string;
+    artistId: string;
+    organisationId: string;
+    eventId: string;
+    read: boolean;
+}
+import {useRouter} from "next/navigation";
+// Fonction pour créer une notification
+async function createNotification(userId :string, artistId : string, organisationId : string, eventId : string) {
+    const notification = await prisma.notification.create({
+        data: {
+            userId,
+            artistId,
+            organisationId,
+            eventId,
+            read: false,
+            createdAt: new Date(),
+        },
+    });
 
-import {useRouter} from "next/router";
-
+    return notification;
+}
 export const config = {
     api: {
         bodyParser: false,
@@ -26,9 +46,8 @@ const readFile = (
     if (saveLocally) {
         options.uploadDir = path.join(process.cwd(), "/public/images/events");
         options.filename = (name, ext, path, form) => {
-            const imageEvent: string =
-                Date.now().toString() + "_" + path.originalFilename;
-            return imageEvent;
+            return Date.now().toString() + "_" + path.originalFilename;
+
         };
     }
 
@@ -51,20 +70,24 @@ export default async function handler(
         }
 
         try {
-
             //await fs.readdir(path.join(process.cwd() + "/public", "/images/events"));
             //const formData = req.body;
             // Save image to disk and get its path
             const {fields, files} = await readFile(req, true);
             const uploadedFile = files;
             //séparer les noms d'orgas en utilisant la virgule
-            const organisationNames = fields.organisation.split(',');
-            //tableau pour stocker les orgas existants à connecter à l'évenement
+            let organisationNames: string[] = [];
+
+            if (typeof fields.organisation === 'string') {
+                organisationNames = fields.organisation.split(',');
+            } else if (Array.isArray(fields.organisation)) {
+                organisationNames = fields.organisation;
+            }            //tableau pour stocker les orgas existants à connecter à l'évenement
             const existingOrganisations = [];
             //tableau pour stocker les noms d'orgas enregistrées
             const unsignedOrganisations = [];
 
-            for (const organisationName of organisationNames){
+            for (const organisationName of organisationNames) {
                 // Recherche de l'organisation existante par nom
                 const existingOrganisation = await prisma.organisation.findFirst({
                     where: {
@@ -74,12 +97,12 @@ export default async function handler(
                 if (existingOrganisation) {
                     // Si l'organisation existe, l'ajouter à la relation organisations de l'évenement
                     existingOrganisations.push(existingOrganisation);
-                }else{
+                } else {
                     // Si l'organisation n'existe pas, ajouter le nom à la colonne unsignedOrganisations
                     unsignedOrganisations.push(organisationName);
                 }
             }
-            //créer un tableaupour stocker les orgas existantes
+            //créer un tableau pour stocker les orgas existantes
             const existingOrganisationsArray = existingOrganisations.map(
                 (organisation) => organisation.organisationName
             )
@@ -94,7 +117,7 @@ export default async function handler(
                     OR: existingOrganisationWhereUniqueInputs
                 }
             })
-            const organisationsOnEventsData: Prisma.OrganisationsOnEventsCreateManyInput[] = [];
+            const organisationsOnEventsData: {organisationName: string}[] = [];
             if (existingOrganisationsArray.length > 0) {
                 existingOrganisationsArray.forEach((organisationName) => {
                     organisationsOnEventsData.push({
@@ -111,8 +134,7 @@ export default async function handler(
             }
 
             // Sépare les noms d'artistes en utilisant la virgule
-            const artistNames = fields.artist.split(',');
-
+            const artistNames = (Array.isArray(fields.artist) ? fields.artist[0] : fields.artist).split(',');
             // Tableau pour stocker les artistes existants à connecter à l'événement
             const existingArtists = [];
 
@@ -146,11 +168,13 @@ export default async function handler(
             if (existingArtistIds.length > 0) {
                 existingArtistIds.forEach((artistId) => {
                     artistsOnEventsData.push({
-                        artistId: artistId,
+                        eventId: "",
+                        artistId: artistId
                     });
                 });
             }
-
+            let imagePath: string | undefined;
+            let imageName: string | undefined;
             if (uploadedFile.image) {
                 const imagePath = uploadedFile.image.filepath;
                 const imageName = uploadedFile.image.newFilename;
@@ -161,7 +185,6 @@ export default async function handler(
                     imageName
                 );
                 await fs.rename(imagePath, imageDestination);
-
 
                 const {name} = fields;
                 const {description} = fields;
@@ -176,13 +199,13 @@ export default async function handler(
                 const {artist} = fields
                 const {genre} = fields
 
-
                 // Check if required fields are provided
                 if (!name || !description || !dateFrom || !dateTo || !price || !jsonAdress) {
                     return res.status(403).json({message: "Veuillez remplir tous les champs"});
                 }
 
                 // Check if dateTo is after dateFrom
+                // @ts-ignore
                 if (new Date(dateTo) < new Date(dateFrom)) {
                     return res.status(403).json({message: "La date de fin doit être après la date de début"});
                 }
@@ -193,20 +216,71 @@ export default async function handler(
                 const artistConnections = existingArtists.map((artist) => ({
                     id: artist.id,
                 }));
+                //réglage pour typescript
+                let formattedFacebookLink: string | null | undefined;
+
+                if (Array.isArray(facebookLink)) {
+                    formattedFacebookLink = facebookLink.join(', ');
+                } else {
+                    formattedFacebookLink = facebookLink;
+                }
+                let formattedName: string | null | undefined;
+
+                if (Array.isArray(name)) {
+                    formattedName = name.join(', ');
+                } else {
+                    formattedName = name;
+                }
+
+                let formattedDescription: string | null | undefined;
+
+                if (Array.isArray(description)) {
+                    formattedDescription = description.join(', ');
+                } else {
+                    formattedDescription = description;
+                }
+                let formattedDateFrom: Date | null = null;
+
+                if (Array.isArray(dateFrom)) {
+                    const firstDate = dateFrom[0];
+                    formattedDateFrom = new Date(firstDate);
+                } else {
+                    formattedDateFrom = new Date(dateFrom);
+                }
+                let formattedDateTo: Date | null = null;
+
+                if (Array.isArray(dateTo)) {
+                    const firstDate = dateTo[0];
+                    formattedDateTo = new Date(firstDate);
+                } else {
+                    formattedDateTo = new Date(dateTo);
+                }
+                let formattedPrice: number | null = null;
+
+                if (typeof price === 'string') {
+                    formattedPrice = parseFloat(price);
+                }
+                let formattedGenre: string | undefined;
+
+                if (Array.isArray(genre)) {
+                    formattedGenre = genre[0];
+                } else {
+                    formattedGenre = genre;
+                }
                 const eventData: Prisma.EventCreateInput = {
-                    name: name,
-                    description: description,
-                    dateFrom: new Date(dateFrom),
-                    dateTo: new Date(dateTo),
-                    price: parseFloat(price),
-                    address: { jsonAdress },
+                    name: formattedName,
+                    description: formattedDescription,
+                    dateFrom: new Date(formattedDateFrom),
+                    dateTo: new Date(formattedDateTo),
+                    price: formattedPrice !== null ? formattedPrice : 0,
+                    address: {jsonAdress},
                     User: {
-                        connect: { id: prismaUser.id },
+                        connect: {id: prismaUser?.id},
                     },
                     unsignedArtists: unsignedArtists,
-                    facebookLink: facebookLink,
+                    facebookLink: formattedFacebookLink,
                     image: imageName,
-                    genres: {connect: {id: genre}},
+                    genres: formattedGenre !== undefined ? { connect: { id: formattedGenre } } : undefined,
 
                 };
 
@@ -221,7 +295,7 @@ export default async function handler(
                     };
                 }
                 if (existingOrganisationPrisma) {
-                    eventData.organisation = { connect: { id: existingOrganisationPrisma.id } };
+                    eventData.organisation = {connect: {id: existingOrganisationPrisma.id}};
                 }
 
                 if (unsignedOrganisations) {
@@ -231,6 +305,16 @@ export default async function handler(
                     data: eventData,
                 });
 
+                const artistsOnEventsData: Prisma.ArtistsOnEventsCreateManyInput[] = [];
+
+                if (existingArtists.length > 0) {
+                    existingArtists.forEach((artist) => {
+                        artistsOnEventsData.push({
+                            eventId: result.id,
+                            artistId: artist.id,
+                        });
+                    });
+                }
                 if (artistsOnEventsData.length > 0) {
                     await prisma.artistsOnEvents.createMany({
                         data: artistsOnEventsData.map((artistData) => ({
@@ -238,10 +322,32 @@ export default async function handler(
                             eventId: result.id,
                         })),
                     });
-
+                }
+                //création d'une notification
+                //trouver les users qui like
+                // Récupérez les utilisateurs qui ont aimé un artiste ou une organisation
+                const likedUsers = await prisma.likes.findMany({
+                    where: {
+                        OR: [
+                            { artistId: existingArtistIds[0] },
+                            { organisationId: existingOrganisationPrisma?.id },],
+                    },
+                    select: {
+                        userId: true,
+                    },
+                });
+                // Créez une notification pour chaque utilisateur
+                for (const user of likedUsers) {
+                    const { userId } = user;
+                    // Vérifiez si artistId ou organisationId est défini
+                    if (existingArtistIds || existingOrganisations) {
+                        // Créez une notification pour l'utilisateur avec artistId ou organisationId
+                        // @ts-ignore
+                        await createNotification(userId, existingArtistIds[0], existingOrganisationPrisma?.id, result.id);
+                    }
                 }
 
-                res.json({done: "ok"});
+                res.json({id: result.id});
             }
         } catch (err) {
             //await fs.mkdir(path.join(process.cwd() + "/public", "/images/events"));

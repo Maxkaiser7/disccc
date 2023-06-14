@@ -118,6 +118,9 @@ export default async function handler(
             if (imageName) {
                 updateData.image = imageName
             }
+            if(description){
+                updateData.description = description
+            }
 
             //await fs.rename(imagePath, imageDestination);
             const updateArtist: Artist | null = await prisma.artist.update({

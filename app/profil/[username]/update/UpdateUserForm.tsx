@@ -8,6 +8,7 @@ import React, {FormEvent, useState} from "react";
 import {useRouter} from "next/router";
 import Link from "next/link";
 import {session} from "next-auth/core/routes";
+import SubmitButton from "@/app/components/SubmitButton";
 type UpdateUserFormProps = {
     name: string | null | undefined
 }
@@ -39,10 +40,10 @@ export default function UpdateUserForm({ name }: UpdateUserFormProps) {
 
         return (
             <div>
-                <form onSubmit={handleSubmit} className={"flex flex-col"}>
+                <form onSubmit={handleSubmit} className={"flex flex-col p-8"}>
                     <label htmlFor="name">Changez votre nom</label>
                     <input type={"text"} name={"name"} value={name}  onChange={(e) => setName(e.target.value)}/>
-                    <input type={"submit"}/>
+                    <SubmitButton inputValue={"Mettre à jour"}/>
                 </form>
             </div>
         )

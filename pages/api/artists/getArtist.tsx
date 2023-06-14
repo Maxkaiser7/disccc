@@ -19,19 +19,23 @@ export default async function handler(
         if (!artist) {
             return res.status(404).json("Artiste non trouvé");
         }
-       /* const session = await getServerSession(req, res, authOptions);
-        const prismaUser = await prisma.user.findUnique({
-            where: {email: session?.user?.email || undefined},
-        })*/
+        /* const session = await getServerSession(req, res, authOptions);
+         const prismaUser = await prisma.user.findUnique({
+             where: {email: session?.user?.email || undefined},
+         })*/
         //récupération des likes
+
         const like = await prisma.likes.findFirst({
             where: {
                 artistId: artist[0].id,
             },
         });
-
         //récupération des genres de l'artiste
-        const genre: Genres[] = await prisma.genres.findMany({where: {id: artist[0].genresId}});
+        let genre: any = []
+        if (artist[0].genresId) {
+            genre = await prisma.genres.findMany({where: {id: artist[0].genresId}});
+        }
+
 
         const artistsOnEvents = await prisma.artistsOnEvents.findMany({
             where: {
@@ -39,21 +43,33 @@ export default async function handler(
             },
         })
 
-        const events = await prisma.event.findMany({
-            where: {
-                id: {
-                    in: artistsOnEvents.map(event => event.eventId)
-                },
-                dateTo: {
-                    gte: new Date()
+        let events: any = []
+        if (artist[0].events) {
+            events = await prisma.event.findMany({
+                where: {
+                    id: {
+                        in: artistsOnEvents.map(event => event.eventId)
+                    },
+                    dateTo: {
+                        gte: new Date()
+                    }
                 }
-            }
+            })
+        }
+        const post = await prisma.post.findFirst({
+            where: {
+                artistId: artist[0].id,
+                published: true
+            },
         })
+
+
         const data = {
             artist,
             genre,
             events,
-            like
+            like,
+            post : post || null
         }
         return res.status(200).json(data);
     } catch (error) {

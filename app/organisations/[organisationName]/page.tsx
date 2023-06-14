@@ -25,7 +25,7 @@ export default function OrganisationPage({
     const fetchData = async () => {
         const response = await fetch(url);
         const data = await response.json();
-        const organisationData = data.organisation
+        const organisationData = data.organisation[0]
         const eventsData = data.events;
         const liked = data.like
         if (liked) {
@@ -60,29 +60,35 @@ export default function OrganisationPage({
              },
          }
      })*/
+    console.log(organisation)
     return(
-        <div>
+        <div className={"w-[75%] max-w-[45rem] mx-auto"}>
             {isLoading ? (<p>Chargement...</p>)
-            : (
-                    <div>
-                        <h2 className={"text-3xl"}>{organisation.organisationName}</h2>
-                        <p>{organisation.description}</p>
+            : ( organisation && (
+                    <div className={"p-8"}>
+                        <div className={"grid justify-center"}>
+                            <h2 className={"text-3xl"}>{organisation?.organisationName}</h2>
+                            <div className={"relative"}>
+                                <Image src={`/./images/organisations/${organisation.image}`}
+                                       alt={`photo ${organisation.organisationName}`}
+                                       width={"1000"} height={"500"}/>
+                                <div className={"absolute bottom-2 right-2"}>
+                                    <LikeButton clickEvent={handleLike} isLiked={isLiked}/>
+                                </div>
 
-                        <div className={"relative"}>
-                            <Image src={`/./images/organisations/${organisation.image}`}
-                                   alt={`photo ${organisation.organisationName}`}
-                                   width={"1000"} height={"500"}/>
-                            <div className={"absolute bottom-2 right-2"}>
-                                <LikeButton clickEvent={handleLike} isLiked={isLiked}/>
                             </div>
+                            <p className={"text-xl mt-3 md:w-6/12 w-12/12"}>{organisation.description}</p>
+
                         </div>
                         <h3 className={"mt-10"}>Evenements à venir organisés par {orgaName}</h3>
-                        {events.length > 0 && events.map((event: object ) => <EventCard event={event}/>)}
+                        <div className={"grid justify-center md:flex md:flex-wrap md:gap-4"}>
+                            {events.length > 0 && events.map((event: object ) => <EventCard event={event}/>)}
+                        </div>
                         {events.length === 0 && (
                             <p>Aucun évènement à venir</p>
                         )}
                     </div>
-                )}
+                ))}
         </div>
 
     )

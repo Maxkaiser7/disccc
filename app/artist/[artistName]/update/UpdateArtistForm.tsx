@@ -8,6 +8,7 @@ import React, {FormEvent, useState, useEffect} from "react";
 import {useRouter} from "next/router";
 import Link from "next/link";
 import {session} from "next-auth/core/routes";
+import SubmitButton from "@/app/components/SubmitButton";
 
 type UpdateArtistFormProps = {
     artist: object
@@ -24,6 +25,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
         const [twitterLink, setTwitterLink] = useState<string>(propArtist.twitterLink ?? "");
         const [appleLink, setAppleLink] = useState<string>(propArtist.appleLink ?? "");
         const [tiktokLink, setTiktokLink] = useState<string>(propArtist.tiktokLink ?? "");
+        const [description, setDescription] = useState("");
         useEffect(() => {
             setIsLoading(false); // Mettez setLoading(true) si vous souhaitez initialement afficher "Chargement en cours"
         }, []);
@@ -39,6 +41,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
             formData.append("twitterLink", twitterLink)
             formData.append("appleLink", appleLink)
             formData.append("tiktokLink", tiktokLink)
+            formData.append("description", description)
 
             // envoyez la demande à l'API en utilisant FormData
             try {
@@ -71,7 +74,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
                                 type="text"
                                 placeholder={"pseudo"}
                                 name={"artistName"}
-                                className={"w-[70vw] py-2 px-4 border-gray-950"}
+                                className={"w-[70vw] border-gray-950"}
                                 onChange={(e) => setArtistName(e.target.value)}
                                 value={artistName}
                             />
@@ -80,7 +83,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
                             <label htmlFor={"description"}>Description</label>
                             <textarea
                                 name={"description"}
-                                className={"w-[70vw] py-2 px-4 border-gray-950"}
+                                className={"w-[70vw] border-gray-950 p-4"}
                                 placeholder={"Décrivez-vous..."}
                                 onChange={(event) => setDescription(event.target.value)}
                             />
@@ -91,7 +94,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
                                 type="text"
                                 placeholder={"spotify"}
                                 name={"spotifyLink"}
-                                className={"w-[70vw] py-2 px-4 border-gray-950"}
+                                className={"w-[70vw] border-gray-950"}
                                 onChange={(e) => setSpotifyLink(e.target.value)}
                                 value={spotifyLink}
                             />
@@ -102,7 +105,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
                                 type="text"
                                 placeholder={"instagram"}
                                 name={"instagramLink"}
-                                className={"w-[70vw] py-2 px-4 border-gray-950"}
+                                className={"w-[70vw] border-gray-950"}
                                 onChange={(e) => setInstagramLink(e.target.value)}
                                 value={instagramLink}
                             />
@@ -113,7 +116,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
                                 type="text"
                                 placeholder={"soundcloud"}
                                 name={"soundcloudLink"}
-                                className={"w-[70vw] py-2 px-4 border-gray-950"}
+                                className={"w-[70vw] border-gray-950"}
                                 onChange={(e) => setSoundcloudLink(e.target.value)}
                                 value={soundcloudLink}
                             />
@@ -124,7 +127,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
                                 type="text"
                                 placeholder={"twitter"}
                                 name={"twitterLink"}
-                                className={"w-[70vw] py-2 px-4 border-gray-950"}
+                                className={"w-[70vw] border-gray-950"}
                                 onChange={(e) => setTwitterLink(e.target.value)}
                                 value={twitterLink}
                             />
@@ -135,7 +138,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
                                 type="text"
                                 placeholder={"apple"}
                                 name={"appleLink"}
-                                className={"w-[70vw] py-2 px-4 border-gray-950"}
+                                className={"w-[70vw] border-gray-950"}
                                 onChange={(e) => setAppleLink(e.target.value)}
                                 value={appleLink}
                             />
@@ -146,7 +149,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
                                 type="text"
                                 placeholder={"tiktok"}
                                 name={"tiktokLink"}
-                                className={"w-[70vw] py-2 px-4 border-gray-950"}
+                                className={"w-[70vw] border-gray-950"}
                                 onChange={(e) => setTiktokLink(e.target.value)}
                                 value={tiktokLink}
                             />
@@ -162,13 +165,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
                                 }
                             }}
                         />
-                        <button
-                            type={"submit"}
-                            disabled={isDisabled}
-                            className={"bg-gray-800 px-4 py-2 disabled:opacity-20"}
-                        >
-                            Confirmer
-                        </button>
+                        <SubmitButton inputValue={"Mettre à jour"} isDisabled={isDisabled}/>
                     </form>
                 )}
             </div>

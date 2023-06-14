@@ -4,22 +4,22 @@ import prisma from "@/prisma/client";
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
-){
+) {
     try {
         const {organisationName} = req.query
-
-        const organisation = await prisma.organisation.findFirst({
+        const currentDate = new Date();
+        const organisation = await prisma.$queryRaw`
+        SELECT * FROM "Organisation"
+        WHERE LOWER(REPLACE("organisationName", ' ', '')) = LOWER(REPLACE(${organisationName}, ' ', ''))`
+        const events = await prisma.event.findMany({
             where: {
-                organisationName: {
-                    contains: organisationName
+                organisationId: organisation?.id,
+                dateTo: {
+                    gte: currentDate.toISOString()
                 }
             }
         })
-        const events = await prisma.event.findMany({
-            where: {
-                organisationId: organisation?.id
-            }
-        })
+
         const like = await prisma.likes.findFirst({
             where: {
                 organisationId: organisation?.id
@@ -31,7 +31,7 @@ export default async function handler(
             organisation
         }
         return res.status(200).json(data);
-    }catch (error){
+    } catch (error) {
         return res.status(500).json(error)
     }
 }

@@ -43,7 +43,7 @@ export default async function ProfilPage({params, searchParams,}: {
     return (
         <div className={"flex flex-col content-center flex-wrap items-center"}>
             <h1 className={"text-3xl"}>Profil</h1>
-            <Image width={64} height={64} className={"w-3/12 rounded-full"} src={session.user.image} alt={""}/>
+            <Image width={500} height={500} className={"w-3/12 rounded-full max-w-[10rem]"} src={session?.user?.image} alt={session?.user?.name}/>
             <h2>{session.user.name}</h2>
             <div className={"flex flex-col gap-4 mt-10"}>
                 <span className={"bg-slate-800 p-2 flex justify-center border-gray-950 rounded"}>
@@ -54,9 +54,14 @@ export default async function ProfilPage({params, searchParams,}: {
                         <Link href={`/signinartist`}>Créer mon profil artiste</Link>
                 </span>)}
                 {artist && (
+                    <>
                     <span className={"bg-slate-800 p-2 flex flex-col items-center border-gray-950 rounded"}>
                         <Link href={`/artist/${artistName}/update`}>Modifier mon profil artiste</Link>
                     </span>
+                        <span className={"bg-slate-800 p-2 flex flex-col items-center border-gray-950 rounded"}>
+                            <Link href={`/artist/${artistName}`}>Voir ma page artiste</Link>
+                        </span>
+                    </>
                 )}
                 {organisation && (
                     <span className={"bg-slate-800 p-2 flex flex-col items-center border-gray-950 rounded"}>

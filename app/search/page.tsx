@@ -4,6 +4,7 @@ import useSWR from "swr";
 import EventCard from "@/app/components/Cards/EventCard";
 import ArtistCard from "@/app/components/Cards/ArtistCard";
 import OrganisationCard from "@/app/components/Cards/OrganisationCard";
+import Link from "next/link";
 const fetchResponse = async (url: string) => {
     const response = await fetch(url);
     if (!response.ok) {
@@ -21,17 +22,18 @@ export default function searchPage(){
         events: object[];
         artists: object[];
         organisations: object[];
+        genres : object[];
     }>(`/api/search/getSearch?search=${searchEncodedQuery}`, fetchResponse);
     return(
         <main>
-            <h1>Résultats</h1>
-            {isLoading && "Chargement"}
+            <h1 className={"text-3xl text-center"}>Résultats</h1>
+            {isLoading && <p className={"text-center"}>Chargement...</p>}
             {!isLoading && data && (
-                <div>
+                <div className={"grid justify-center"}>
                     { data.data.events.length > 0 && data.data.events.map((event: Array<object>) => {
                         return (
                             <div>
-                                <h2>Evenements</h2>
+                                <h2 className={"text-2xl"}>Evenements</h2>
                                 <EventCard event={event} overflow={false}/>
                             </div>
                         )
@@ -39,7 +41,7 @@ export default function searchPage(){
                     { data.data.artists.length > 0 && data.data.artists.map((artist: Array<object>) => {
                         return (
                             <div>
-                                <h2>Artistes</h2>
+                                <h2>Artiste</h2>
                                 <ArtistCard overflow={false} artist={artist}/>
                             </div>
                         )
@@ -47,8 +49,16 @@ export default function searchPage(){
                     { data.data.organisations.length > 0 && data.data.organisations.map((organisation: Array<object>) => {
                         return (
                             <div>
-                                <h2>Organisations</h2>
+                                <h2>Organisation</h2>
                                 <OrganisationCard overflow={false} organisation={organisation}/>
+                            </div>
+                        )
+                    })}
+                    {data.data.genres.length > 0 && data.data.genres.map((genre: Array<object>) => {
+                        return (
+                            <div>
+                                <h2>Genres</h2>
+                                <Link href={'/genres/' + genre.nom} key={genre.id} className={'bg-gray-800 py-2 px-4'}>{genre.nom}</Link>
                             </div>
                         )
                     })}

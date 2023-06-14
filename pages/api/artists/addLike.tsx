@@ -7,17 +7,18 @@ export default async function handler(
 ){
 
     try {
-        const artist = req.body.params.artist
-        const session = req.body.params.session
+        const artistId :string = req.body.params.artistId
+        const userId : string = req.body.params.userId
         const prismaUser = await prisma.user.findUnique({
-            where: {email: session?.user?.email || undefined},
+           where: {
+               id: userId
+           }
         })
-        const userId = prismaUser?.id
         //récupération des likes
         const like = await prisma.likes.findFirst({
             where: {
-                artistId: artist.id,
-                userId: prismaUser.id
+                artistId: artistId,
+                userId: userId
             },
         });
 
@@ -28,19 +29,17 @@ export default async function handler(
                     id: like.id
                 }
             });
-            console.log(deleteLike);
+
         } else {
             // L'utilisateur n'a pas aimé l'artiste, créer un nouveau like
             const newLike = await prisma.likes.create({
                 data: {
                     User: { connect: { id: userId } },
-                    artist: { connect: { id: artist.id } },
+                    artist: { connect: { id: artistId } },
                     type: "artist"
                 }
             });
         }
-
-
 
         return res.status(200).end()
     }
