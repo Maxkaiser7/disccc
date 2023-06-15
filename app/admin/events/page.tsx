@@ -1,6 +1,7 @@
 "use client"
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
+import {BsFillTrashFill} from "react-icons/bs";
 
 interface Event {
     id: number;
@@ -50,7 +51,6 @@ export default function EventTable() {
                     },
                 });
                 setEvents(response.data);
-                console.log(events)
             } catch (err) {
                 console.log(err);
             }
@@ -60,13 +60,16 @@ export default function EventTable() {
 
     const deleteEvent = async (eventId: number) => {
         try {
-            await axios.post("/api/event/deleteEvent/", {
-                params: { eventId },
-            });
-            setEvents((prevEvents) =>
-                prevEvents.filter((event) => event.id !== eventId)
-            );
+            const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cet événement ?");
 
+            if (confirmed) {
+                await axios.post("/api/event/deleteEvent/", {
+                    params: { eventId },
+                });
+                setEvents((prevEvents) =>
+                    prevEvents.filter((event) => event.id !== eventId)
+                );
+            }
         } catch (err) {
             console.log(err);
         }
@@ -83,88 +86,64 @@ export default function EventTable() {
     };
 
     return (
-        <div className="overflow-x-auto">
-            <table className="table-auto border-collapse border-white border">
+        <div className={"w-full p-8 overflow-x-scroll"}>
+            <table className="table-auto border-collapse border-white border text-xs font-light ">
                 <thead>
-                <tr>
-                    <th className="px-4 py-2">id</th>
-                    <th className="px-4 py-2">description</th>
-                    <th className="px-4 py-2">name</th>
-                    <th className="px-4 py-2">unsignedArtists</th>
-                    <th className="px-4 py-2">image</th>
-                    <th className="px-4 py-2">User</th>
-                    <th className="px-4 py-2">userId</th>
-                    <th className="px-4 py-2">createdAt</th>
-                    <th className="px-4 py-2">dateFrom</th>
-                    <th className="px-4 py-2">dateTo</th>
-                    <th className="px-4 py-2">price</th>
-                    <th className="px-4 py-2">facebookLink</th>
-                    <th className="px-4 py-2">adress</th>
-                    <th className="px-4 py-2">Comments</th>
-                    <th className="px-4 py-2">ArtistsOnEvents</th>
-                    <th className="px-4 py-2">genres</th>
-                    <th className="px-4 py-2">genresId</th>
-                    <th className="px-4 py-2">unsignedOrganisation</th>
-                    <th className="px-4 py-2">artist</th>
-                    <th className="px-4 py-2">artistId</th>
-                    <th className="px-4 py-2">organisation</th>
-                    <th className="px-4 py-2">organisationId</th>
-                    <th className="px-4 py-2">Likes</th>
-                    <th className="px-4 py-2">isPromoted</th>
-                    <th className="px-4 py-2">endPromotion</th>
-                    <th className="px-4 py-2">Notification</th>
-                    <th className="px-4 py-2">Post</th>
-                    <th className="px-4 py-2">Actions</th>
+                <tr className={"bg-slate-700 "}>
+                    <th className="px-4 py-2 whitespace-nowrap">action</th>
+                    <th className="px-4 py-2 whitespace-nowrap">description</th>
+                    <th className="px-4 py-2 whitespace-nowrap">name</th>
+                    <th className="px-4 py-2 whitespace-nowrap">unsignedArtists</th>
+                    <th className="px-4 py-2 whitespace-nowrap">createdAt</th>
+                    <th className="px-4 py-2 whitespace-nowrap">dateFrom</th>
+                    <th className="px-4 py-2 whitespace-nowrap">dateTo</th>
+                    <th className="px-4 py-2 whitespace-nowrap">price</th>
+                    <th className="px-4 py-2 whitespace-nowrap">facebookLink</th>
+                    <th className="px-4 py-2 whitespace-nowrap">adress</th>
+                    <th className="px-4 py-2 whitespace-nowrap">ArtistsOnEvents</th>
+                    <th className="px-4 py-2 whitespace-nowrap">genres</th>
+                    <th className="px-4 py-2 whitespace-nowrap">unsignedOrganisation</th>
+                    <th className="px-4 py-2 whitespace-nowrap">organisation</th>
+                    <th className="px-4 py-2 whitespace-nowrap">Likes</th>
+                    <th className="px-4 py-2 whitespace-nowrap">isPromoted</th>
+                    <th className="px-4 py-2 whitespace-nowrap">endPromotion</th>
                 </tr>
                 </thead>
                 <tbody>
                 {events.map((event) => (
                     <tr key={event.id}>
-                        <td className="border px-4 py-2">{event.id}</td>
-                        <td className="border px-4 py-2">{event.description}</td>
-                        <td className="border px-4 py-2">{event.name}</td>
-                        <td className="border px-4 py-2">{event.unsignedArtists}</td>
-                        <td className="border px-4 py-2">
-                            <img src={event.image} alt="Event" />
+                        <td className="border px-4 py-2 whitespace-nowrap">
+                            <button
+                                onClick={() => deleteEvent(event.id)}
+                            >
+                                <BsFillTrashFill/>
+                            </button>
                         </td>
-                        <td className="border px-4 py-2">{event.User}</td>
-                        <td className="border px-4 py-2">{event.userId}</td>
-                        <td className="border px-4 py-2">{event.createdAt}</td>
-                        <td className="border px-4 py-2">{event.dateFrom}</td>
-                        <td className="border px-4 py-2">{event.dateTo}</td>
-                        <td className="border px-4 py-2">{event.price}</td>
-                        <td className="border px-4 py-2">{event.facebookLink}</td>
-                        <td className="border px-4 py-2">
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.description ? event.description.slice(0, 10) + "..." : "N/A"}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.name}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.unsignedArtists ? event.unsignedArtists.slice(0, 10) : "N/A"}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.createdAt ? new Date(event.createdAt).toLocaleDateString() : "N/A"}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.dateFrom ? new Date(event.dateFrom).toLocaleDateString() : "N/A"}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.dateTo ? new Date(event.dateTo).toLocaleDateString() : "N/A"}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.price}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.facebookLink ? event.facebookLink.slice(0, 10) + "..." : "N/A"}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">
                             {event.address && (
                                 <>
-                                    <div>Street: {event.address.jsonAdress.rue}</div>
+                                    <div>Street: {event.address.jsonAdress.rue ? event.address.jsonAdress.rue.slice(0, 10) + "..." : "N/A"}</div>
                                     <div>City: {event.address.jsonAdress.commune}</div>
                                     <div>Postal Code: {event.address.jsonAdress.cp}</div>
                                 </>
                             )}
                         </td>
-                        <td className="border px-4 py-2">{event.Comments}</td>
-                        <td className="border px-4 py-2">{event.ArtistsOnEvents}</td>
-                        <td className="border px-4 py-2">{event.genres}</td>
-                        <td className="border px-4 py-2">{event.genresId}</td>
-                        <td className="border px-4 py-2">{event.unsignedOrganisation}</td>
-                        <td className="border px-4 py-2">{event.artist}</td>
-                        <td className="border px-4 py-2">{event.artistId}</td>
-                        <td className="border px-4 py-2">{event.organisation}</td>
-                        <td className="border px-4 py-2">{event.organisationId}</td>
-                        <td className="border px-4 py-2">{event.Likes}</td>
-                        <td className="border px-4 py-2">{event.isPromoted}</td>
-                        <td className="border px-4 py-2">{event.endPromotion}</td>
-                        <td className="border px-4 py-2">{event.Notification}</td>
-                        <td className="border px-4 py-2">{event.Post}</td>
-                        <td className="border px-4 py-2">
-                            <button
-                                onClick={() => deleteEvent(event.id)}
-                                className="text-red-500 hover:text-red-700"
-                            >
-                                &#10006; {/* Croix de suppression */}
-                            </button>
-                        </td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.ArtistsOnEvents}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.genres}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.unsignedOrganisation}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.organisation}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.Likes}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.isPromoted}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{event.endPromotion}</td>
+
                     </tr>
                 ))}
                 </tbody>
