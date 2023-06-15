@@ -1,9 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from "next";
 import prisma from "@/prisma/client";
-import {getSession} from "next-auth/react";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import bodyParser from "body-parser";
 import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
