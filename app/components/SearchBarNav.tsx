@@ -31,19 +31,19 @@ export default function SearchBarNav() {
     }
     return (
         <form
-            className="text-xl flex items-center justify-center flex-wrap"
+            className="text-xl flex items-center justify-center flex-wrap w-12/12"
             onSubmit={handleSubmit}
         >
-            <div className="relative flex items-center">
+            <div className="relative flex items-center mb-28 top-[17rem] lg:mb-16 lg:top-[14rem]">
                 <input
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="pl-10 pr-4 py-2 rounded-md bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="lg:w-[35rem] pl-10 pr-4 py-2 rounded-md bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                     type="submit"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                    className="absolute right-2 top-1/2  transform -translate-y-1/2"
                 >
                     <span className="sr-only">Search</span>
                     <AiOutlineSearch className="text-gray-400" />

@@ -37,12 +37,11 @@ export default function PromotionForm(props: PromotionFormProps) {
         setSelected(item);
 
     };
-
+    console.log(data)
     return (
-        <div>
-
-            <h1 className={"text-3xl"}>Promotion</h1>
-            <form action="/api/checkout_sessions" method="POST" className={"flex flex-col mb-3"}>
+        <div className={"flex flex-col items-center"}>
+            <h1 className={"text-3xl  text-center"}>Promotion</h1>
+            <form action="/api/checkout_sessions" method="POST" className={"flex flex-col mb-3 "}>
                 <select
                     name="eventId"
                     onChange={(e) => setSelected(e.target.value)}
@@ -59,20 +58,22 @@ export default function PromotionForm(props: PromotionFormProps) {
                     Valider
                 </button>
             </form>
-            {data.artists && (
+            {data.artists.length > 0 && (
                 <form action="/api/checkout_sessions" method="POST" className={"flex flex-col mb-3"}>
                     <button className={"px-4 py-2 bg-slate-700 hover:bg-slate-500"} name={"artistName"} type="submit" role="link" value={data.artists[0].artistName}>
                         Promouvoir mon profil artiste
                     </button>
                 </form>
             )}
-            {data.organisations && (
-                <form action="/api/checkout_sessions" method="POST" className={"flex flex-col"}>
+            {data.organisations.length > 0 && (
+                <form action="/api/checkout_sessions" method="POST" className={"flex flex-col mb-3"}>
                     <button className={"px-4 py-2 bg-slate-700 hover:bg-slate-500"} name={"organisationName"} type="submit" role="link" value={data.organisations[0].organisationName}>
-                        Promouvoir mon organisation
+                        Promouvoir mon profil organisateur
                     </button>
                 </form>
             )}
+
+
 
         </div>
     );

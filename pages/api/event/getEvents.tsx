@@ -11,7 +11,7 @@ export default async function getEvents(req: NextApiRequest, res: NextApiRespons
             orderBy: {
                 createdAt: "desc",
             },
-            take: limit + 1, // Demander un élément supplémentaire pour vérifier s'il y a une page suivante
+            take: limit + 1,
             skip: skip,
         });
 

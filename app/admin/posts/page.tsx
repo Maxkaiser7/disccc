@@ -1,7 +1,8 @@
 "use client"
 import prisma from "@/prisma/client";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
+import {BsFillTrashFill} from "react-icons/bs";
 
 export default function adminPost() {
     const [posts, setPosts] = useState([]);
@@ -23,10 +24,10 @@ export default function adminPost() {
         fetchPosts();
     }, []);
 
-    const deletePost = async (postId:string) => {
+    const deletePost = async (postId: string) => {
         try {
             await axios.post(`/api/posts/deletePost/`, {
-                params: { postId },
+                params: {postId},
             });
             setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
         } catch (err) {
@@ -35,49 +36,35 @@ export default function adminPost() {
     };
 
     return (
-        <div className="overflow-x-auto">
-            <table className="table-auto border-collapse border-white border">
+        <div className="overflow-x-auto flex justify-center mt-4">
+            <table className="table-auto border-collapse border-white border text-xs font-light ">
                 <thead>
-                <tr>
-                    <th className="px-4 py-2">id</th>
-                    <th className="px-4 py-2">createdAt</th>
-                    <th className="px-4 py-2">updatedAt</th>
-                    <th className="px-4 py-2">postContent</th>
-                    <th className="px-4 py-2">published</th>
-                    <th className="px-4 py-2">userId</th>
-                    <th className="px-4 py-2">user</th>
-                    <th className="px-4 py-2">Artist</th>
-                    <th className="px-4 py-2">artistId</th>
-                    <th className="px-4 py-2">Organisation</th>
-                    <th className="px-4 py-2">organisationId</th>
-                    <th className="px-4 py-2">Event</th>
-                    <th className="px-4 py-2">eventId</th>
-                    <th className="px-4 py-2">Actions</th>
+                <tr className={"bg-slate-700 "}>
+                    <th className="px-4 py-2 whitespace-nowrap">Actions</th>
+                    <th className="px-4 py-2 whitespace-nowrap">createdAt</th>
+                    <th className="px-4 py-2 whitespace-nowrap">postContent</th>
+                    <th className="px-4 py-2 whitespace-nowrap">published</th>
+                    <th className="px-4 py-2 whitespace-nowrap">Artist</th>
+                    <th className="px-4 py-2 whitespace-nowrap">Organisation</th>
+                    <th className="px-4 py-2 whitespace-nowrap">Event</th>
                 </tr>
                 </thead>
                 <tbody>
                 {posts.map((post) => (
                     <tr key={post.id}>
-                        <td className="border px-4 py-2">{post.id}</td>
-                        <td className="border px-4 py-2">{post.createdAt}</td>
-                        <td className="border px-4 py-2">{post.updatedAt}</td>
-                        <td className="border px-4 py-2">{post.postContent}</td>
-                        <td className="border px-4 py-2">{post.published}</td>
-                        <td className="border px-4 py-2">{post.userId}</td>
-                        <td className="border px-4 py-2">{post.user}</td>
-                        <td className="border px-4 py-2">{post.Artist}</td>
-                        <td className="border px-4 py-2">{post.artistId}</td>
-                        <td className="border px-4 py-2">{post.Organisation}</td>
-                        <td className="border px-4 py-2">{post.organisationId}</td>
-                        <td className="border px-4 py-2">{post.Event}</td>
-                        <td className="border px-4 py-2">{post.eventId}</td>
-                        <td className="border px-4 py-2">
-                            <button
-                                onClick={() => deletePost(post.id)}
-                                className="text-red-500 hover:text-red-700"
-                            >
-                                &#10006;
-                            </button>
+                        <button
+                            onClick={() => deletePost(post.id)}
+                        >
+                            <BsFillTrashFill/>
+                        </button>
+                        <td className="border px-4 py-2 whitespace-nowrap">{post.createdAt}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{post.postContent}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{post.published}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{post.Artist}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{post.Organisation}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">{post.Event}</td>
+                        <td className="border px-4 py-2 whitespace-nowrap">
+
                         </td>
                     </tr>
                 ))}

@@ -2,6 +2,7 @@
 import {shuffle} from "txt-shuffle"
 import {useEffect} from "react";
 import SearchBarNav from "@/app/components/SearchBarNav";
+import Image from "next/image";
 export default function Hero() {
     useEffect(()=> {
         const outputElement =
@@ -24,17 +25,15 @@ export default function Hero() {
             }
         })
     })
+    const imageClassname = "left-0 absolute -z-10 h-1/4 w-screen min-h-[25rem] top-[6rem] lg:h-[18rem] lg:min-h-[18rem]"
+    const imageSrc = "/./images/assets/gradient.png"
     return (
-        <div className="pb-52 ">
-            <div className=" flex items-start justify-center flex-col m-8 ml-auto mr-auto relative w-6/12">
+        <div className="pb-52 flex flex-col items-center ">
+            <div className="w-9/12 flex items-start justify-center flex-col m-8 ml-auto mr-auto absolute md:w-6/12">
                 <span id={"headings"} className={"text-3xl flex flex-wrap"}></span>
-                <p id={"shuffle_p"} className={"text-sm md:text-xl"}></p>
+                <p id={"shuffle_p"} className={"text-sm sm:max-h-2xl md:text-xl"}></p>
             </div>
-            <img
-                src="../images/assets/gradient.png"
-                alt="hero gradient"
-                className="left-0 absolute -z-10 h-1/4 w-screen min-h-[25rem] top-[6rem]"
-            />
+            <Image alt={"logo"} src={imageSrc} className={imageClassname} width={500} height={500}/>
             <SearchBarNav/>
         </div>
     );

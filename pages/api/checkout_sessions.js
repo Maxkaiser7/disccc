@@ -15,9 +15,7 @@ export default async function handler(req, res) {
                 ],
 
                 mode: 'payment',
-                success_url: `${req.headers.origin}/payment/success/eventId=${encodeURIComponent(
-                    eventId
-                )}`,
+                success_url: `${req.headers.origin}/payment/success/`,
                 cancel_url: `${req.headers.origin}/?canceled=true`,
                 automatic_tax: { enabled: true },
             });
