@@ -28,13 +28,14 @@ export default function OrganisationForm(){
             console.log(formData)
             const response = await fetch("/api/signin/addOrganisation", {
                 method: "POST",
-                // @ts-ignore
-
-                params: {
+                body: JSON.stringify({
                     organisationName,
                     description,
-                    selectedFile
-                }
+                    selectedFile,
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
             });
 
             if (response.ok) {
