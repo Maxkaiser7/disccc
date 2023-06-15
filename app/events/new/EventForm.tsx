@@ -29,7 +29,7 @@ export default function EventForm() {
     const [isDisabled, setIsDisabled] = useState(false);
     const router = useRouter();
     // @ts-ignore
-    const errorDigest = error.digest;
+    //const errorDigest = error.digest;
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
