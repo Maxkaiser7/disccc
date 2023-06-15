@@ -25,7 +25,11 @@ export default function OrganisationForm(){
             formData.append("organisationName", organisationName)
             formData.append("description", description )
             console.log(formData)
-            const {data} = await axios.post("/api/signin/addOrganisation", formData)
+            const {data} = await axios.post("/api/signin/addOrganisation", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
             setIsDisabled(true)
             //console.log(data)
         } catch (err) {
