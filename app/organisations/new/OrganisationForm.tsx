@@ -19,31 +19,21 @@ export default function OrganisationForm(){
     const submitPost = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            if (!selectedFile) return
-            const formData = new FormData()
+            if (!selectedFile) return;
 
-            formData.append("image", selectedFile)
-            formData.append("organisationName", organisationName)
-            formData.append("description", description )
-            await fetch("/api/signin/addOrganisation", {
-                method: "POST",
-                body: JSON.stringify({
-                    organisationName,
-                    description,
-                    selectedFile,
-                }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            //
+            const data = {
+                image: selectedFile,
+                organisationName: organisationName,
+                description: description,
+            };
+
+            await axios.post("/api/signin/addOrganisation", data);
+
             setIsDisabled(true);
-                // Traiter la réponse réussie si nécessaire
-
+            // Traiter la réponse réussie si nécessaire
         } catch (err) {
             // Traiter l'erreur de la requête
         }
-    };
 
     return(
         <form className={"flex flex-col  items-center gap-2"}
