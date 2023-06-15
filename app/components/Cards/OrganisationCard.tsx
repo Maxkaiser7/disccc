@@ -1,5 +1,6 @@
 import Link from "next/link";
 interface OrganisationCard{
+    overflow: any;
     organisation: {
         id: string,
         organisationName: string,

@@ -12,7 +12,7 @@ export default function OrganisationForm(){
     const [organisationName, setOrganisationName] = useState<string>("");
     const [description, setDescription] = useState("");
 
-    const handleFileChange = (event) => {
+    const handleFileChange = (event : any) => {
         const files = event.target.files;
         setSelectedFile(files ? files : null);
     };
@@ -29,6 +29,7 @@ export default function OrganisationForm(){
             setIsDisabled(true)
             //console.log(data)
         } catch (err) {
+            // @ts-ignore
             console.log(err.response?.data)
         }
     };
@@ -48,6 +49,7 @@ export default function OrganisationForm(){
                 onChange={({target}) => {
                     if (target.files) {
                         const file: File = target.files[0];
+                        // @ts-ignore
                         setSelectedFile(URL.createObjectURL(file));
                         setSelectedFile(file);
                     }

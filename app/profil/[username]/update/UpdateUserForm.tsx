@@ -16,7 +16,7 @@ export default function UpdateUserForm({ name }: UpdateUserFormProps) {
     {
         const [isLoading, setIsLoading] = useState(true);
         const [name, setName] = useState("");
-
+        const [isDisabled, setIsDisabled] = useState(false);
         const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault()
             const formData = new FormData();
@@ -28,6 +28,7 @@ export default function UpdateUserForm({ name }: UpdateUserFormProps) {
                         "Content-Type": "multipart/form-data"
                     }
                 });
+                setIsDisabled(true)
             } catch (error) {
                 console.error(error);
                 // Handle error here
@@ -43,7 +44,7 @@ export default function UpdateUserForm({ name }: UpdateUserFormProps) {
                 <form onSubmit={handleSubmit} className={"flex flex-col p-8"}>
                     <label htmlFor="name">Changez votre nom</label>
                     <input type={"text"} name={"name"} value={name}  onChange={(e) => setName(e.target.value)}/>
-                    <SubmitButton inputValue={"Mettre à jour"}/>
+                    <SubmitButton isDisabled={isDisabled} inputValue={"Mettre à jour"}/>
                 </form>
             </div>
         )

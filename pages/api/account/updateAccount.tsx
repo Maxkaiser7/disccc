@@ -47,6 +47,7 @@ export default async function handler(
             const prismaUser = await prisma.user.update({
                 where: { email: session?.user?.email || undefined },
                 data: {
+                    // @ts-ignore
                     name: name,
                 },
             });

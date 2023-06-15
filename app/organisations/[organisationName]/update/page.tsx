@@ -7,6 +7,7 @@ export default async function UpdateProfilePage (){
     const session = await getServerSession( authOptions)
     const organisation = await prisma.organisation.findFirst({
         where: {
+            // @ts-ignore
             userId: session?.user?.id
         },
     })

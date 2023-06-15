@@ -82,7 +82,7 @@ export default function OrganisationPage({
                         </div>
                         <h3 className={"mt-10"}>Evenements à venir organisés par {orgaName}</h3>
                         <div className={"grid justify-center md:flex md:flex-wrap md:gap-4"}>
-                            {events.length > 0 && events.map((event: object ) => <EventCard event={event}/>)}
+                            {events.length > 0 && events.map((event: any ) => <EventCard event={event} featured={false} overflow={false}/>)}
                         </div>
                         {events.length === 0 && (
                             <p>Aucun évènement à venir</p>

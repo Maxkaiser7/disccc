@@ -7,6 +7,8 @@ export default async function handler(req: NextApiRequest,
         try {
             const notificationUpdate = await prisma.notification.update({
                 where: {
+                    // @ts-ignore
+
                     id: req.query.notificationId
                 },
                 data: {

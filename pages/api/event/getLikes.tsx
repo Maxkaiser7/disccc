@@ -29,6 +29,7 @@ export default async function handler(
         const like = await prisma.likes.findFirst({
             where: {
                 artistId: eventId,
+                // @ts-ignore
                 User: prismaUser
             }
         })

@@ -6,7 +6,7 @@ export default function contactPage() {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>)=>
     {
         e.preventDefault();
-        const data = new FormData(e.currentTarget);
+        const data: any = new FormData(e.currentTarget);
         try {
             const response = await fetch('/api/contact/send', {
                 method: 'post',

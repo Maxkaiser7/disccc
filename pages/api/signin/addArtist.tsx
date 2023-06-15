@@ -50,9 +50,14 @@ export default async function handler(
     const {fields, files} = await readFile(req, true);
     const uploadedFile = files;
     //console.log(uploadedFile.image);
-    const imagePath = uploadedFile.image.filepath;
-
-    const imageName = uploadedFile.image.newFilename;
+    let imagePath: string = ""
+    let imageName: string = "";
+    if("filepath" in uploadedFile.image){
+       imagePath = uploadedFile.image.filepath;
+    }
+    if("newFilename" in uploadedFile.image){
+       imageName = uploadedFile.image.newFilename;
+    }
     const {
         artistName,
         genre,
@@ -88,7 +93,14 @@ export default async function handler(
         genres: {
             connect: { id: genre }
         },
-        User: { connect: { id: prismaUser.id } },
+        User: { connect: { id: prismaUser?.id } },
+        spotifyLink,
+        instagramLink,
+        soundcloudLink,
+        twitterLink,
+        appleLink,
+        tiktokLink
+
     };
 
     // Check if the platform links exist and add them to artistData if they are not empty
@@ -112,6 +124,7 @@ export default async function handler(
     }
     // Create a new artistes record and associate it with the user
     const newArtist = await prisma.artist.create({
+        // @ts-ignore
         data: artistData,
     });
 

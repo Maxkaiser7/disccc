@@ -6,7 +6,10 @@ import FormData from "form-data";
 import {getSession, signIn} from "next-auth/react";
 import {useSession} from "next-auth/react"
 import Link from "next/link";
-
+interface Genre {
+    id: string;
+    nom: string;
+}
 export default function SignInArtist() {
     const [artistName, setArtistName] = useState("");
     const [selectedFile, setSelectedFile] = useState<File>();
@@ -15,7 +18,7 @@ export default function SignInArtist() {
     const [isConnected, setIsConnected] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [genre, setGenre] = useState("");
-    const [formGenre, setFormGenre] = useState();
+    const [formGenre, setFormGenre] = useState([]);
     const [description, setDescription] = useState("");
     const [instagramLink, setInstagramLink] = useState<string>("");
     const [spotifyLink, setSpotifyLink] = useState<string>("");
@@ -23,7 +26,7 @@ export default function SignInArtist() {
     const [twitterLink, setTwitterLink] = useState<string>("");
     const [appleLink, setAppleLink] = useState<string>("");
     const [tiktokLink, setTiktokLink] = useState<string>("");
-    const handleFileChange = (event) => {
+    const handleFileChange = (event : any) => {
         const files = event.target.files;
         setSelectedFile(files ? files : null);
     };
@@ -78,9 +81,11 @@ export default function SignInArtist() {
             setIsDisabled(true)
             //console.log(data)
         } catch (err) {
+            // @ts-ignore
             console.log(err.response?.data)
         }
     };
+    // @ts-ignore
     return (
         <div>
             {isLoading ? (
@@ -194,6 +199,7 @@ export default function SignInArtist() {
                         onChange={({target}) => {
                             if (target.files) {
                                 const file: File = target.files[0];
+                                // @ts-ignore
                                 setSelectedFile(URL.createObjectURL(file));
                                 setSelectedFile(file);
                             }
@@ -207,7 +213,7 @@ export default function SignInArtist() {
                             className={"px-4 py-2"}
                         >
                             <option value="">Choisissez un genre</option>
-                            {formGenre.map((genre) => (
+                            {formGenre?.map((genre : any) => (
                                 <option key={genre.id} value={genre.id}>
                                     {genre.nom}
                                 </option>

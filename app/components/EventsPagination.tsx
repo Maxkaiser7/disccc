@@ -44,8 +44,8 @@ export default function EventsPagination() {
                 {events.length === 0 ? (
                     <p>Aucun événement à afficher pour le moment.</p>
                 ) : (
-                    events.map((event) => (
-                        <EventCard event={event} key={event.id} overflow={false} />
+                    events.map((event: any) => (
+                        <EventCard event={event} key={event.id} overflow={false}  featured={false}/>
                     ))
                 )}
             </div>

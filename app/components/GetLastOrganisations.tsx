@@ -30,7 +30,7 @@ export default function GetLastOrganisations(){
                 <p>Aucune organisation pour l'instant</p>
             )}
             <div className={"md:flex md:flex-wrap md:justify-center md:gap-4  grid justify-center"}>
-                {organisations.map((organisation: object ) => <OrganisationCard organisation={organisation} key={organisation.id} overflow={false}/>)}
+                {organisations.map((organisation: any ) => <OrganisationCard organisation={organisation} key={organisation.id} overflow={false}/>)}
             </div>
             <span className={"flex justify-center"}>
                 <Link href={"/organisations"} className={"mt-10 text-center bg-slate-800 text-white px-4 py-2"}>Voir plus</Link>

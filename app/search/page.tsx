@@ -30,15 +30,15 @@ export default function searchPage(){
             {isLoading && <p className={"text-center"}>Chargement...</p>}
             {!isLoading && data && (
                 <div className={"grid justify-center"}>
-                    { data.data.events.length > 0 && data.data.events.map((event: Array<object>) => {
+                    { data.data.events.length > 0 && data.data.events.map((event: any) => {
                         return (
                             <div>
                                 <h2 className={"text-2xl"}>Evenements</h2>
-                                <EventCard event={event} overflow={false}/>
+                                <EventCard event={event} overflow={false} featured={false}/>
                             </div>
                         )
                     })}
-                    { data.data.artists.length > 0 && data.data.artists.map((artist: Array<object>) => {
+                    { data.data.artists.length > 0 && data.data.artists.map((artist: any) => {
                         return (
                             <div>
                                 <h2>Artiste</h2>
@@ -46,7 +46,7 @@ export default function searchPage(){
                             </div>
                         )
                     })}
-                    { data.data.organisations.length > 0 && data.data.organisations.map((organisation: Array<object>) => {
+                    { data.data.organisations.length > 0 && data.data.organisations.map((organisation: any) => {
                         return (
                             <div>
                                 <h2>Organisation</h2>
@@ -54,7 +54,7 @@ export default function searchPage(){
                             </div>
                         )
                     })}
-                    {data.data.genres.length > 0 && data.data.genres.map((genre: Array<object>) => {
+                    {data.data.genres.length > 0 && data.data.genres.map((genre: any) => {
                         return (
                             <div>
                                 <h2>Genres</h2>

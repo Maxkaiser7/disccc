@@ -44,8 +44,14 @@ export default async function handler(
 ) {
     const {fields, files} = await readFile(req, true);
     const uploadedFile = files.image;
-    const imagePath = uploadedFile ? uploadedFile.filepath : null;
-    const imageName = uploadedFile ? uploadedFile.newFilename : null;
+    let imagePath: string | null = "";
+    let imageName: string | null = "";
+    if ("filepath" in uploadedFile){
+        imagePath = uploadedFile ? uploadedFile.filepath : null;
+    }
+    if ("newFilename" in uploadedFile){
+        imageName = uploadedFile ? uploadedFile.newFilename : null;
+    }
 
     const session = await getServerSession(req, res, authOptions)
     const user = await prisma.user.findFirst({
@@ -123,7 +129,7 @@ export default async function handler(
             }
 
             //await fs.rename(imagePath, imageDestination);
-            const updateArtist: Artist | null = await prisma.artist.update({
+            const updateArtist: any = await prisma.artist.update({
                 where: {
                     id: artist?.id
                 },

@@ -6,7 +6,8 @@ export default async function handler(
 ){
     try {
         //const search : string= req.body.artistName.toLowerCase()
-        const search : string= req.query.artistName.toLowerCase()
+        // @ts-ignore
+        const search : string= req?.query?.artistName?.toLowerCase()
         //get prisma to fetch the posts
         let data;
         if (search === "") {

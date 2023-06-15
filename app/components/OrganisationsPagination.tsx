@@ -41,7 +41,7 @@ export default function OrganisationsPagination() {
                 {organisations.length === 0 ? (
                     <p>Aucune organisation à afficher pour le moment.</p>
                 ) : (
-                    organisations.map((organisation) => (
+                    organisations.map((organisation: any) => (
                         <OrganisationCard
                             organisation={organisation}
                             key={organisation.id}

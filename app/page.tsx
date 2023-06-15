@@ -14,6 +14,7 @@ import dynamic from "next/dynamic";
 import {GetServerSideProps} from "next";
 import prisma from "@/prisma/client";
 
+// @ts-ignore
 const ComponentFeatured = dynamic(()=> import("@/app/components/Featured"))
 const ComponentHero = dynamic(()=> import("@/app/components/Hero"))
 // @ts-ignore

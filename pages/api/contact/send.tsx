@@ -1,13 +1,15 @@
+import {NextApiRequest, NextApiResponse} from "next";
+
 const { SuperfaceClient } = require('@superfaceai/one-sdk');
 
 const sdk = new SuperfaceClient();
 
 // Just check if all required fields are provided
-function formValid(body) {
+function formValid(body : any) {
     return body.email && body.first && body.last;
 }
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const body = req.body;
 
     if (!formValid(body)) {

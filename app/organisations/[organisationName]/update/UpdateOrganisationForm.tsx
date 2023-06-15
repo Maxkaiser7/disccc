@@ -25,6 +25,8 @@ export default function UpdateArtistForm({organisationName:propOrganisationName}
         const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault()
             const formData = new FormData();
+
+            // @ts-ignore
             formData.append("image", selectedFile)
             formData.append("organisationName", organisationName)
             // envoyez la demande à l'API en utilisant FormData
@@ -67,6 +69,7 @@ export default function UpdateArtistForm({organisationName:propOrganisationName}
                                 if (target.files) {
                                     const file: File = target.files[0];
                                     console.log(file)
+                                    // @ts-ignore
                                     setSelectedFile(URL.createObjectURL(file));
                                     setSelectedFile(file);
                                 }

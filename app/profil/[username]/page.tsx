@@ -42,12 +42,13 @@ export default async function ProfilPage({params, searchParams,}: {
         const organisationNameLower = organisation.organisationName.toLowerCase()
         organisationName = organisationNameLower.replace(/\s+/g, "")
     }
+    const imgSrc = session?.user?.image
     return (
         <div className={"flex flex-col content-center flex-wrap items-center"}>
             <h1 className={"text-3xl"}>Profil</h1>
             // @ts-ignore
-            <Image width={500} height={500} className={"w-3/12 rounded-full max-w-[10rem]"} src={session?.user?.image}
-                   alt={session?.user?.name}/>
+            <Image width={500} height={500} className={"w-3/12 rounded-full max-w-[10rem]"}   src={imgSrc ?? 'default-image-url'}
+                   alt={session?.user?.name ?? 'default-name'}/>
             <h2>{session?.user?.name}</h2>
             <div className={"flex flex-col gap-4 mt-10"}>
                 <span className={"bg-slate-800 p-2 flex justify-center border-gray-950 rounded"}>

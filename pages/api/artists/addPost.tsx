@@ -35,6 +35,8 @@ export default async function handler(
                 });
             }
             const newPost = await prisma.post.create({
+                // @ts-ignore
+
                 data: {
                     userId: user?.id,
                     postContent: postContent,

@@ -1,7 +1,8 @@
 import {getSession} from "next-auth/react";
 import prisma from "@/prisma/client";
 import {getServerSession} from "next-auth";
-export default async function handler(req, res) {
+import {NextApiRequest, NextApiResponse} from "next";
+export default async function handler(req : NextApiRequest, res: NextApiResponse) {
     const session = await getSession({ req });
     const userMail : string | null | undefined = session?.user?.email
 
@@ -17,7 +18,7 @@ export default async function handler(req, res) {
 
 
 
-    const artist : Artist | null = await prisma.artist.findFirst({
+    const artist : any = await prisma.artist.findFirst({
         where: {
            userId: user?.id
         },

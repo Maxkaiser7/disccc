@@ -14,7 +14,7 @@ export default async function handler(
         const title: string = req.body.title
 
         //get user
-        const prismaUser: User | null = await prisma.user.findUnique({
+        const prismaUser:any = await prisma.user.findUnique({
             where: {email: session?.user?.email || undefined}
         })
         //check title
@@ -25,7 +25,7 @@ export default async function handler(
         try {
             const result = await prisma.post.create({
                 data: {
-                    title,
+                    postContent: title,
                     userId: prismaUser.id
                 }
             })

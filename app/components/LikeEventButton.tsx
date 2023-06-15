@@ -28,7 +28,7 @@ export default function LikeEventButton(props: { eventId: string }, {session}: a
         getLike()
     }, []);
 
-    const handleClick = async (e) => {
+    const handleClick = async (e: any) => {
         setIsLiked(!isLiked)
         const session = await getSession()
         e.preventDefault()

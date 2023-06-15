@@ -50,8 +50,14 @@ export default async function handler(
     console.log({fields})
     const uploadedFile = files;
     //console.log(uploadedFile.image);
-    const imagePath = uploadedFile.image.filepath;
-    const imageName = uploadedFile.image.newFilename;
+    let imagePath: string = ""
+    let imageName: string = "";
+    if ("filepath" in uploadedFile.image){
+         imagePath = uploadedFile.image.filepath;
+    }
+    if ("newFilename" in uploadedFile.image){
+        imageName = uploadedFile.image.newFilename;
+    }
     const {organisationName} = fields;
     const {description} = fields;
     try {
@@ -72,10 +78,12 @@ export default async function handler(
     });
     const newOrganisation = await prisma.organisation.create({
         data:{
+            // @ts-ignore
             organisationName: organisationName,
+            // @ts-ignore
             description: description,
             image: imageName,
-            User: {connect: {id: prismaUser.id}},
+            User: {connect: {id: prismaUser?.id}},
 
         }
     })

@@ -17,7 +17,7 @@ export default async function handler(
         const like = await prisma.likes.findFirst({
             where: {
                 organisationId: organisation.id,
-                userId: prismaUser.id
+                userId: prismaUser?.id
             },
         });
 

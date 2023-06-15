@@ -11,6 +11,7 @@ export default async function handler(
         const session = await getServerSession(req, res, authOptions);
         const user = await prisma.user.findUnique({
             where: {
+                // @ts-ignore
                 email: session?.user?.email,
             }
         })
@@ -26,6 +27,8 @@ export default async function handler(
         const events = await prisma.event.findMany({
             where:{
                 id:{
+                    // @ts-ignore
+
                     in: notifications.map(notification => notification.eventId)
                 }
             }
@@ -37,6 +40,8 @@ export default async function handler(
         const artists = await prisma.artist.findMany({
             where: {
                 id: {
+                    // @ts-ignore
+
                     in: artistIds
                 }
             }
@@ -49,6 +54,8 @@ export default async function handler(
         const organisations = await prisma.organisation.findMany({
             where: {
                 id: {
+                    // @ts-ignore
+
                     in: organisationIds
                 }
             }

@@ -18,6 +18,7 @@ export default async function Organisations(){
     if (session){
         user = await prisma.user.findUnique({
             where: {
+                // @ts-ignore
                 email : session?.user?.email
             }
         })
@@ -37,7 +38,9 @@ export default async function Organisations(){
         likedOrganisations = await prisma.organisation.findMany({
             where: {
                 id:{
-                    in: likes.map(like => like.organisationId)
+                    in: likes.map((like:any) => {
+                        like.organisationId
+                    })
                 }
             }
         })
@@ -50,7 +53,9 @@ export default async function Organisations(){
                 <>
                     <h2 className={"mt-4 text-2xl"}>Vos organisations likées</h2>
                     <div className={"flex gap-4 overflow-x-scroll "}>
-                        {likedOrganisations.map(organisation => <OrganisationCard organisation={organisation} key={organisation.id} overflow={false}/>)}
+                        {likedOrganisations.map((organisation : any) =>
+                            <OrganisationCard organisation={organisation} key={organisation.id} overflow={false}/>
+                    )}
                     </div>
                 </>
             )}
@@ -58,7 +63,7 @@ export default async function Organisations(){
                     <>
                         <h2>Vos organisations likées</h2>
                         <div className={"flex gap-4 overflow-x-scroll justify-center"}>
-                            {likedOrganisations.map(organisation => <OrganisationCard organisation={organisation} key={organisation.id} overflow={true}/>)}
+                            {likedOrganisations.map((organisation: any) => <OrganisationCard organisation={organisation} key={organisation.id} overflow={true}/>)}
                         </div>
                     </>
             )}

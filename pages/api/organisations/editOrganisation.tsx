@@ -45,8 +45,14 @@ export default async function handler(
     const { fields, files } = await readFile(req, true);
 
     const uploadedFile = files.image;
-    const imagePath = uploadedFile ? uploadedFile.filepath : null;
-    const imageName = uploadedFile ? uploadedFile.newFilename : null;
+    let imagePath: string | null = "";
+    let imageName: string | null = "";
+    if ("filepath" in uploadedFile){
+        imagePath = uploadedFile ? uploadedFile.filepath : null;
+    }
+    if ("newFilename" in uploadedFile){
+        imageName = uploadedFile ? uploadedFile.newFilename : null;
+    }
 
     const session = await getServerSession(req, res, authOptions);
     const userMail: string | null | undefined = session?.user?.email;
@@ -96,7 +102,7 @@ export default async function handler(
                 updateData.image = imageName;
             }
 
-            const updateOrganisation: Organisation | null = await prisma.organisation.update({
+            const updateOrganisation: any = await prisma.organisation.update({
                 where: {
                     id: organisation?.id,
                 },

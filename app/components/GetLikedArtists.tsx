@@ -16,10 +16,12 @@ export default async function getLikedArtists(){
             type: "artist"
         }
     })
+    const artistsLiked: any = []
     if (likes.length > 0) {
         const artistsLiked = await prisma.artist.findMany({
             where: {
                 id: {
+                    // @ts-ignore
                     in: likes.map((like) => like.artistId),
                 }
             }
@@ -34,7 +36,7 @@ export default async function getLikedArtists(){
                 <>
                     <h2 className="mt-4 text-2xl">Vos artistes likés</h2>
                     <div className="flex gap-4 overflow-x-scroll justify-center-center">
-                        {artistsLiked.map((artist) => (
+                        {artistsLiked.map((artist : any) => (
                             <ArtistCard artist={artist} key={artist.id} overflow={false} />
                         ))}
                     </div>
@@ -45,7 +47,7 @@ export default async function getLikedArtists(){
                 <>
                     <h2>Vos artistes likés</h2>
                     <div className="flex gap-4 overflow-x-scroll justify-center">
-                        {artistsLiked.map((artist) => (
+                        {artistsLiked.map((artist : any) => (
                             <ArtistCard artist={artist} key={artist.id} overflow={true} />
                         ))}
                     </div>

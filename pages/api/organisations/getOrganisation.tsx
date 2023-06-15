@@ -13,6 +13,8 @@ export default async function handler(
         WHERE LOWER(REPLACE("organisationName", ' ', '')) = LOWER(REPLACE(${organisationName}, ' ', ''))`
         const events = await prisma.event.findMany({
             where: {
+                // @ts-ignore
+
                 organisationId: organisation?.id,
                 dateTo: {
                     gte: currentDate.toISOString()
@@ -22,6 +24,8 @@ export default async function handler(
 
         const like = await prisma.likes.findFirst({
             where: {
+                // @ts-ignore
+
                 organisationId: organisation?.id
             }
         })

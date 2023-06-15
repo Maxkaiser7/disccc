@@ -30,10 +30,11 @@ import Notification from "@/app/components/Notification";
 }*/
 export default async function  Nav(){
     const session = await getServerSession(authOptions);
-    let user =""
+    let user : any =""
     if (session){
         user = await prisma.user.findUnique({
             where: {
+                // @ts-ignore
                 email: session?.user?.email,
             },
         })
