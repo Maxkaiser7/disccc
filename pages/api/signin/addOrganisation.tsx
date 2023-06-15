@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const imageDestination = path.join(uploadDir, imageFileName);
 
         await fs.rename(selectedFile.path, imageDestination);
-
+        //?
         // Create a new organisation record and associate it with the user
         const prismaUser = await prisma.user.findUnique({
             where: { email: session?.user?.email || undefined },
