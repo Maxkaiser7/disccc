@@ -8,7 +8,7 @@ import fs from "fs/promises";
 export const dynamic = 'force-dynamic'
 export const config = {
     api: {
-        bodyParser: false,
+        bodyParser: true,
     },
 };
 

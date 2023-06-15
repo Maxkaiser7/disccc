@@ -60,7 +60,7 @@ export default function adminArtist() {
     const descriptionShort = []
 
     return (
-        <div className={"w-full p-8"}>
+        <div className={"w-full p-8 overflow-x-auto grid justify-center" }>
             <table className="table-auto border-collapse border-white border text-xs font-light overflow-x-scroll">
                 <thead>
                 <tr className={"bg-slate-700 "}>
