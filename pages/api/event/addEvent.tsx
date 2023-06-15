@@ -6,6 +6,7 @@ import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
 import {Prisma} from "@prisma/client";
+export const dynamic = 'force-dynamic'
 interface Notification {
     userId: string;
     artistId: string;

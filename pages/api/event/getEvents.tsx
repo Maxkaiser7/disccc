@@ -1,6 +1,6 @@
 import prisma from "@/prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-
+export const dynamic = 'force-dynamic'
 export default async function getEvents(req: NextApiRequest, res: NextApiResponse) {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;

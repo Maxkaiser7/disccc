@@ -4,7 +4,7 @@ import {Genres} from ".prisma/client";
 import {getSession} from "next-auth/react";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
-
+export const dynamic = 'force-dynamic'
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse

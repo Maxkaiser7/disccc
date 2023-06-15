@@ -10,6 +10,7 @@ import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import Image from "next/image";
 import {Prisma} from "@prisma/client";
 import GenreCard from "@/app/components/Cards/GenreCard";
+export const dynamic = 'force-dynamic'
 
 interface Props {
     params: { artistName: string };

@@ -10,7 +10,7 @@ export default function Hero() {
             document.getElementById("headings")
         if (outputElement){
             shuffle({
-                text:"Disccc vous permet de découvrir des artistes et des salles de concerts près de chez vous pour collaborer et vous produire sur scène.",
+                text:"Découvrez, collaborez, jouez !",
                 direction:'left',
                 fps:25,
                 onUpdate:(headings: any)=> {

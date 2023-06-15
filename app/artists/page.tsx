@@ -4,6 +4,8 @@ import GetLikedArtists from "@/app/components/GetLikedArtists";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import ArtistsPagination from "@/app/components/ArtistsPagination";
+export const dynamic = 'force-dynamic'
+
 export default async function getArtists(context: any){
     const sessionData =  getServerSession(authOptions)
     const page = parseInt(context?.query?.page) || 1;

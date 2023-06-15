@@ -5,7 +5,7 @@ import prisma from "@/prisma/client";
 import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
-
+export const dynamic = 'force-dynamic'
 export const config = {
     api: {
         bodyParser: false,

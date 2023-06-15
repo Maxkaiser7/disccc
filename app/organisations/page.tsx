@@ -6,7 +6,7 @@ import EventCard from "@/app/components/Cards/EventCard";
 import OrganisationCard from "@/app/components/Cards/OrganisationCard";
 import OrganisationsPagination from "@/app/components/OrganisationsPagination";
 const prisma = new PrismaClient()
-
+export const dynamic = 'force-static'
 export default async function Organisations(){
     const organisations = await prisma.organisation.findMany()
     const session = await getServerSession(authOptions)

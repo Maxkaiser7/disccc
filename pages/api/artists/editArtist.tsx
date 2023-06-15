@@ -7,7 +7,7 @@ import bodyParser from "body-parser";
 import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
-
+export const dynamic = 'force-dynamic'
 export const config = {
     api: {
         bodyParser: false,

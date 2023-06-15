@@ -1,7 +1,7 @@
 import prisma from "@/prisma/client";
 import Link from "next/link";
 import ArtistCard from "@/app/components/Cards/ArtistCard";
-
+export const dynamic = 'force-dynamic'
 export default async function Page({
                                  params,
                                  searchParams,

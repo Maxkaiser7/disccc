@@ -6,7 +6,7 @@ import EventCard from "@/app/components/Cards/EventCard";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import {Carousel} from 'react-responsive-carousel';
 import EventsPagination from "@/app/components/EventsPagination";
-
+export const dynamic = 'force-dynamic'
 const prisma = new PrismaClient()
 
 export default async function Events() {

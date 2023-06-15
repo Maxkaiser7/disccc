@@ -2,6 +2,7 @@ import {getSession} from "next-auth/react";
 import prisma from "@/prisma/client";
 import {getServerSession} from "next-auth";
 import {NextApiRequest, NextApiResponse} from "next";
+export const dynamic = 'force-dynamic'
 export default async function handler(req : NextApiRequest, res: NextApiResponse) {
     const session = await getSession({ req });
     const userMail : string | null | undefined = session?.user?.email

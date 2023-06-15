@@ -1,6 +1,7 @@
 "use client"
 import SubmitButton from "@/app/components/SubmitButton";
 import {FormEvent} from "react";
+export const dynamic = 'force-dynamic'
 
 export default function contactPage() {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>)=>

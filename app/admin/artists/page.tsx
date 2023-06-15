@@ -8,7 +8,7 @@ export default function adminArtist() {
     const [artists, setArtists] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-
+    const revalidate = 0
     useEffect(() => {
         const fetchArtists = async () => {
             try {

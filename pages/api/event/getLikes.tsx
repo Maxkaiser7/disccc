@@ -4,7 +4,7 @@ import {getServerSession} from "next-auth";
 import prisma from "@/prisma/client";
 import {getSession} from "next-auth/react";
 import {log} from "util";
-
+export const dynamic = 'force-dynamic'
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse

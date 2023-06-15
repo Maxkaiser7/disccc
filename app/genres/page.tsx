@@ -1,7 +1,7 @@
 import axios from "axios/index";
 import prisma from "@/prisma/client";
 import Link from "next/link";
-
+export const dynamic = 'force-dynamic'
 export default async function GenresPages() {
 
     const genres = await prisma.genres.findMany()

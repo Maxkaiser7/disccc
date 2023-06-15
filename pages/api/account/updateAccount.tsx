@@ -6,7 +6,7 @@ import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
 import {useRouter} from "next/router";
-
+export const dynamic = 'force-dynamic'
 export const config = {
     api: {
         bodyParser: false,

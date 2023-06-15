@@ -1,5 +1,5 @@
 import EventForm from "@/app/events/new/EventForm";
-
+export const dynamic = 'force-dynamic'
 export default function NewEvent(){
     return(
         <main>

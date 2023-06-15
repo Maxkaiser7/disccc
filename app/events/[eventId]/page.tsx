@@ -8,6 +8,8 @@ import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import {session} from "next-auth/core/routes"
 import Link from "next/link";
 import ArtistCard from "@/app/components/Cards/ArtistCard";
+export const dynamic = 'force-dynamic'
+
 interface Artist {
     id: string;
     artistName: string;
