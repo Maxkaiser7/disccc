@@ -24,19 +24,25 @@ export default function OrganisationForm(){
             formData.append("image", selectedFile)
             formData.append("organisationName", organisationName)
             formData.append("description", description )
-            console.log(formData)
-            const {data} = await axios.post("/api/signin/addOrganisation", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            })
-            setIsDisabled(true)
-            //console.log(data)
+
+            const response = await fetch("/api/signin/addOrganisation", {
+                method: "POST",
+                // @ts-ignore
+
+                body: formData,
+            });
+
+            if (response.ok) {
+                setIsDisabled(true);
+                // Traiter la réponse réussie si nécessaire
+            } else {
+                // Traiter l'erreur de la réponse
+            }
         } catch (err) {
-            // @ts-ignore
-            console.log(err.response?.data)
+            // Traiter l'erreur de la requête
         }
     };
+
     return(
         <form className={"flex flex-col  items-center gap-2"}
               onSubmit={submitPost}>

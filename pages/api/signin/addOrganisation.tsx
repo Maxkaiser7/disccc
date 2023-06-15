@@ -87,5 +87,5 @@ export default async function handler(
 
         }
     })
-    res.status(303).json({done:"ok"});
+    res.status(200).json({done:"ok"});
 }
