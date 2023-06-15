@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic'
 const prisma = new PrismaClient();
 export const authOptions = {
     adapter: PrismaAdapter(prisma),
-    secret: process.env.AUTH_SECRET,
+    secret: "jdjfofeze5zf8f4sklas",
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,

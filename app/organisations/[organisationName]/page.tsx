@@ -7,6 +7,8 @@ import {useEffect, useState} from "react";
 import {getSession} from "next-auth/react";
 import axios from "axios";
 import {log} from "util";
+export const dynamic = 'force-dynamic'
+
 export default function OrganisationPage({
                                             params,
                                             searchParams,
