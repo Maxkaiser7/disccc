@@ -24,7 +24,7 @@ export default function OrganisationForm(){
             formData.append("image", selectedFile)
             formData.append("organisationName", organisationName)
             formData.append("description", description )
-
+            console.log(formData)
             const response = await fetch("/api/signin/addOrganisation", {
                 method: "POST",
                 // @ts-ignore
