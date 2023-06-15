@@ -1,102 +1,52 @@
-import type {NextApiRequest, NextApiResponse} from "next";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import prisma from "@/prisma/client";
-import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
-export const dynamic = 'force-dynamic'
+
+export const dynamic = 'force-dynamic';
 export const config = {
     api: {
         bodyParser: true,
     },
 };
 
-const readFile = (
-    req: NextApiRequest,
-    data: {
-        organisationName: string;
-        description: string;
-        selectedFile: File;
-    },
-    saveLocally?: boolean
-): Promise<{
-    fields: formidable.Fields;
-    files: formidable.Files;
-}> => {
-
-    const options: formidable.Options = {};
-    if (saveLocally) {
-        options.uploadDir = path.join(process.cwd(), "/public/images/organisations");
-        options.filename = (name, ext, path, form) => {
-            const imageOrganisation: string =
-                Date.now().toString() + "_" + path.originalFilename;
-            return imageOrganisation;
-        };
-    }
-
-    const form = formidable(options);
-    return new Promise((resolve, reject) => {
-        form.parse(req, (err, fields, files) => {
-            if (err) reject(err);
-            resolve({fields, files});
-        });
-    });
-};
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
-){
-    const data = {
-        organisationName: req.body.organisationName,
-        description: req.body.description,
-        selectedFile: req.body.selectedFile,
-    };
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const { organisationName, description, selectedFile } = req.body;
 
     const session = await getServerSession(req, res, authOptions);
     if (!session)
-        return res.status(401).json({message: "Connectez vous pour pouvoir poster"});
+        return res.status(401).json({ message: "Connectez-vous pour pouvoir poster" });
 
-    // Save image to disk and get its path
-    const { fields, files } = await readFile(req, data, true);
-    const uploadedFile = files;
-    //console.log(uploadedFile.image);
-    let imagePath: string = ""
-    let imageName: string = "";
-    if ("filepath" in uploadedFile.image){
-         imagePath = uploadedFile.image.filepath;
-    }
-    if ("newFilename" in uploadedFile.image){
-        imageName = uploadedFile.image.newFilename;
-    }
-    const {organisationName} = fields;
-    const {description} = fields;
     try {
-        await fs.readdir(path.join(process.cwd() + "/public", "/images/organisations"));
-    } catch (err) {
-        await fs.mkdir(path.join(process.cwd() + "/public", "/images/organisations"));
+        // Save image to disk and get its path
+        const uploadDir = path.join(process.cwd(), "/public/images/organisations");
+        await fs.mkdir(uploadDir, { recursive: true });
+
+        const timestamp = Date.now().toString();
+        const imageFileName = `${timestamp}_${selectedFile.name}`;
+        const imageDestination = path.join(uploadDir, imageFileName);
+
+        await fs.rename(selectedFile.path, imageDestination);
+
+        // Create a new organisation record and associate it with the user
+        const prismaUser = await prisma.user.findUnique({
+            where: { email: session?.user?.email || undefined },
+        });
+
+        const newOrganisation = await prisma.organisation.create({
+            data: {
+                organisationName,
+                description,
+                image: imageFileName,
+                User: { connect: { id: prismaUser?.id } },
+            },
+        });
+
+        res.status(200).json({ done: "ok" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Une erreur s'est produite lors de la création de l'organisation" });
     }
-    const imageDestination = path.join(
-        process.cwd(),
-        "/public/images/organisations",
-        imageName
-    );
-    await fs.rename(imagePath, imageDestination);
-
-    // Create a new artistes record and associate it with the user
-    const prismaUser = await prisma.user.findUnique({
-        where: {email: session?.user?.email || undefined},
-    });
-    const newOrganisation = await prisma.organisation.create({
-        data:{
-            // @ts-ignore
-            organisationName: organisationName,
-            // @ts-ignore
-            description: description,
-            image: imageName,
-            User: {connect: {id: prismaUser?.id}},
-
-        }
-    })
-    res.status(200).json({done:"ok"});
 }
