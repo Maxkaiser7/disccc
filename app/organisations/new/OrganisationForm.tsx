@@ -25,8 +25,7 @@ export default function OrganisationForm(){
             formData.append("image", selectedFile)
             formData.append("organisationName", organisationName)
             formData.append("description", description )
-            console.log(formData)
-            const response = await fetch("/api/signin/addOrganisation", {
+            await fetch("/api/signin/addOrganisation", {
                 method: "POST",
                 body: JSON.stringify({
                     organisationName,
@@ -38,12 +37,9 @@ export default function OrganisationForm(){
                 },
             });
 
-            if (response.ok) {
-                setIsDisabled(true);
+            setIsDisabled(true);
                 // Traiter la réponse réussie si nécessaire
-            } else {
-                // Traiter l'erreur de la réponse
-            }
+
         } catch (err) {
             // Traiter l'erreur de la requête
         }
