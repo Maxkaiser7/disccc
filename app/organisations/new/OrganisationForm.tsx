@@ -21,8 +21,7 @@ export default function OrganisationForm(){
         try {
             if (!selectedFile) return
             const formData = new FormData()
-            console.log(organisationName)
-            console.log(description)
+
             formData.append("image", selectedFile)
             formData.append("organisationName", organisationName)
             formData.append("description", description )
@@ -31,7 +30,11 @@ export default function OrganisationForm(){
                 method: "POST",
                 // @ts-ignore
 
-                body: formData,
+                params: {
+                    organisationName,
+                    description,
+                    selectedFile
+                }
             });
 
             if (response.ok) {

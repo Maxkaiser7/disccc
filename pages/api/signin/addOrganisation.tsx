@@ -14,11 +14,17 @@ export const config = {
 
 const readFile = (
     req: NextApiRequest,
+    data: {
+        organisationName: string;
+        description: string;
+        selectedFile: File;
+    },
     saveLocally?: boolean
 ): Promise<{
     fields: formidable.Fields;
     files: formidable.Files;
 }> => {
+
     const options: formidable.Options = {};
     if (saveLocally) {
         options.uploadDir = path.join(process.cwd(), "/public/images/organisations");
@@ -41,13 +47,18 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ){
+    const data = {
+        organisationName: req.body.organisationName,
+        description: req.body.description,
+        selectedFile: req.body.selectedFile,
+    };
+
     const session = await getServerSession(req, res, authOptions);
     if (!session)
         return res.status(401).json({message: "Connectez vous pour pouvoir poster"});
 
     // Save image to disk and get its path
-    const {fields, files} = await readFile(req, true);
-    console.log({fields})
+    const { fields, files } = await readFile(req, data, true);
     const uploadedFile = files;
     //console.log(uploadedFile.image);
     let imagePath: string = ""
