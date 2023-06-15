@@ -29,7 +29,7 @@ export default function adminPost() {
             await axios.post(`/api/posts/deletePost/`, {
                 params: {postId},
             });
-            setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+            setPosts((prevPosts) => prevPosts.filter((post : any) => post.id !== postId));
         } catch (err) {
             console.log(err);
         }
@@ -50,7 +50,7 @@ export default function adminPost() {
                 </tr>
                 </thead>
                 <tbody>
-                {posts.map((post) => (
+                {posts.map((post: any) => (
                     <tr key={post.id}>
                         <button
                             onClick={() => deletePost(post.id)}

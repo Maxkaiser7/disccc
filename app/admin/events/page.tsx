@@ -85,6 +85,8 @@ export default function EventTable() {
         setCurrentPage(currentPage + 1);
     };
 
+    // @ts-ignore
+    // @ts-ignore
     return (
         <div className={"w-full p-8 overflow-x-scroll"}>
             <table className="table-auto border-collapse border-white border text-xs font-light ">
@@ -110,7 +112,7 @@ export default function EventTable() {
                 </tr>
                 </thead>
                 <tbody>
-                {events.map((event) => (
+                {events.map((event: any) => (
                     <tr key={event.id}>
                         <td className="border px-4 py-2 whitespace-nowrap">
                             <button
@@ -128,13 +130,14 @@ export default function EventTable() {
                         <td className="border px-4 py-2 whitespace-nowrap">{event.price}</td>
                         <td className="border px-4 py-2 whitespace-nowrap">{event.facebookLink ? event.facebookLink.slice(0, 10) + "..." : "N/A"}</td>
                         <td className="border px-4 py-2 whitespace-nowrap">
-                            {event.address && (
+                            {event.address && typeof event.address === 'object' && event.address.jsonAdress && (
                                 <>
                                     <div>Street: {event.address.jsonAdress.rue ? event.address.jsonAdress.rue.slice(0, 10) + "..." : "N/A"}</div>
                                     <div>City: {event.address.jsonAdress.commune}</div>
                                     <div>Postal Code: {event.address.jsonAdress.cp}</div>
                                 </>
                             )}
+
                         </td>
                         <td className="border px-4 py-2 whitespace-nowrap">{event.ArtistsOnEvents}</td>
                         <td className="border px-4 py-2 whitespace-nowrap">{event.genres}</td>

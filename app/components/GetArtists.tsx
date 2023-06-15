@@ -42,8 +42,8 @@ export default async function GetArtists() {
             {artists.length === 0 ? (
                 <p>Aucun artiste à afficher pour le moment.</p>
             ) : (
-                artists.map((artist) => (
-                    <ArtistCard artist={artist}/>
+                artists.map((artist: any) => (
+                    <ArtistCard artist={artist} overflow={false}/>
                 ))
             )}
             </div>

@@ -37,6 +37,7 @@ export default function AdminGenre() {
     const [query, setQuery] = useState("");
     const [isDisabled, setIsDisabled] = useState(false);
     const [error, setError] = useState("");
+    // @ts-ignore
     const [relatedArtists, setRelatedArtists] = useState<Artist>([]);
     const [relatedEvents, setRelatedEvents] = useState([]);
   useEffect(() => {
@@ -83,17 +84,17 @@ export default function AdminGenre() {
                 await axios.post(`/api/genres/deleteGenres/`, {
                     params: {genreId},
                 });
-                setGenres((prevGenres) => prevGenres.filter((genre) => genre.id !== genreId));
+                setGenres((prevGenres) => prevGenres.filter((genre : any) => genre.id !== genreId));
 
             }
         } catch (error) {
             console.log(error);
         }
     };
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e : any) => {
         e.preventDefault();
         // Vérifier si le genre existe déjà
-        const genreExists = genres.some((genre) => genre.nom.toLowerCase() === query.toLowerCase());
+        const genreExists = genres.some((genre : any) => genre.nom.toLowerCase() === query.toLowerCase());
         if (genreExists) {
             window.alert("Ce genre existe déjà.");
             setError("Ce genre existe déjà.");
@@ -135,7 +136,7 @@ export default function AdminGenre() {
                 </tr>
                 </thead>
                 <tbody>
-                {genres.map((genre) => (
+                {genres.map((genre : any) => (
                     <tr key={genre.id}>
                         <td className="border px-4 py-2 whitespace-nowrap">
                             <button

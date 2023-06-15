@@ -16,7 +16,7 @@ export default async function Page({
     })
     const artists = await prisma.artist.findMany({
         where: {
-            genresId:genre.id,
+            genresId:genre?.id,
         },
     })
     /*const events = await prisma.event.findMany({
@@ -30,8 +30,8 @@ export default async function Page({
         {artists.length === 0 ? (
             <p>Aucun artiste à afficher pour le moment.</p>
         ) : (
-            artists.map((artist) => (
-                <ArtistCard artist={artist}/>
+            artists.map((artist : any) => (
+                <ArtistCard overflow={false} artist={artist}/>
             ))
         )}
     </div>;

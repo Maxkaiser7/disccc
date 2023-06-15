@@ -9,10 +9,11 @@ export default async function UpdateProfilePage (){
     const session = await getServerSession( authOptions)
     const user = await prisma.user.findUnique({
         where: {
+            // @ts-ignore
             email: session?.user?.email
         }
     })
-    const artist = await prisma.artist.findFirst({
+    const artist: any = await prisma.artist.findFirst({
         where: {
             userId: user?.id
         },

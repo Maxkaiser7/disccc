@@ -176,7 +176,9 @@ export default async function handler(
             let imagePath: string | undefined;
             let imageName: string | undefined;
             if (uploadedFile.image) {
+                // @ts-ignore
                 const imagePath = uploadedFile.image.filepath;
+                // @ts-ignore
                 const imageName = uploadedFile.image.newFilename;
                 // handle the first file in the 'image' array here
                 const imageDestination = path.join(

@@ -15,9 +15,11 @@ export default async function ProfilPage({params, searchParams,}: {
     const session = await getServerSession(authOptions)
     const user = await prisma.user.findUnique({
         where: {
+            // @ts-ignore
             email: session?.user?.email
         }
     })
+
     const artist = await prisma.artist.findFirst({
         where: {
             userId: user?.id
@@ -25,7 +27,7 @@ export default async function ProfilPage({params, searchParams,}: {
         }
     })
     let artistName = ""; // Declare artistName with a default value
-    if (artist){
+    if (artist) {
         const artistNameLower = artist.artistName.toLowerCase()
         artistName = artistNameLower.replace(/\s+/g, "")
     }
@@ -36,15 +38,17 @@ export default async function ProfilPage({params, searchParams,}: {
         }
     })
     let organisationName = "";
-    if (organisation){
+    if (organisation) {
         const organisationNameLower = organisation.organisationName.toLowerCase()
         organisationName = organisationNameLower.replace(/\s+/g, "")
     }
     return (
         <div className={"flex flex-col content-center flex-wrap items-center"}>
             <h1 className={"text-3xl"}>Profil</h1>
-            <Image width={500} height={500} className={"w-3/12 rounded-full max-w-[10rem]"} src={session?.user?.image} alt={session?.user?.name}/>
-            <h2>{session.user.name}</h2>
+            // @ts-ignore
+            <Image width={500} height={500} className={"w-3/12 rounded-full max-w-[10rem]"} src={session?.user?.image}
+                   alt={session?.user?.name}/>
+            <h2>{session?.user?.name}</h2>
             <div className={"flex flex-col gap-4 mt-10"}>
                 <span className={"bg-slate-800 p-2 flex justify-center border-gray-950 rounded"}>
                 <Link href={`/profil/${params.username}/update`}>Modifier mon profil</Link>

@@ -1,4 +1,5 @@
 "use client"
+// @ts-ignore
 import {shuffle} from "txt-shuffle"
 import {useEffect} from "react";
 import SearchBarNav from "@/app/components/SearchBarNav";
@@ -7,23 +8,27 @@ export default function Hero() {
     useEffect(()=> {
         const outputElement =
             document.getElementById("headings")
-        shuffle({
-            text:"Découvrez, partagez, jouez !",
-            direction:'random',
-            fps:25,
-            onUpdate:(headings: any)=> {
-                outputElement.innerHTML = headings
-            }
-        })
+        if (outputElement){
+            shuffle({
+                text:"Disccc vous permet de découvrir des artistes et des salles de concerts près de chez vous pour collaborer et vous produire sur scène.",
+                direction:'left',
+                fps:25,
+                onUpdate:(headings: any)=> {
+                    outputElement.innerHTML = headings
+                }
+            })
+        }
         const outputElement2 = document.getElementById("shuffle_p")
-        shuffle({
-            text:"Disccc vous permet de découvrir des artistes et des salles de concerts près de chez vous pour collaborer et vous produire sur scène.",
-            direction:'left',
-            fps:25,
-            onUpdate:(shuffle_p: any)=> {
-                outputElement2.innerHTML = shuffle_p
-            }
-        })
+        if (outputElement2){
+            shuffle({
+                text:"Disccc vous permet de découvrir des artistes et des salles de concerts près de chez vous pour collaborer et vous produire sur scène.",
+                direction:'left',
+                fps:25,
+                onUpdate:(shuffle_p: any)=> {
+                    outputElement2.innerHTML = shuffle_p
+                }
+            })
+        }
     })
     const imageClassname = "left-0 absolute -z-10 h-1/4 w-screen min-h-[25rem] top-[6rem] lg:h-[18rem] lg:min-h-[18rem]"
     const imageSrc = "/./images/assets/gradient.png"

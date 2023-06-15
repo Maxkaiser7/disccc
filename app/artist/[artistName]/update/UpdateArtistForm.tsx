@@ -11,7 +11,7 @@ import {session} from "next-auth/core/routes";
 import SubmitButton from "@/app/components/SubmitButton";
 
 type UpdateArtistFormProps = {
-    artist: object
+    artist: any
 }
 export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormProps) {
     {
@@ -33,6 +33,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
         const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
             e.preventDefault()
             const formData = new FormData();
+            // @ts-ignore
             formData.append("image", selectedFile)
             formData.append("artistName", artistName)
             formData.append("spotifyLink", spotifyLink)
@@ -160,6 +161,7 @@ export default function UpdateArtistForm({artist: propArtist}: UpdateArtistFormP
                             onChange={({target}) => {
                                 if (target.files) {
                                     const file: File = target.files[0];
+                                    // @ts-ignore
                                     setSelectedFile(URL.createObjectURL(file));
                                     setSelectedFile(file);
                                 }

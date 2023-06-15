@@ -45,7 +45,7 @@ export default function ArtistsPagination() {
                 {artists.length === 0 ? (
                     <p>Aucun artiste à afficher pour le moment.</p>
                 ) : (
-                    artists.map((artist) => (
+                    artists.map((artist:any) => (
                         <ArtistCard overflow={false} artist={artist} key={artist.id} />
                     ))
                 )}

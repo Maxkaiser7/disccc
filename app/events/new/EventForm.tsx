@@ -30,6 +30,7 @@ export default function EventForm() {
     const [organisationSuggestion, setOrganisationSuggestion] = useState([]);
     const [isDisabled, setIsDisabled] = useState(false);
     const router = useRouter();
+    // @ts-ignore
     const errorDigest = error.digest;
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -40,6 +41,7 @@ export default function EventForm() {
         formData.append("description", description);
         formData.append("dateFrom", dateFrom);
         formData.append("dateTo", dateTo);
+        // @ts-ignore
         formData.append("price", price);
         formData.append("rue", rue);
         formData.append("commune", commune);
@@ -70,7 +72,7 @@ export default function EventForm() {
         }
 
     };
-    const searchArtists = async (query) => {
+    const searchArtists = async (query : string) => {
         try {
             const response = await axios.get(`/api/artists/searchArtists?artistName=${query}`);
             setArtistSuggestions(response.data);
@@ -78,7 +80,7 @@ export default function EventForm() {
             console.error(error);
         }
     };
-    const searchOrganisations = async(organisation)=> {
+    const searchOrganisations = async (organisation: string)=> {
         try {
             const response = await axios.get(`/api/organisations/searchOrganisations?organisationName=${organisation}`);
             setOrganisationSuggestion(response.data);
@@ -111,7 +113,7 @@ export default function EventForm() {
         fetchGenres();
     }, []);
     //ouverture ul artiste
-    const handleItemClick = (artistName) => {
+    const handleItemClick = (artistName : string) => {
         if (query === "") {
             setQuery(artistName);
         } else {
@@ -119,7 +121,7 @@ export default function EventForm() {
         }
         setIsOpen(false);
     };
-    const handleItemClickOrganisation = (organisationName) => {
+    const handleItemClickOrganisation = (organisationName : string) => {
         setOrganisation(organisationName);
         setIsOpen(false);
     }
@@ -153,7 +155,7 @@ export default function EventForm() {
 
             {isOpen && Array.isArray(artistSuggestions) && artistSuggestions.length > 0 && (
                 <ul className={""}>
-                    {artistSuggestions.map((artist) => (
+                    {artistSuggestions.map((artist : any) => (
                         <li key={artist.id} onClick={() => handleItemClick(artist.artistName)} className={"bg-slate-800 hover:bg-slate-500 p-2"}>
                             {artist.artistName}
                         </li>
@@ -166,13 +168,13 @@ export default function EventForm() {
                    name={"organisation"}
                    value={organisation}
                    onChange={(event) => {
-                       const valueOrga = event.target.value;
+                       const valueOrga: string = event.target.value;
                        setOrganisation(valueOrga);
                        searchOrganisations(valueOrga)
                    }}/>
             {isOpen && Array.isArray(organisationSuggestion) && organisationSuggestion.length > 0 && (
                 <ul>
-                    {organisationSuggestion.map((organisation) => (
+                    {organisationSuggestion.map((organisation : any) => (
                         <li key={organisation.id} onClick={() => handleItemClickOrganisation(organisation.organisationName)}>
                             {organisation.organisationName}
                         </li>
@@ -202,7 +204,7 @@ export default function EventForm() {
                 className={"px-4 py-2"}
             >
                 <option value="">Choisissez un genre</option>
-                {formGenre.map((genre) => (
+                {formGenre.map((genre: any) => (
                     <option key={genre.id} value={genre.id}>
                         {genre.nom}
                     </option>
@@ -257,6 +259,7 @@ export default function EventForm() {
                     if (target.files) {
                         const file: File = target.files[0];
                         setImage(URL.createObjectURL(file));
+                        // @ts-ignore
                         setImage(file);
                     }
                 }}

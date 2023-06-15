@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function layout({children}) {
+export default function layout({children} : any) {
     return (
         <div>
             <h1 className={"text-center text-3xl"}>Admin page</h1>

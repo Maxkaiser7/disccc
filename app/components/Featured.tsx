@@ -3,7 +3,7 @@ import Image from "next/image";
 import EventCard from "@/app/components/Cards/EventCard";
 import ArtistCard from "@/app/components/Cards/ArtistCard";
 
-export default async function Featured(): JSX.Element {
+export default async function Featured(): Promise<JSX.Element> {
     //récupération de la date et conversion en format ISO
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().replace("T", " ").split(".")[0];
@@ -23,7 +23,9 @@ export default async function Featured(): JSX.Element {
     const eventsWithDates = events.map((event) => {
         const dateFrom = new Date(event.dateFrom);
         const options = {day: 'numeric', month: 'long'};
+        // @ts-ignore
         const dateStr = dateFrom.toLocaleDateString('fr-FR', options);
+        // @ts-ignore
         const eventAddress = event.address.jsonAdress;
         const day = dateStr.split(' ')[0].trim();
         const month = dateStr.split(' ')[1].trim();
@@ -112,7 +114,7 @@ export default async function Featured(): JSX.Element {
                         <a href={`/organisations/${organisation.organisationName}`} className={``}>
                             <div className={"relative"}>
                                 <Image
-                                    alt={organisation.name}
+                                    alt={organisation.organisationName}
                                     width={500}
                                     height={500}
                                     src={`/images/organisations/${organisation.image}`}

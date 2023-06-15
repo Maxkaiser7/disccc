@@ -3,6 +3,7 @@ import prisma from "@/prisma/client";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {BsFillTrashFill} from "react-icons/bs";
+
 export default function adminArtist() {
     const [artists, setArtists] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -27,17 +28,22 @@ export default function adminArtist() {
         };
         fetchArtists();
     }, [currentPage, itemsPerPage]);
-    const deleteArtist = async (artistId : string) => {
+    const deleteArtist = async (artistId: string) => {
         try {
-            const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer cet artiste ?");
-            if(confirmed){
-                await axios.post(`/api/artists/deleteArtist/`,  {
-                    params: {artistId},
-                })
-                setArtists(prevArtists => prevArtists.filter(artist => artist.id !== artistId));
-
+            const confirmed = window.confirm(
+                "Êtes-vous sûr de vouloir supprimer cet artiste ?"
+            );
+            if (confirmed) {
+                await axios.post(`/api/artists/deleteArtist/`, {
+                    params: { artistId },
+                });
+                setArtists((prevArtists : any) => {
+                    if (Array.isArray(prevArtists)) {
+                        return prevArtists.filter((artist) => artist.id !== artistId);
+                    }
+                    return prevArtists;
+                });
             }
-
         } catch (err) {
             console.log(err);
         }
@@ -58,7 +64,8 @@ export default function adminArtist() {
             <table className="table-auto border-collapse border-white border text-xs font-light overflow-x-scroll">
                 <thead>
                 <tr className={"bg-slate-700 "}>
-                    <th className="px-4 py-2 whitespace-nowrap">Actions</th> {/* Nouvelle colonne pour les actions */}
+                    <th className="px-4 py-2 whitespace-nowrap">Actions</th>
+                    {/* Nouvelle colonne pour les actions */}
                     <th className="px-4 py-2 whitespace-nowrap">artistName</th>
                     <th className="px-4 py-2 whitespace-nowrap">createdAt</th>
                     <th className="px-4 py-2 whitespace-nowrap max-w-xs">description</th>
@@ -72,7 +79,7 @@ export default function adminArtist() {
                 </tr>
                 </thead>
                 <tbody>
-                {artists.map((artist) => {
+                {artists.map((artist : any) => {
                     return (
                         <tr key={artist.id}>
                             <td className="border px-4 py-2 whitespace-nowrap">

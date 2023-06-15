@@ -28,6 +28,7 @@ export default function EventCard(props: EventCardProps): JSX.Element {
     }
     const dateFrom = new Date(event.dateFrom);
     const options = {day: 'numeric', month: 'long'};
+    // @ts-ignore
     const dateStr = dateFrom.toLocaleDateString('fr-FR', options);
     const eventAddress = event.address.jsonAdress
     const day = dateStr.split(' ')[0].trim();

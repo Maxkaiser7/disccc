@@ -44,13 +44,8 @@ interface events {
 type EventsComingProps = {
     events: Event[];
 }
-export default async function ArtistPage<Props>({params}: {
-    params: { artistName: string };
-    artistData: any;
-    genreData: any;
-    eventsData: any;
-    liked: boolean;
-}) {
+export default async function ArtistPage({params}: Props) {
+
     const artistName = params.artistName
     const urlArtistAccount = `/api/artists/checkArtistAccount?artistName=${encodeURIComponent(artistName)}`
 

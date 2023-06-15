@@ -1,7 +1,6 @@
 import axios from "axios/index";
 import prisma from "@/prisma/client";
 import Link from "next/link";
-import {useGenreContext} from "@/pages/api/genres/GenresContext";
 
 export default async function GenresPages() {
 

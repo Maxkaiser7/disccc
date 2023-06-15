@@ -18,6 +18,7 @@ export default async function Events() {
     if (session){
          user = await prisma.user.findUnique({
             where: {
+                // @ts-ignore
                 email: session?.user?.email
             }
         })
@@ -35,6 +36,8 @@ export default async function Events() {
                 eventsLiked = await prisma.event.findMany({
                     where: {
                         id: {
+                            // @ts-ignore
+
                             in: likes.map(like => like.eventId)
                         }
                     }
@@ -53,7 +56,9 @@ export default async function Events() {
                 <>
                     <h2 className={"text-3xl text-center"}>Vos évenements à venir</h2>
                     <div className={"flex gap-4 overflow-x-scroll justify-center"}>
-                        {eventsLiked.map(event => <EventCard event={event} key={event.id} overflow={true}/>)}
+                        {eventsLiked.map((event : any) => {
+                            <EventCard featured={false} event={event} key={event.id} overflow={true}/>
+                        })}
                     </div>
                 </>
             )}

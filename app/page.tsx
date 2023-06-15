@@ -18,6 +18,7 @@ const ComponentFeatured = dynamic(()=> import("@/app/components/Featured"))
 const ComponentHero = dynamic(()=> import("@/app/components/Hero"))
 // @ts-ignore
 const ComponentGetArtists = dynamic(()=> import("@/app/components/GetArtists"))
+// @ts-ignore
 const ComponentEventsComing = dynamic(()=> import("@/app/components/EventsComing"))
 const ComponentGetLastOrganisations = dynamic(()=> import("@/app/components/GetLastOrganisations"))
 

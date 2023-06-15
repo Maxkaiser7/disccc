@@ -34,6 +34,7 @@ export default function PromotionForm(props: PromotionFormProps) {
     const [selected, setSelected] = useState<string>("");
 
     const handleSelection = (item: Event | Artist | Organisation) => {
+        // @ts-ignore
         setSelected(item);
 
     };
@@ -48,7 +49,7 @@ export default function PromotionForm(props: PromotionFormProps) {
                     className={"px-4 py-2"}
                 >
                     <option value="">Choisissez un evenement</option>
-                    {data.events.map((event) => (
+                    {data.events.map((event: any) => (
                         <option key={event.id} value={event.id}>
                             {event.name}
                         </option>

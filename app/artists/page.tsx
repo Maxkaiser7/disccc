@@ -3,7 +3,6 @@ import ArtistCard from "@/app/components/Cards/ArtistCard";
 import GetLikedArtists from "@/app/components/GetLikedArtists";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import {Pagination} from "next-pagination"
 import ArtistsPagination from "@/app/components/ArtistsPagination";
 export default async function getArtists(context: any){
     const sessionData =  getServerSession(authOptions)
@@ -28,6 +27,7 @@ export default async function getArtists(context: any){
     if (session){
         user = await prisma.user.findUnique({
             where: {
+                // @ts-ignore
                 email: session?.user?.email,
             },
         });
@@ -41,7 +41,7 @@ export default async function getArtists(context: any){
             artistsLiked = await prisma.artist.findMany({
                 where: {
                     id: {
-                        in: likes.map((like) => like.artistId),
+                        in: likes.map((like : any) => like.artistId),
                     },
                 },
             });

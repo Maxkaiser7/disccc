@@ -27,7 +27,7 @@ export default function Admincomment() {
             await axios.post(`/api/comments/deleteComment/`, {
                 params: { commentId },
             });
-            setComments((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
+            setComments((prevComments) => prevComments.filter((comment : any) => comment.id !== commentId));
         } catch (err) {
             console.log(err);
         }
@@ -52,7 +52,7 @@ export default function Admincomment() {
                 </tr>
                 </thead>
                 <tbody>
-                {comments.map((comment) => (
+                {comments.map((comment : any) => (
                     <tr key={comment.id}>
                         <td className="border px-4 py-2">{comment.id}</td>
                         <td className="border px-4 py-2">{comment.createdAt}</td>

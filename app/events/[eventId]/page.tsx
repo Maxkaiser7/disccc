@@ -42,6 +42,7 @@ async function getEvent(    params: { eventId: string }){
         where: {
             Event: {
                 some: {
+                    // @ts-ignore
                     id: eventData?.id,
                 },
             },
@@ -49,6 +50,7 @@ async function getEvent(    params: { eventId: string }){
     })
     const artistOnEventData =  prisma.artistsOnEvents.findMany({
         where: {
+            // @ts-ignore
             eventId: eventData?.id
         },
     })

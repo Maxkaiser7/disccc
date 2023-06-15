@@ -19,13 +19,14 @@ export default function Notification() {
         events: object[];
     }>(`/api/notifications/getNotifications`, fetchResponse);
     let events;
-    let notifications;
+    let notifications : any[] = [];
     if (data?.user){
         events = data?.events
         notifications = data?.notifications
     }
     const handleNotificationClick = async (notificationId: string) => {
         try {
+            // @ts-ignore
             await fetch(`/api/notifications/markAsRead?notificationId=${notificationId}&userId=${data?.notifications[0].userId}`, {
                 method: "PUT",
             });
