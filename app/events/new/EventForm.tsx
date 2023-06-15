@@ -2,8 +2,6 @@
 import React, {FormEvent, useEffect, useState} from "react";
 import axios from "axios";
 import {useRouter} from "next/navigation";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 import SubmitButton from "@/app/components/SubmitButton";
 
 export default function EventForm() {
