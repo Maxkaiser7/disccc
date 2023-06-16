@@ -13,7 +13,7 @@ export default function ArtistCard(props: ArtistCardProps) : JSX.Element{
     const {artist} = props
     const artistNameLower = artist.artistName.toLowerCase()
     const artistName = artistNameLower.replace(/\s+/g, "")
-    const imageClassname : string = `object-cover ${props.overflow ? "h-[19rem]" : "w-full h-[17rem]"}`
+    //const imageClassname : string = `object-cover ${props.overflow ? "h-[19rem]" : "w-full h-[17rem]"}`
     const imageSrc: string = `/./images/artists/${artist.image}`
     return (
         <li key={artist.id} className={`mb-3 list-none ${props.overflow ? "" : ""}`}>
@@ -26,8 +26,8 @@ export default function ArtistCard(props: ArtistCardProps) : JSX.Element{
                             </span>
                         <Image alt={artist.artistName}
                                src={imageSrc}
-                               className={imageClassname} width={500}
-                               height={500}/>
+                               className={"object-cover h-[17rem]"} width={500}
+                               height={500} />
                     </div>
                 </div>
             </Link>
