@@ -79,14 +79,13 @@ async function getEvent(params: { eventId: string }) {
             day: "numeric",
             month: "long",
         };
+        // @ts-ignore
         const dateStr: string = dateFrom?.toLocaleDateString("fr-FR", options)!;
-        const eventAddress:
-            | { commune: string; rue: string; cp: string }
-            | undefined = event?.address as
+        const eventAddress: { commune: string; rue: string; cp: string } | undefined = event?.address as
             | { commune: string; rue: string; cp: string }
             | undefined;
-        const jsonAddress: { commune: string; rue: string; cp: string } =
-            eventAddress?.jsonAdress;
+        // @ts-ignore
+        const jsonAddress: { commune: string; rue: string; cp: string } | undefined = eventAddress?.jsonAddress;
 
         return {
             event,
