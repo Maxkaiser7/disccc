@@ -95,7 +95,7 @@ export default async function Featured(): Promise<JSX.Element> {
                 ))}
                 {artistsWithNames.map((artist) => (
                     <div key={artist.id}>
-                        <a href={`/artist/${artist.artistName}`} className={``}>
+                        <a href={`/artist/${artist.artistName}`}>
                             <div className={"relative"}>
                                 <Image
                                     alt={artist.originalName}
