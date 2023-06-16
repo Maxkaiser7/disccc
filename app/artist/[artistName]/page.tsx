@@ -106,7 +106,7 @@ export default async function ArtistPage({params}: Props) {
                 <div className={"relative   max-w-[35rem]"}>
                     <Suspense fallback={<div>Chargement...</div>}>
                         <Image alt={artist.artistName}
-                               src={`/./images/artists/${artist.image}`}
+                               src={`/images/artists/${artist.image}`}
                                className={imageClassname} width={500}
                                height={500}/>
                     </Suspense>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 interface OrganisationCard{
     overflow: any;
     organisation: {
@@ -12,6 +13,9 @@ export default function OrganisationCard(props: OrganisationCard) : JSX.Element{
     const {organisation} = props
     const organisationNameLower = organisation.organisationName.toLowerCase()
     const organisationName = organisationNameLower.replace(/\s+/g, "")
+    const imageClassname : string = `object-cover ${props.overflow ? "h-[19rem]" : "w-full h-[17rem]"}`
+    const imageSrc: string = `/images/organisations/${organisation.image}`
+
     return (
         <li key={organisation.id} className={" list-none mb-3"}>
             <Link href={`/organisations/${organisationName}`}>
@@ -21,8 +25,10 @@ export default function OrganisationCard(props: OrganisationCard) : JSX.Element{
                                  className={"absolute top-0 left-0 right-0 px-4 py-2 bg-black bg-opacity-50 text-white w-max"}>
                                  <h2 className={"text-2xl"}>{organisation.organisationName}</h2>
                             </span>
-                        <img src={`../images/organisations/${organisation.image}`} alt={`photo ${organisation.organisationName}`}
-                             className={'w-full h-full object-cover'}/>
+                        <Image alt={organisation.organisationName}
+                               src={imageSrc}
+                               className={imageClassname} width={500}
+                               height={500} />
                     </div>
                 </div>
             </Link>

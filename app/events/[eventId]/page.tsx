@@ -8,6 +8,7 @@ import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import {session} from "next-auth/core/routes"
 import Link from "next/link";
 import ArtistCard from "@/app/components/Cards/ArtistCard";
+import Image from "next/image";
 export const dynamic = 'force-dynamic'
 
 interface Artist {
@@ -95,14 +96,17 @@ export default async function EventPage({
     const session = await getServerSession(authOptions);
 
     const {event, genres, artists, dateStr, jsonAddress} = await getEvent(params)
-
+    const imageClassname = "object-cover w-screen h-60"
+    const imageSource = `/images/events/${event?.image}`
 return (
         <div className={"p8  max-w-[45rem] ml-auto mr-auto"}>
 
             <h2 className={"text-3xl"}>{event?.name}</h2>
             <p>le {dateStr} à {jsonAddress?.commune} {jsonAddress?.rue}, {jsonAddress?.cp}</p>
-            <img src={`../images/events/${event?.image}`} alt={`${event?.name} event`}
-                 className={'object-cover w-screen h-60'}/>
+            <Image src={imageSource}
+                   alt={event?.name || "evenement"}
+                   className={imageClassname}
+                   width={500} height={500}/>
             <span className={"flex gap-4 mt-2 text-xl"}>
             {artists.map((artist)=> (
                 <Link href={`/artists/${artist.id}`} key={artist.id} className={"bg-violet-900 py-2 px-4 hover:scale-110 duration-75"}>{artist.artistName}</Link>

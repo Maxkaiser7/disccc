@@ -71,7 +71,7 @@ export default function OrganisationPage({
                         <div className={"grid justify-center"}>
                             <h2 className={"text-3xl"}>{organisation?.organisationName}</h2>
                             <div className={"relative"}>
-                                <Image src={`/./images/organisations/${organisation.image}`}
+                                <Image src={`/images/organisations/${organisation.image}`}
                                        alt={`photo ${organisation.organisationName}`}
                                        width={"1000"} height={"500"}/>
                                 <div className={"absolute bottom-2 right-2"}>

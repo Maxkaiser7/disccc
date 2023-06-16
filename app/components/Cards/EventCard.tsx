@@ -35,7 +35,7 @@ export default function EventCard(props: EventCardProps): JSX.Element {
     const month = dateStr.split(' ')[1].trim();
 
     const imageClassname = `${props.featured ? "object-cover w-10/12" : "object-cover w-screen h-60"}`
-    const imageSource = `/./images/events/${event.image}`
+    const imageSource = `/images/events/${event.image}`
     return (
         <div key={event.id} id={event.id} className={"mb-3 max-w-[25rem] lg:max-w-[30rem]"}>
             <a href={`/events/${event.id}`}
