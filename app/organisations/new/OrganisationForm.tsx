@@ -20,21 +20,24 @@ export default function OrganisationForm(){
         e.preventDefault();
         try {
             if (!selectedFile) return;
+            const formData = new FormData();
+            formData.append("image", selectedFile);
+            formData.append("organisationName", organisationName);
+            formData.append("description", description);
 
-            const data = {
-                image: selectedFile,
-                organisationName: organisationName,
-                description: description,
-            };
+            await axios.post("/api/signin/addOrganisation", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
 
-            await axios.post("/api/signin/addOrganisation", data);
 
             setIsDisabled(true);
             // Traiter la réponse réussie si nécessaire
         } catch (err) {
             // Traiter l'erreur de la requête
         }
-    }
+    };
 
     return(
         <form className={"flex flex-col  items-center gap-2"}

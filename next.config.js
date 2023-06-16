@@ -10,6 +10,7 @@ const nextConfig = {
 
 module.exports = nextConfig
 // next.config.js
+
 module.exports = {
   async headers() {
     return [
@@ -25,4 +26,9 @@ module.exports = {
       }
     ]
   }
+};// next.config.js
+module.exports = {
+  images: {
+    domains: ['lh3.googleusercontent.com'],
+  },
 };

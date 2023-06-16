@@ -53,7 +53,7 @@ export default function BurgerMenu({propsSession, propsUser}: BurgerMenuProps) {
                     <Link href={"/genres"}><li key={"genres"}>Genres</li></Link>
                     <Link href={"/contact"}><li key={"contacts"}>Contact</li></Link>
                     {!session?.user && <Login/>}
-                    {session?.user && <Logged username={username} image={session.user?.image || ""}/>}
+                    {session?.user && <Logged username={username} image={session.user?.image}/>}
                     <li key={"admin"}>
                         {propsUser?.role === "ADMIN" && (
                             <Link href={"/admin"}>Admin</Link>)
