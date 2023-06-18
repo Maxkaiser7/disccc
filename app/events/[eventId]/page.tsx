@@ -70,7 +70,7 @@ async function getEvent(params: { eventId: string }) {
             },
         });
 
-
+        //
 
         const dateFrom: Date | undefined = event?.dateFrom;
         const options: { day: string; month: string } = {
