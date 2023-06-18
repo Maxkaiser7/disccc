@@ -70,9 +70,7 @@ async function getEvent(params: { eventId: string }) {
             },
         });
 
-        console.log(artistOnEvent);
-        console.log(genresData);
-        console.log(artists);
+
 
         const dateFrom: Date | undefined = event?.dateFrom;
         const options: { day: string; month: string } = {
