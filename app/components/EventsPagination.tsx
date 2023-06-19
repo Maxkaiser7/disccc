@@ -11,7 +11,7 @@ export default function EventsPagination() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await axios.get("https://github.com/Maxkaiser7/disccc/blob/main/pages/api/event/getEvents.tsx", {
+                const response = await axios.get("/api/event/getEvents", {
                     headers: {
                         "Content-Type": "application/json",
                     },
