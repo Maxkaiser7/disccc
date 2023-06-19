@@ -30,20 +30,20 @@ export default async function Events() {
                 type: "event"
             }
         })
-        if(likes){
-            if (likes.length > 0){
-                eventsLiked = await prisma.event.findMany({
-                    where: {
-                        id: {
-                            // @ts-ignore
-
-                            in: likes.map(like => like.eventId)
-                        }
+        /*
+        if (likes && likes.length > 0) {
+            const eventIds = likes.map((like: { eventId: string }) => like.eventId);
+            eventsLiked = await prisma.event.findMany({
+                where: {
+                    id: {
+                        in: eventIds
                     }
+                }
+            });
+        }*/
 
-                })
-            }
-        }
+
+
 
 
     }
@@ -55,9 +55,9 @@ export default async function Events() {
                 <>
                     <h2 className={"text-3xl text-center"}>Vos évenements à venir</h2>
                     <div className={"flex gap-4 overflow-x-scroll justify-center"}>
-                        {eventsLiked.map((event : any) => {
+                        {eventsLiked.map((event : any) =>
                             <EventCard featured={false} event={event} key={event.id} overflow={true}/>
-                        })}
+                        )}
                     </div>
                 </>
             )}

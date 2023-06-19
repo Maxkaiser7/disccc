@@ -39,6 +39,7 @@ export default async function getArtists(context: any){
                 type: "artist"
             }
         })
+        /*
         if(likes.length > 0){
             artistsLiked = await prisma.artist.findMany({
                 where: {
@@ -47,7 +48,7 @@ export default async function getArtists(context: any){
                     },
                 },
             });
-        }
+        }*/
     }
 
 

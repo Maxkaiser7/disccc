@@ -12,9 +12,9 @@ export default function EventsPagination() {
         const fetchEvents = async () => {
             try {
                 const response = await axios.get("https://github.com/Maxkaiser7/disccc/blob/main/pages/api/event/getEvents.tsx", {
-                    /*headers: {
+                    headers: {
                         "Content-Type": "application/json",
-                    },*/
+                    },
                     params: {
                         page: currentPage,
                         limit: itemsPerPage,
