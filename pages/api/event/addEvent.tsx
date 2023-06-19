@@ -6,6 +6,7 @@ import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
 import {Prisma} from "@prisma/client";
+
 export const dynamic = 'force-dynamic'
 interface Notification {
     userId: string;
@@ -14,10 +15,9 @@ interface Notification {
     eventId: string;
     read: boolean;
 }
-import {useRouter} from "next/navigation";
 // Fonction pour créer une notification
 async function createNotification(userId :string, artistId : string, organisationId : string, eventId : string) {
-    const notification = await prisma.notification.create({
+    return prisma.notification.create({
         data: {
             userId,
             artistId,
@@ -27,8 +27,6 @@ async function createNotification(userId :string, artistId : string, organisatio
             createdAt: new Date(),
         },
     });
-
-    return notification;
 }
 export const config = {
     api: {
@@ -45,7 +43,7 @@ const readFile = (
 }> => {
     const options: formidable.Options = {};
     if (saveLocally) {
-        options.uploadDir = path.join(process.cwd(), "/images/events");
+        options.uploadDir = path.join(process.cwd(), "/public/images/events");
         options.filename = (name, ext, path, form) => {
             return Date.now().toString() + "_" + path.originalFilename;
 
