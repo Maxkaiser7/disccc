@@ -25,7 +25,7 @@ export default function OrganisationForm(){
             formData.append("organisationName", organisationName);
             formData.append("description", description);
 
-            await axios.post("https://github.com/Maxkaiser7/disccc/blob/main/pages/api/signin/addOrganisation.tsx", formData, {
+            await axios.post("/api/signin/addOrganisation", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
