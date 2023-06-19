@@ -2,6 +2,7 @@
 const nextConfig = {
   experimental: {
     appDir: true,
+    esmExternals: false, // THIS IS THE FLAG THAT MATTERS
   },
   images:{
     domains: ["lh3.googleusercontent.com"]
