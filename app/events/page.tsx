@@ -11,7 +11,7 @@ const prisma = new PrismaClient()
 
 export default async function Events() {
     const session = await getServerSession(authOptions)
-    const events = await prisma.event.findMany()
+   // const events = await prisma.event.findMany()
     let user: any = []
     let likes: any = []
     let eventsLiked: any = []
@@ -30,7 +30,6 @@ export default async function Events() {
                 type: "event"
             }
         })
-        console.log(likes)
         if(likes){
             if (likes.length > 0){
                 eventsLiked = await prisma.event.findMany({
