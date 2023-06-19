@@ -32,6 +32,7 @@
     "sinatra": "^0.0.5",
     "slick-carousel": "^1.8.1",
     "stripe": "^12.7.0",
+    "supports-color": "^9.3.1",
     "swr": "^2.1.5",
     "txt-shuffle": "^1.0.3",
     "zod": "^3.21.4"
