@@ -1,11 +1,14 @@
 'use client'
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, FormEvent} from "react";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import axios from "axios";
 import FormData from "form-data";
 import {getSession, signIn} from "next-auth/react";
 import {useSession} from "next-auth/react"
+import {useRouter} from "next/navigation";
+
 import Link from "next/link";
+import SubmitButton from "@/app/components/SubmitButton";
 interface Genre {
     id: string;
     nom: string;
@@ -26,10 +29,14 @@ export default function SignInArtist() {
     const [twitterLink, setTwitterLink] = useState<string>("");
     const [appleLink, setAppleLink] = useState<string>("");
     const [tiktokLink, setTiktokLink] = useState<string>("");
+    const [imageSrc, setImageSrc] = useState("");
+    const [uploadData, setUploadData] = useState({});
     const handleFileChange = (event : any) => {
         const files = event.target.files;
         setSelectedFile(files ? files : null);
     };
+    const router = useRouter();
+
     //vérifier si l'utilisateur à déjà un compte artiste
     useEffect(() => {
         const checkArtistRegistration = async () => {
@@ -62,23 +69,38 @@ export default function SignInArtist() {
         fetchGenres();
     }, []);
 
-    const submitPost = async (e: React.FormEvent) => {
+    const submitPost = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const form = e.currentTarget
+        const fileInput : any = Array.from(form.elements).find((element: any) => element.name === "file")
+
+        const imgFormData = new FormData();
+        for (const file of fileInput.files){
+            imgFormData.append("file", file);
+        }
+        imgFormData.append("upload_preset", "imgUpload")
+        const data = await fetch("https://api.cloudinary.com/v1_1/dsn7y9mu4/image/upload", {
+            method: "POST",
+            // @ts-ignore
+            body: imgFormData,
+        }).then(r => r.json());
+
+        setImageSrc(data.url)
+        setUploadData(data)
         try {
-            if (!selectedFile) return
-            const formData = new FormData()
-            formData.append("image", selectedFile)
-            formData.append("artistName", artistName)
-            formData.append("genre", genre)
-            formData.append("description", description)
-            formData.append("spotifyLink", spotifyLink)
-            formData.append("soundcloudLink", soundcloudLink)
-            formData.append("instagramLink", instagramLink)
-            formData.append("twitterLink", twitterLink)
-            formData.append("appleLink", appleLink)
-            formData.append("tiktokLink", tiktokLink)
-            const {data} = await axios.post("/api/signin/addArtist", formData)
+            //if (!selectedFile) return
+            //const formData = new FormData()
+
+            const response = await axios.post("/api/signin/addArtist", {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+                method: "POST",
+                params: {artistName, description, genre, instagramLink, spotifyLink, soundcloudLink, twitterLink, appleLink, tiktokLink, imageSrc},
+            });
             setIsDisabled(true)
+            const {artistname} = response.data
+            router.push(`/artist/${artistname}`);
             //console.log(data)
         } catch (err) {
             // @ts-ignore
@@ -113,7 +135,7 @@ export default function SignInArtist() {
                             type="text"
                             placeholder={"pseudo"}
                             name={"artistName"}
-                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
                             onChange={(e) => setArtistName(e.target.value)}
                             value={artistName}
                         />
@@ -122,7 +144,7 @@ export default function SignInArtist() {
                         <label htmlFor={"description"}>Description</label>
                         <textarea
                             name={"description"}
-                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
                             placeholder={"Décrivez-vous..."}
                             onChange={(event) => setDescription(event.target.value)}
                         />
@@ -133,7 +155,7 @@ export default function SignInArtist() {
                             type="text"
                             placeholder={"spotify"}
                             name={"spotifyLink"}
-                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
                             onChange={(e) => setSpotifyLink(e.target.value)}
                             value={spotifyLink}
                         />
@@ -144,7 +166,7 @@ export default function SignInArtist() {
                             type="text"
                             placeholder={"instagram"}
                             name={"instagramLink"}
-                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
                             onChange={(e) => setInstagramLink(e.target.value)}
                             value={instagramLink}
                         />
@@ -155,7 +177,7 @@ export default function SignInArtist() {
                             type="text"
                             placeholder={"soundcloud"}
                             name={"soundcloudLink"}
-                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
                             onChange={(e) => setSoundcloudLink(e.target.value)}
                             value={soundcloudLink}
                         />
@@ -166,7 +188,7 @@ export default function SignInArtist() {
                             type="text"
                             placeholder={"twitter"}
                             name={"twitterLink"}
-                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
                             onChange={(e) => setTwitterLink(e.target.value)}
                             value={twitterLink}
                         />
@@ -177,7 +199,7 @@ export default function SignInArtist() {
                             type="text"
                             placeholder={"apple"}
                             name={"appleLink"}
-                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
                             onChange={(e) => setAppleLink(e.target.value)}
                             value={appleLink}
                         />
@@ -188,23 +210,14 @@ export default function SignInArtist() {
                             type="text"
                             placeholder={"tiktok"}
                             name={"tiktokLink"}
-                            className={"w-[70vw] py-2 px-4 border-gray-950"}
+                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
                             onChange={(e) => setTiktokLink(e.target.value)}
                             value={tiktokLink}
                         />
                     </div>
-                    <input
-                        type="file"
-                        name={"image"}
-                        onChange={({target}) => {
-                            if (target.files) {
-                                const file: File = target.files[0];
-                                // @ts-ignore
-                                setSelectedFile(URL.createObjectURL(file));
-                                setSelectedFile(file);
-                            }
-                        }}
-                    />
+                    <p>
+                        <input type="file" name={"file"}/>
+                    </p>
                     <div className={"flex flex-col w-[70vw]"}>
                         <label htmlFor={"genre"}>Genre</label>
                         <select
@@ -220,13 +233,7 @@ export default function SignInArtist() {
                             ))}
                         </select>
                     </div>
-                    <button
-                        type={"submit"}
-                        disabled={isDisabled}
-                        className={"bg-gray-800 px-4 py-2 disabled:opacity-20"}
-                    >
-                        Confirmer
-                    </button>
+                    <SubmitButton isDisabled={isDisabled} inputValue={"Créer"}/>
                 </form>
             )}
         </div>

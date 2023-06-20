@@ -27,36 +27,37 @@ export default function EventForm() {
     const [organisation, setOrganisation] = useState<string>("");
     const [organisationSuggestion, setOrganisationSuggestion] = useState([]);
     const [isDisabled, setIsDisabled] = useState(false);
+    const [imageSrc, setImageSrc] = useState("");
+    const [uploadData, setUploadData] = useState({});
     const router = useRouter();
     // @ts-ignore
     //const errorDigest = error.digest;
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const form = e.currentTarget
+        const fileInput : any = Array.from(form.elements).find((element: any) => element.name === "file")
 
-        const formData = new FormData();
+        const imgFormData = new FormData();
+        for (const file of fileInput.files){
+            imgFormData.append("file", file);
+        }
+        imgFormData.append("upload_preset", "imgUpload")
+        const data = await fetch("https://api.cloudinary.com/v1_1/dsn7y9mu4/image/upload", {
+            method: "POST",
+            body: imgFormData,
+        }).then(r => r.json());
 
-        formData.append("name", name);
-        formData.append("description", description);
-        formData.append("dateFrom", dateFrom);
-        formData.append("dateTo", dateTo);
-        // @ts-ignore
-        formData.append("price", price);
-        formData.append("rue", rue);
-        formData.append("commune", commune);
-        formData.append("cp", cp);
-        formData.append("facebookLink", facebookLink);
-        formData.append("image", image);
-        formData.append("artist", query)
-        formData.append("genre", genre);
-        formData.append("organisation", organisation);
-
+        setImageSrc(data.url)
+        setUploadData(data)
         // envoyez la demande à l'API en utilisant FormData
         try {
 
-            const response = await axios.post("/api/event/addEvent", formData, {
+            const response = await axios.post("/api/event/newAddEvent", {
                 headers: {
                     "Content-Type": "multipart/form-data"
-                }
+                },
+                method: "POST",
+                params: {name, description, dateFrom, dateTo, price, rue, commune, cp, facebookLink, imageSrc, artist: query, genre, organisation}
             });
             setIsDisabled(true)
             const {id} = response.data;
@@ -128,17 +129,17 @@ export default function EventForm() {
     };
     return (
         <form onSubmit={handleSubmit}
-              className={"flex flex-col gap-2 m-auto w-9/12 lg:max-w-[50vw]"}
+              className={"flex flex-col gap-2 m-auto w-9/12 lg:max-w-[50vw] text-black"}
               encType={"multipart/form-data"}>
-            <label htmlFor="name">Nom de l'événement</label>
+            <label htmlFor="name" className={"text-white"}>Nom de l'événement</label>
             <input name={"name"} value={name} onChange={(e) => setName(e.target.value)}/>
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description" className={"text-white"}>Description</label>
             <input
                 name={"description"}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
             />
-            <label htmlFor="artist" className={"flex flex-col"}>Artistes</label>
+            <label htmlFor="artist" className={"flex flex-col text-white"}>Artistes</label>
             <input
                 type="text"
                 name="artist"
@@ -152,7 +153,7 @@ export default function EventForm() {
             />
 
             {isOpen && Array.isArray(artistSuggestions) && artistSuggestions.length > 0 && (
-                <ul className={""}>
+                <ul className={"text-white"}>
                     {artistSuggestions.map((artist : any) => (
                         <li key={artist.id} onClick={() => handleItemClick(artist.artistName)} className={"bg-slate-800 hover:bg-slate-500 p-2"}>
                             {artist.artistName}
@@ -161,7 +162,7 @@ export default function EventForm() {
                 </ul>
             )}
 
-            <label htmlFor="organisation">Organisation</label>
+            <label htmlFor="organisation" className={"text-white"}>Organisation</label>
             <input type="text"
                    name={"organisation"}
                    value={organisation}
@@ -179,21 +180,21 @@ export default function EventForm() {
                     ))}
                 </ul>
             )}
-            <label htmlFor="dateFrom">Date de début</label>
+            <label htmlFor="dateFrom" className={"text-white"}>Date de début</label>
             <input
                 name={"dateFrom"}
                 type={"date"}
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
             />
-            <label htmlFor="dateTo">Date de fin</label>
+            <label htmlFor="dateTo" className={"text-white"}>Date de fin</label>
             <input
                 name={"dateTo"}
                 type={"date"}
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
             />
-            <label htmlFor={"genre"}>Genre</label>
+            <label htmlFor={"genre"} className={"text-white"}>Genre</label>
             <select
                 name="genre"
                 onChange={(event) => {
@@ -208,7 +209,7 @@ export default function EventForm() {
                     </option>
                 ))}
             </select>
-            <label htmlFor="price">Prix</label>
+            <label htmlFor="price" className={"text-white"}>Prix</label>
             <input
                 name={"price"}
                 type={"number"}
@@ -216,7 +217,7 @@ export default function EventForm() {
                 onChange={(e) => setPrice(Number(e.target.value))}
             />
             <div id={"adresse"} className={"grid gap-2"}>
-                <label htmlFor="rue">Rue</label>
+                <label htmlFor="rue" className={"text-white"}>Rue</label>
                 <input
                     name={"rue"}
                     type={"string"}
@@ -225,7 +226,7 @@ export default function EventForm() {
                 />
                 <div className={"flex gap-4"}>
                 <span className={"grid"}>
-                    <label htmlFor="commune">Commune</label>
+                    <label htmlFor="commune" className={"text-white"}>Commune</label>
                 <input
                     name={"commune"}
                     type={"string"}
@@ -234,7 +235,7 @@ export default function EventForm() {
                 />
                 </span>
                     <span className={"grid"}>
-                        <label htmlFor="cp">Code postal</label>
+                        <label htmlFor="cp" className={"text-white"}>Code postal</label>
                 <input
                     name={"cp"}
                     type={"string"}
@@ -244,24 +245,15 @@ export default function EventForm() {
                 </span>
                 </div>
             </div>
-            <label htmlFor="facebookLink">Evenement Facebook</label>
+            <label htmlFor="facebookLink" className={"text-white"}>Evenement Facebook</label>
             <input type="string"
                    name={"facebookLink"}
                    value={facebookLink}
                    onChange={(e) => setFacebookLink(e.target.value)}/>
-            <label htmlFor="image">Ajoutez une photo pour l'évenement</label>
-            <input
-                type="file"
-                name={"image"}
-                onChange={({target}) => {
-                    if (target.files) {
-                        const file: File = target.files[0];
-                        setImage(URL.createObjectURL(file));
-                        // @ts-ignore
-                        setImage(file);
-                    }
-                }}
-            />
+            <label htmlFor="image" className={"text-white"}>Ajoutez une photo pour l'évenement</label>
+            <p>
+                <input type="file" name={"file"}/>
+            </p>
             <SubmitButton isDisabled={isDisabled} inputValue={"Créer"}/>
         </form>
     );

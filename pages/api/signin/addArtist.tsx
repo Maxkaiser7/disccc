@@ -6,37 +6,13 @@ import formidable from "formidable";
 import path from "path";
 import fs from "fs/promises";
 export const dynamic = 'force-dynamic'
-export const config = {
+/*export const config = {
     api: {
         bodyParser: false,
     },
 };
+*/
 
-const readFile = (
-    req: NextApiRequest,
-    saveLocally?: boolean
-): Promise<{
-    fields: formidable.Fields;
-    files: formidable.Files;
-}> => {
-    const options: formidable.Options = {};
-    if (saveLocally) {
-        options.uploadDir = path.join(process.cwd(), "/public/images/artists");
-        options.filename = (name, ext, path, form) => {
-            const imageArtist: string =
-                Date.now().toString() + "_" + path.originalFilename;
-            return imageArtist;
-        };
-    }
-
-    const form = formidable(options);
-    return new Promise((resolve, reject) => {
-        form.parse(req, (err, fields, files) => {
-            if (err) reject(err);
-            resolve({fields, files});
-        });
-    });
-};
 
 export default async function handler(
     req: NextApiRequest,
@@ -45,19 +21,12 @@ export default async function handler(
     const session = await getServerSession(req, res, authOptions);
     if (!session)
         return res.status(401).json({message: "Connectez vous pour pouvoir poster"});
-
     // Save image to disk and get its path
-    const {fields, files} = await readFile(req, true);
-    const uploadedFile = files;
-    //console.log(uploadedFile.image);
-    let imagePath: string = ""
-    let imageName: string = "";
-    if("filepath" in uploadedFile.image){
-       imagePath = uploadedFile.image.filepath;
-    }
-    if("newFilename" in uploadedFile.image){
-       imageName = uploadedFile.image.newFilename;
-    }
+    const fields = req.body.params;
+    //const uploadedFile = files;
+    //let imagePath: string = ""
+    //let imageName: string = "";
+
     const {
         artistName,
         genre,
@@ -67,28 +36,18 @@ export default async function handler(
         soundcloudLink,
         twitterLink,
         appleLink,
-        tiktokLink
+        tiktokLink,
+        imageSrc,
+        deezerLink
     } = fields;
-    try {
-        await fs.readdir(path.join(process.cwd() + "/public", "/images/artists"));
-    } catch (err) {
-        await fs.mkdir(path.join(process.cwd() + "/public", "/images/artists"));
-    }
 
-
-    const imageDestination = path.join(
-        process.cwd(),
-        "/public/images/artists",
-        imageName
-    );
-    await fs.rename(imagePath, imageDestination);
     // Create a new artistes record and associate it with the user
     const prismaUser = await prisma.user.findUnique({
         where: {email: session?.user?.email || undefined},
     });
     const artistData = {
         artistName,
-        image: imageName,
+        ...(imageSrc.startsWith("http") && { image: imageSrc }),
         description,
         genres: {
             connect: { id: genre }
@@ -99,9 +58,11 @@ export default async function handler(
         soundcloudLink,
         twitterLink,
         appleLink,
-        tiktokLink
+        tiktokLink,
+        deezerLink
 
     };
+    console.log(artistData)
 
     // Check if the platform links exist and add them to artistData if they are not empty
     if (spotifyLink) {
@@ -122,11 +83,14 @@ export default async function handler(
     if (tiktokLink) {
         artistData.tiktokLink = tiktokLink;
     }
+    if(deezerLink) {
+        artistData.deezerLink = deezerLink;
+    }
     // Create a new artistes record and associate it with the user
     const newArtist = await prisma.artist.create({
         // @ts-ignore
         data: artistData,
     });
 
-    res.json({done: "ok"});
+    res.json({artistname: newArtist.artistName});
 }

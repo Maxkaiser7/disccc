@@ -8,6 +8,7 @@ import fs from "fs/promises";
 import {Prisma} from "@prisma/client";
 
 export const dynamic = 'force-dynamic'
+
 interface Notification {
     userId: string;
     artistId: string;
@@ -15,8 +16,9 @@ interface Notification {
     eventId: string;
     read: boolean;
 }
+
 // Fonction pour créer une notification
-async function createNotification(userId :string, artistId : string, organisationId : string, eventId : string) {
+async function createNotification(userId: string, artistId: string, organisationId: string, eventId: string) {
     return prisma.notification.create({
         data: {
             userId,
@@ -28,6 +30,7 @@ async function createNotification(userId :string, artistId : string, organisatio
         },
     });
 }
+
 export const config = {
     api: {
         bodyParser: false,
@@ -46,7 +49,6 @@ const readFile = (
         options.uploadDir = path.join(process.cwd(), "/public/images/events");
         options.filename = (name, ext, path, form) => {
             return Date.now().toString() + "_" + path.originalFilename;
-
         };
     }
 
@@ -116,7 +118,7 @@ export default async function handler(
                     OR: existingOrganisationWhereUniqueInputs
                 }
             })
-            const organisationsOnEventsData: {organisationName: string}[] = [];
+            const organisationsOnEventsData: { organisationName: string }[] = [];
             if (existingOrganisationsArray.length > 0) {
                 existingOrganisationsArray.forEach((organisationName) => {
                     organisationsOnEventsData.push({
@@ -281,7 +283,7 @@ export default async function handler(
                     unsignedArtists: unsignedArtists,
                     facebookLink: formattedFacebookLink,
                     image: imageName,
-                    genres: formattedGenre !== undefined ? { connect: { id: formattedGenre } } : undefined,
+                    genres: formattedGenre !== undefined ? {connect: {id: formattedGenre}} : undefined,
 
                 };
 
@@ -330,8 +332,8 @@ export default async function handler(
                 const likedUsers = await prisma.likes.findMany({
                     where: {
                         OR: [
-                            { artistId: existingArtistIds[0] },
-                            { organisationId: existingOrganisationPrisma?.id },],
+                            {artistId: existingArtistIds[0]},
+                            {organisationId: existingOrganisationPrisma?.id},],
                     },
                     select: {
                         userId: true,
@@ -339,7 +341,7 @@ export default async function handler(
                 });
                 // Créez une notification pour chaque utilisateur
                 for (const user of likedUsers) {
-                    const { userId } = user;
+                    const {userId} = user;
                     // Vérifiez si artistId ou organisationId est défini
                     if (existingArtistIds || existingOrganisations) {
                         // Créez une notification pour l'utilisateur avec artistId ou organisationId

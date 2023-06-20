@@ -14,7 +14,7 @@ export default async function RootLayout({children}) {
         <html lang="en">
         <head>
         </head>
-        <body className={`${azaret.className} bg-slate-900`}>
+        <body className={`${azaret.className} bg-[#121212] text-white`}>
             <Nav/>
             {children}
         <Footer/>

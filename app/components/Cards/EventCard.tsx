@@ -36,10 +36,11 @@ export default function EventCard(props: EventCardProps): JSX.Element {
 
     const imageClassname = `${props.featured ? "object-cover w-10/12" : "object-cover w-screen h-60"}`
     const imageSource = `/images/events/${event.image}`
+    const isExternalImage: any = event?.image?.startsWith("http");
     return (
-        <div key={event.id} id={event.id} className={"mb-3 max-w-[25rem] lg:max-w-[30rem]"}>
+        <div key={event.id} id={event.id} className={"mb-3 max-w-[25rem] lg:max-w-[30rem] relative"}>
             <a href={`/events/${event.id}`}
-               className={`h-full relative ${props.overflow ? 'w-[18rem] flex' : ""} ${props.featured ? 'w-[6rem] h-[6rem] flex' : ""}`}>
+               className={`h-full ${props.overflow ? 'w-[18rem] flex' : ""} ${props.featured ? 'w-[6rem] h-[6rem] flex' : ""}`}>
                 <h2 className={`max-[375px]:text-[5vw]  ${props.overflow ? 'min-[375px]:text-md' : "text-3xl"} bg-black bg-opacity-75 absolute top-1 left-1`}>
                     {event.name}</h2>
                 <div className={`flex flex-col absolute p-2 h-60 justify-between w-full`} id="test">
@@ -54,10 +55,14 @@ export default function EventCard(props: EventCardProps): JSX.Element {
                         </span>
                     </span>
                 </div>
-                <Image src={imageSource}
-                       alt={event.name}
-                       className={imageClassname}
-                       width={500} height={500}/>
+                {isExternalImage && (<img src={event.image} alt={event.name} className={imageClassname}/>)}
+                {!isExternalImage &&(                    <Image
+                    src={imageSource}
+                    alt={event.name || "evenement"}
+                    className={imageClassname}
+                    width={500}
+                    height={500}
+                />)}
 
             </a>
         </div>

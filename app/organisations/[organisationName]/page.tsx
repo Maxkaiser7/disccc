@@ -20,7 +20,7 @@ export default function OrganisationPage({
     const [isLoading, setIsLoading] = useState(true);
     const [events, setEvents] = useState<any>(null);
     const [organisation, setOrganisation] = useState<any>(null);
-
+    const [isExternalImage, setIsExternalImage] = useState(false);
 
     const orgaName = params.organisationName.charAt(0).toUpperCase() + params.organisationName.slice(1)
     const url = `/api/organisations/getOrganisation?organisationName=${encodeURIComponent(orgaName)}`;
@@ -36,6 +36,8 @@ export default function OrganisationPage({
         setEvents(eventsData);
         setOrganisation(organisationData)
         setIsLoading(false)
+        organisationData.image.startsWith("http") ? setIsExternalImage(true) : setIsExternalImage(false);
+
     }
     useEffect(() => {
         fetchData();
@@ -62,7 +64,7 @@ export default function OrganisationPage({
              },
          }
      })*/
-    console.log(organisation)
+
     return(
         <div className={"w-[75%] max-w-[45rem] mx-auto"}>
             {isLoading ? (<p>Chargement...</p>)
@@ -71,9 +73,10 @@ export default function OrganisationPage({
                         <div className={"grid justify-center"}>
                             <h2 className={"text-3xl"}>{organisation?.organisationName}</h2>
                             <div className={"relative"}>
-                                <Image src={`/images/organisations/${organisation.image}`}
-                                       alt={`photo ${organisation.organisationName}`}
-                                       width={"1000"} height={"500"}/>
+                                {isExternalImage && (<img src={organisation.image} alt={organisation.organisationName} className={"object-cover w-screen max-h-[35vw]"}/>)}
+                                {!isExternalImage && (<Image src={`/images/organisations/${organisation.image}`}
+                                                             alt={`photo ${organisation.organisationName}`}
+                                                             width={"1000"} height={"500"}/>)}
                                 <div className={"absolute bottom-2 right-2"}>
                                     <LikeButton clickEvent={handleLike} isLiked={isLiked}/>
                                 </div>

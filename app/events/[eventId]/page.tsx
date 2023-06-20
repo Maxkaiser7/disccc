@@ -116,6 +116,8 @@ export default async function EventPage({
     );
     const imageClassname = "object-cover w-screen h-60";
     const imageSource = `/images/events/${event?.image}`;
+    const isExternalImage: any = event?.image?.startsWith("http");
+
     return (
         <div className={"p8  max-w-[45rem] ml-auto mr-auto"}>
             {event && (
@@ -125,17 +127,19 @@ export default async function EventPage({
                         le {dateStr} à {jsonAddress?.commune} {jsonAddress?.rue},{" "}
                         {jsonAddress?.cp}
                     </p>
-                    <Image
+                    {isExternalImage && (<img src={event.image} alt={event.name} className={imageClassname}/>)}
+                    {!isExternalImage &&(                    <Image
                         src={imageSource}
                         alt={event.name || "evenement"}
                         className={imageClassname}
                         width={500}
                         height={500}
-                    />
+                    />)}
+
                     <span className={"flex gap-4 mt-2 text-xl"}>
             {artists.map((artist) => (
-                <Link href={`/artists/${artist.id}`} key={artist.id}>
-                    <a className={"bg-violet-900 py-2 px-4 hover:scale-110 duration-75"}>{artist.artistName}</a>
+                <Link href={`/artists/${artist.id}`} key={artist.id} className={"bg-violet-900 py-2 px-4 hover:scale-110 duration-75"}>
+                    {artist.artistName}
                 </Link>
             ))}
           </span>

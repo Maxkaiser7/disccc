@@ -6,6 +6,8 @@ export default function newTest(){
     const [uploadData, setUploadData] = useState();
     const [organisationName, setOrganisationName] = useState("");
     const [description, setDescription] = useState("");
+    const [isDisabled, setIsDisabled] = useState(false);
+
     const handleOnChange = (changeEvent: any)  => {
         const reader = new FileReader();
         reader.onload = (onLoadEvent : any) => {
@@ -28,6 +30,8 @@ export default function newTest(){
             method: "POST",
             body: formData,
         }).then(r => r.json());
+        setIsDisabled(true);
+
         setImageSrc(data.url)
         setUploadData(data)
 
@@ -46,7 +50,7 @@ export default function newTest(){
     }
     return (
      <>
-         <form method={"post"} onChange={handleOnChange} onSubmit={handleOnSubmit}>
+         <form className={"flex flex-col  items-center gap-2"} method={"post"} onChange={handleOnChange} onSubmit={handleOnSubmit}>
              <label htmlFor="organisationName"  className={"text-white"}>Nom de l'organisation</label>
              <input type="text" name={"organisationName"}
                     onChange={(e) => setOrganisationName(e.target.value)}/>
@@ -56,7 +60,9 @@ export default function newTest(){
              <p>
                  <input type="file" name={"file"}/>
              </p>
-             <button type={"submit"} className={"text-white"}>Submit</button>
+             <button type={"submit"} className={"text-white"}
+                     disabled={isDisabled}
+                     className={"bg-gray-800 px-4 py-2 disabled:opacity-20"}>Confirmer</button>
          </form>
      </>
     )

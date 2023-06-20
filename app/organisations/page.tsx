@@ -67,9 +67,9 @@ export default async function Organisations(){
                         </div>
                     </>
             )}
-            <h1 className={"mt-4 text-3xl text-center"}>Organisations</h1>
+            <h1 className={"mt-4 text-3xl text-center mb-8"}>Organisations</h1>
             <span className={"flex justify-center"}>
-                {orgnisationsByUser.length ==0 && <Link href={"/organisations/new"} className={"bg-gray-800 py-2 px-4 mb-8"}>S'inscrire comme organisation</Link>}
+                {(orgnisationsByUser.length == 0 && session)  && <Link href={"/organisations/new"} className={"bg-gray-800 py-2 px-4 mb-8 hover:bg-gray-700"}>S'inscrire comme organisation</Link>}
             </span>
                 <OrganisationsPagination/>
         </main>
