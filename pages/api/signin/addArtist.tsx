@@ -47,7 +47,7 @@ export default async function handler(
     });
     const artistData = {
         artistName,
-        ...(imageSrc.startsWith("http") && { image: imageSrc }),
+        image:imageSrc,
         description,
         genres: {
             connect: { id: genre }

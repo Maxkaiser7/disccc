@@ -9,6 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         const session = await getServerSession(req, res, authOptions);
         const data = req.body.params
+        console.log(data)
         const user : any = await prisma.user.findFirst({
             where: {
                 email: session?.user?.email
@@ -113,6 +114,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const jsonAdress = {rue: rue, cp: cp, commune: commune};
         const {artist} = data
         const {genre} = data
+        const {imageSrc} = data
         // Check if required fields are provided
 
         // Check if dateTo is after dateFrom
@@ -189,7 +191,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             },
             unsignedArtists: unsignedArtists,
             facebookLink: formattedFacebookLink,
-            ...(data.imageSrc.startsWith("http") && { image: data.imageSrc }),
+            image:imageSrc,
             genres: formattedGenre !== undefined ? {connect: {id: formattedGenre}} : undefined,
 
         };

@@ -3,6 +3,7 @@ import React, {FormEvent, useEffect, useState} from "react";
 import axios from "axios";
 import {useRouter} from "next/navigation";
 import SubmitButton from "@/app/components/SubmitButton";
+import postalcodes from "@/public/utils/zipcode-belgium.json";
 
 export default function EventForm() {
     const [name, setName] = useState("");
@@ -29,16 +30,19 @@ export default function EventForm() {
     const [isDisabled, setIsDisabled] = useState(false);
     const [imageSrc, setImageSrc] = useState("");
     const [uploadData, setUploadData] = useState({});
+    const [filteredCities, setFilteredCities] = useState<string[]>([]);
+    const [isCityOpen, setCityOpen] = useState(false);
+
     const router = useRouter();
     // @ts-ignore
     //const errorDigest = error.digest;
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = e.currentTarget
-        const fileInput : any = Array.from(form.elements).find((element: any) => element.name === "file")
+        const fileInput: any = Array.from(form.elements).find((element: any) => element.name === "file")
 
         const imgFormData = new FormData();
-        for (const file of fileInput.files){
+        for (const file of fileInput.files) {
             imgFormData.append("file", file);
         }
         imgFormData.append("upload_preset", "imgUpload")
@@ -51,13 +55,26 @@ export default function EventForm() {
         setUploadData(data)
         // envoyez la demande à l'API en utilisant FormData
         try {
-
             const response = await axios.post("/api/event/newAddEvent", {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 },
                 method: "POST",
-                params: {name, description, dateFrom, dateTo, price, rue, commune, cp, facebookLink, imageSrc, artist: query, genre, organisation}
+                params: {
+                    name,
+                    description,
+                    dateFrom,
+                    dateTo,
+                    price,
+                    rue,
+                    commune,
+                    cp,
+                    facebookLink,
+                    imageSrc,
+                    artist: query,
+                    genre,
+                    organisation
+                }
             });
             setIsDisabled(true)
             const {id} = response.data;
@@ -71,7 +88,7 @@ export default function EventForm() {
         }
 
     };
-    const searchArtists = async (query : string) => {
+    const searchArtists = async (query: string) => {
         try {
             const response = await axios.get(`/api/artists/searchArtists?artistName=${query}`);
             setArtistSuggestions(response.data);
@@ -79,7 +96,7 @@ export default function EventForm() {
             console.error(error);
         }
     };
-    const searchOrganisations = async (organisation: string)=> {
+    const searchOrganisations = async (organisation: string) => {
         try {
             const response = await axios.get(`/api/organisations/searchOrganisations?organisationName=${organisation}`);
             setOrganisationSuggestion(response.data);
@@ -112,7 +129,7 @@ export default function EventForm() {
         fetchGenres();
     }, []);
     //ouverture ul artiste
-    const handleItemClick = (artistName : string) => {
+    const handleItemClick = (artistName: string) => {
         if (query === "") {
             setQuery(artistName);
         } else {
@@ -120,13 +137,32 @@ export default function EventForm() {
         }
         setIsOpen(false);
     };
-    const handleItemClickOrganisation = (organisationName : string) => {
+    const handleItemClickOrganisation = (organisationName: string) => {
         setOrganisation(organisationName);
         setIsOpen(false);
     }
     const handleInputClick = () => {
         setIsOpen(true);
     };
+    //auto remplissage communes
+    const handlePostalCodeChange = (event: any) => {
+        const postalCode = event.target.value;
+        const selectedPostalCodes = postalcodes.filter((item) => item.zip === postalCode);
+        if (selectedPostalCodes.length > 0) {
+            setFilteredCities((prevState) => {
+                const citiesToAdd = selectedPostalCodes.map((item) => item.city);
+                if (prevState) {
+                    return [...prevState, ...citiesToAdd];
+                } else {
+                    return citiesToAdd;
+                }
+            });
+            setCityOpen(selectedPostalCodes.length > 1); // Met à jour l'état isCityOpen en fonction du nombre de villes filtrées
+        } else {
+            setCityOpen(false); // Aucune ville filtrée, désactive la liste déroulante
+        }
+    };
+
     return (
         <form onSubmit={handleSubmit}
               className={"flex flex-col gap-2 m-auto w-9/12 lg:max-w-[50vw] text-black"}
@@ -154,8 +190,9 @@ export default function EventForm() {
 
             {isOpen && Array.isArray(artistSuggestions) && artistSuggestions.length > 0 && (
                 <ul className={"text-white"}>
-                    {artistSuggestions.map((artist : any) => (
-                        <li key={artist.id} onClick={() => handleItemClick(artist.artistName)} className={"bg-slate-800 hover:bg-slate-500 p-2"}>
+                    {artistSuggestions.map((artist: any) => (
+                        <li key={artist.id} onClick={() => handleItemClick(artist.artistName)}
+                            className={"bg-slate-800 hover:bg-slate-500 p-2"}>
                             {artist.artistName}
                         </li>
                     ))}
@@ -173,8 +210,9 @@ export default function EventForm() {
                    }}/>
             {isOpen && Array.isArray(organisationSuggestion) && organisationSuggestion.length > 0 && (
                 <ul>
-                    {organisationSuggestion.map((organisation : any) => (
-                        <li key={organisation.id} onClick={() => handleItemClickOrganisation(organisation.organisationName)}>
+                    {organisationSuggestion.map((organisation: any) => (
+                        <li key={organisation.id}
+                            onClick={() => handleItemClickOrganisation(organisation.organisationName)}>
                             {organisation.organisationName}
                         </li>
                     ))}
@@ -225,24 +263,44 @@ export default function EventForm() {
                     onChange={(e) => setRue(e.target.value)}
                 />
                 <div className={"flex gap-4"}>
-                <span className={"grid"}>
-                    <label htmlFor="commune" className={"text-white"}>Commune</label>
-                <input
-                    name={"commune"}
-                    type={"string"}
-                    value={commune}
-                    onChange={(e) => setCommune(e.target.value)}
-                />
-                </span>
-                    <span className={"grid"}>
+                                        <span className={"grid"}>
                         <label htmlFor="cp" className={"text-white"}>Code postal</label>
                 <input
                     name={"cp"}
                     type={"string"}
                     value={cp}
-                    onChange={(e) => setCp(e.target.value)}
+                    onChange={(e) => {
+                        setCp(e.target.value)
+                        handlePostalCodeChange(e)
+                    }}
                 />
                 </span>
+                    <span className="grid relative">
+                    <label htmlFor="commune" className="text-white">Commune</label>
+                        <input
+                          name="commune"
+                          type="text"
+                          value={commune}
+                          onChange={(e) => setCommune(e.target.value)}
+                      />
+                        {isCityOpen && (
+                            <ul className="text-white absolute top-full left-0 mt-1">
+                                {filteredCities.map((city: string, index: number) => (
+                                    <li
+                                        key={index}
+                                        onClick={() => {
+                                            setCommune(city);
+                                            setCityOpen(false);
+                                        }}
+                                        className="bg-slate-800 hover:bg-slate-500 p-2"
+                                    >
+                                        {city}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </span>
+
                 </div>
             </div>
             <label htmlFor="facebookLink" className={"text-white"}>Evenement Facebook</label>

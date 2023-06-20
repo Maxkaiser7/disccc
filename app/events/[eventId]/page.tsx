@@ -55,7 +55,6 @@ async function getEvent(params: { eventId: string }) {
         });
 
         const event = eventData;
-        console.log(event);
 
         const artistOnEvent = artistOnEventData;
         const artists = await prisma.artist.findMany({
@@ -80,7 +79,6 @@ async function getEvent(params: { eventId: string }) {
             | undefined;
         // @ts-ignore
         const jsonAddress: { commune: string; rue: string; cp: string } | undefined = eventAddress?.jsonAddress;
-
         return {
             event,
             genres: genresData,
@@ -114,14 +112,20 @@ export default async function EventPage({
     const imageSource = `/images/events/${event?.image}`;
     const isExternalImage: any = event?.image?.startsWith("http");
 
+    // @ts-ignore
+    const commune = event?.address?.jsonAdress?.commune;
+    // @ts-ignore
+    const rue = event?.address?.jsonAdress?.rue;
+    // @ts-ignore
+    const cp = event?.address?.jsonAdress?.cp;
     return (
         <div className={"p8  max-w-[45rem] ml-auto mr-auto"}>
             {event && (
                 <>
                     <h2 className={"text-3xl"}>{event.name}</h2>
                     <p>
-                        le {dateStr} à {jsonAddress?.commune} {jsonAddress?.rue},{" "}
-                        {jsonAddress?.cp}
+
+                        le {dateStr} à {commune} {rue},{" "}{cp}
                     </p>
                     {isExternalImage && event.image && (
                         <img src={event.image} alt={event.name} className={imageClassname} />
