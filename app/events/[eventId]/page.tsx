@@ -1,16 +1,12 @@
 import prisma from "@/prisma/client";
 import GenreCard from "@/app/components/Cards/GenreCard";
-import { AiOutlineStar, AiFillStar } from "react-icons/ai";
-import LikeButton from "@/app/components/LikeButton";
 import LikeEventButton from "@/app/components/LikeEventButton";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { session } from "next-auth/core/routes";
 import Link from "next/link";
-import ArtistCard from "@/app/components/Cards/ArtistCard";
 import Image from "next/image";
 
-interface Artist {
+/*interface Artist {
     id: string;
     artistName: string;
     image: string;
@@ -33,7 +29,7 @@ interface Genre {
     id: string;
     genreName: string;
 }
-
+*/
 async function getEvent(params: { eventId: string }) {
     try {
         const eventData = await prisma.event.findUnique({
@@ -127,8 +123,10 @@ export default async function EventPage({
                         le {dateStr} à {jsonAddress?.commune} {jsonAddress?.rue},{" "}
                         {jsonAddress?.cp}
                     </p>
-                    {isExternalImage && (<img src={event.image} alt={event.name} className={imageClassname}/>)}
-                    {!isExternalImage &&(                    <Image
+                    {isExternalImage && event.image && (
+                        <img src={event.image} alt={event.name} className={imageClassname} />
+                    )}
+                    {!isExternalImage &&(<Image
                         src={imageSource}
                         alt={event.name || "evenement"}
                         className={imageClassname}

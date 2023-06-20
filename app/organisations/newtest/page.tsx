@@ -60,9 +60,9 @@ export default function newTest(){
              <p>
                  <input type="file" name={"file"}/>
              </p>
-             <button type={"submit"} className={"text-white"}
+             <button type={"submit"}
                      disabled={isDisabled}
-                     className={"bg-gray-800 px-4 py-2 disabled:opacity-20"}>Confirmer</button>
+                     className={"bg-gray-800 text-white px-4 py-2 disabled:opacity-20"}>Confirmer</button>
          </form>
      </>
     )
