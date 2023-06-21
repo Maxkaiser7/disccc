@@ -41,7 +41,7 @@ export default function UpdateUserForm({ name }: UpdateUserFormProps) {
 
         return (
             <div>
-                <form onSubmit={handleSubmit} className={"flex flex-col p-8"}>
+                <form onSubmit={handleSubmit} className={"grid justify-center gap-4"}>
                     <label htmlFor="name">Changez votre nom</label>
                     <input type={"text"} name={"name"} value={name}  onChange={(e) => setName(e.target.value)}/>
                     <SubmitButton isDisabled={isDisabled} inputValue={"Mettre à jour"}/>

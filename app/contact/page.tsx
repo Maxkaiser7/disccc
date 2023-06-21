@@ -24,25 +24,26 @@ export default function contactPage() {
     }
     return (
         <main className={"p-8"}>
-            <h1 className={"text-3xl text-center"}>Contact</h1>
+            <h1 className={"text-4xl text-center text-white"}>Contact</h1>
             <div>
                 <h2 className={"text-center"}>Nous contacter</h2>
                 <form onSubmit={handleSubmit} className={"grid justify-center gap-4"}>
                     <div className="grid">
                         <label htmlFor="frm-email">Email</label>
-                        <input className={"text-black"}
+                        <input className={"bg-slate-600 text-white"}
                             id="frm-email"
                             type="email"
                             name="email"
-                            autoComplete="email"
+                               autoComplete="email"
                             required
                         />
                     </div>
                     <div className={"flex gap-4"}>
                         <div className="grid">
                             <label htmlFor="frm-first">Prénom</label>
-                            <input className={"text-black"}
+                            <input className={"bg-slate-600 text-white"}
                                 id="frm-first"
+
                                 type="text"
                                 name="first"
                                 autoComplete="given-name"
@@ -51,7 +52,7 @@ export default function contactPage() {
                         </div>
                         <div className={"grid"}>
                             <label htmlFor="frm-last">Nom</label>
-                            <input className={"text-black"}
+                            <input className={"bg-slate-600 text-white"}
                                 id="frm-last"
                                 type="text"
                                 name="last"
@@ -62,7 +63,7 @@ export default function contactPage() {
                     </div>
                     <div className="grid">
                         <label htmlFor="frm-message">Message</label>
-                        <textarea id="frm-message" name="message" className={"text-black"}></textarea>
+                        <textarea id="frm-message" name="message" className={"bg-slate-600 text-white"}></textarea>
                     </div>
                     <div className="w-full">
                         <SubmitButton isDisabled={false} inputValue={"Envoyer"}/>

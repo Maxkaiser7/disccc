@@ -2,6 +2,8 @@ import prisma from "@/prisma/client";
 import {NextApiRequest, NextApiResponse} from "next";
 import {useRouter} from "next/router";
 import {redirect} from "next/navigation";
+import {json} from "stream/consumers";
+
 export const dynamic = 'force-dynamic'
 export default async function handler(req: NextApiRequest,
                                       res: NextApiResponse) {
@@ -9,10 +11,11 @@ export default async function handler(req: NextApiRequest,
 
     if (req.method === "GET") {
         try {
-            const {search : search} = req.query
+            const {search: search} = req.query
             if (typeof search !== "string") {
-                throw new Error("Invalid search query")
+                throw new Error("Recherche invalide")
             }
+
             const events = await prisma.event.findMany({
                 where: {
                     OR: [
@@ -28,13 +31,20 @@ export default async function handler(req: NextApiRequest,
                                 mode: "insensitive"
                             }
                         },
+                        {
+                            address: {
+                                equals:{
+                                    commune: search
+                                }
+                            }
+                        }
 
                     ]
                 }
             });
             const artists = await prisma.artist.findMany({
                 where: {
-                    OR : [
+                    OR: [
                         {
                             artistName: {
                                 contains: search,
@@ -47,7 +57,7 @@ export default async function handler(req: NextApiRequest,
             });
             const organisations = await prisma.organisation.findMany({
                 where: {
-                    OR : [
+                    OR: [
                         {
                             organisationName: {
                                 contains: search,
@@ -64,19 +74,57 @@ export default async function handler(req: NextApiRequest,
                 }
             });
             const genres = await prisma.genres.findMany({
-                where : {
-                    nom:{
+                where: {
+                    nom: {
                         contains: search,
                         mode: "insensitive"
                     }
                 }
             });
+            const genreArtist = await prisma.genres.findMany({
+                where: {
+                    // @ts-ignore
+
+                    id : artists[0].genresId
+                }
+            })
+            const genreEvent = await prisma.genres.findMany({
+                where: {
+                    // @ts-ignore
+
+                    id : events[0].genresId
+                }
+            })
+            const relativeArtists = await prisma.artist.findMany({
+                where: {
+                    genresId: genreArtist[0].id
+                }
+            })
+
+            const relativeEvents = await prisma.event.findMany({
+                where: {
+                   OR: [
+                       {
+                           genresId: genreEvent[0].id
+                       },
+                       {
+                           genresId: genreArtist[0].id
+                       }
+                   ]
+                }
+            })
+
+
+
             const results = {
                 events,
                 artists,
                 organisations,
-                genres
+                genres,
+                relativeArtists,
+                relativeEvents
             };
+
             res.status(200).json({message: "success", data: results});
 
         } catch (error) {

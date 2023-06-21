@@ -60,10 +60,12 @@ export default function newTest(){
         <>
             <form className={"flex flex-col  items-center gap-2"} method={"post"} onSubmit={handleOnSubmit}>
                 <label htmlFor="organisationName"  className={"text-white"}>Nom de l'organisation</label>
-                <input type="text" name={"organisationName"} className={"text-black"}
+                <input type="text" name={"organisationName"} className={"bg-slate-600 text-white"}
+
                        onChange={(e) => setOrganisationName(e.target.value)}/>
                 <label htmlFor="description"  className={"text-white"}>Description</label>
-                <input type="text" name={"description"} className={"text-black"}
+                <input type="text" name={"description"} className={"bg-slate-600 text-white"}
+
                        onChange={(e) => setDescription(e.target.value)}/>
                 <p>
                     <input type="file" name={"file"} onChange={handleOnChange}/>

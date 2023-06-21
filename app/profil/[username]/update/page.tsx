@@ -9,7 +9,7 @@ export default async function UpdateProfilePage (){
     return(
         <div>
             <UpdateUserForm name={session?.user?.name}/>
-            <Link href={`/profil/${session?.user?.name}`} className={"p-8"}>Retour au profil</Link>
+            <Link href={`/profil/${session?.user?.name}`} className={"grid justify-center p-8"}>Retour au profil</Link>
         </div>
     )
 }

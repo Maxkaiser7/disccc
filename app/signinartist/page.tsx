@@ -96,7 +96,7 @@ export default function SignInArtist() {
                     "Content-Type": "multipart/form-data"
                 },
                 method: "POST",
-                params: {artistName, description, genre, instagramLink, spotifyLink, soundcloudLink, twitterLink, appleLink, tiktokLink, imageSrc},
+                params: {artistName, description, genre, instagramLink, spotifyLink, soundcloudLink, twitterLink, appleLink, tiktokLink, imageSrc: data.url},
             });
             setIsDisabled(true)
             const {artistname} = response.data

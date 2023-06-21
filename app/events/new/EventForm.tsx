@@ -187,15 +187,17 @@ export default function EventForm() {
               className={"flex flex-col gap-2 m-auto w-9/12 lg:max-w-[50vw] text-black"}
               >
             <label htmlFor="name" className={"text-white"}>Nom de l'événement</label>
-            <input name={"name"} value={name} onChange={(e) => setName(e.target.value)}/>
+            <input name={"name"} className={"bg-slate-600 text-white"} value={name} onChange={(e) => setName(e.target.value)}/>
             <label htmlFor="description" className={"text-white"}>Description</label>
             <input
                 name={"description"}
+                className={"bg-slate-600 text-white"}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
             />
             <label htmlFor="artist" className={"flex flex-col text-white"}>Artistes</label>
             <input
+                className={"bg-slate-600 text-white"}
                 type="text"
                 name="artist"
                 value={query}
@@ -220,6 +222,7 @@ export default function EventForm() {
 
             <label htmlFor="organisation" className={"text-white"}>Organisation</label>
             <input type="text"
+                   className={"bg-slate-600 text-white"}
                    name={"organisation"}
                    value={organisation}
                    onChange={(event) => {
@@ -239,6 +242,7 @@ export default function EventForm() {
             )}
             <label htmlFor="dateFrom" className={"text-white"}>Date de début</label>
             <input
+                className={"bg-slate-600 text-white"}
                 name={"dateFrom"}
                 type={"date"}
                 value={dateFrom}
@@ -248,6 +252,7 @@ export default function EventForm() {
             <input
                 name={"dateTo"}
                 type={"date"}
+                className={"bg-slate-600 text-white"}
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
             />
@@ -257,7 +262,7 @@ export default function EventForm() {
                 onChange={(event) => {
                     setGenre(event.target.value)
                 }}
-                className={"px-4 py-2"}
+                className={"px-4 py-2 bg-slate-600 text-white"}
             >
                 <option value="">Choisissez un genre</option>
                 {formGenre.map((genre: any) => (
@@ -271,6 +276,7 @@ export default function EventForm() {
                 name={"price"}
                 type={"number"}
                 value={price}
+                className={"bg-slate-600 text-white"}
                 onChange={(e) => setPrice(Number(e.target.value))}
             />
             <div id={"adresse"} className={"grid gap-2"}>
@@ -279,6 +285,7 @@ export default function EventForm() {
                     name={"rue"}
                     type={"string"}
                     value={rue}
+                    className={"bg-slate-600 text-white"}
                     onChange={(e) => setRue(e.target.value)}
                 />
                 <div className={"flex gap-4"}>
@@ -287,6 +294,7 @@ export default function EventForm() {
                 <input
                     name={"cp"}
                     type={"string"}
+                    className={"bg-slate-600 text-white"}
                     value={cp}
                     onChange={(e) => {
                         setCp(e.target.value)
@@ -299,6 +307,7 @@ export default function EventForm() {
                         <input
                           name="commune"
                           type="text"
+                          className={"bg-slate-600 text-white"}
                           value={commune}
                           onChange={(e) => setCommune(e.target.value)}
                       />
@@ -326,10 +335,11 @@ export default function EventForm() {
             <input type="string"
                    name={"facebookLink"}
                    value={facebookLink}
+                   className={"bg-slate-600 text-white"}
                    onChange={(e) => setFacebookLink(e.target.value)}/>
             <label htmlFor="image" className={"text-white"}>Ajoutez une photo pour l'évenement</label>
             <p>
-                <input type="file" name={"file"} onChange={handleOnChange}/>
+                <input type="file" name={"file"} className={"text-white"} onChange={handleOnChange}/>
             </p>
             <button type={"submit"}
                     disabled={isDisabled}
