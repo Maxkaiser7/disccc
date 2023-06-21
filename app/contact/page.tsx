@@ -30,7 +30,7 @@ export default function contactPage() {
                 <form onSubmit={handleSubmit} className={"grid justify-center gap-4"}>
                     <div className="grid">
                         <label htmlFor="frm-email">Email</label>
-                        <input
+                        <input className={"text-black"}
                             id="frm-email"
                             type="email"
                             name="email"
@@ -41,7 +41,7 @@ export default function contactPage() {
                     <div className={"flex gap-4"}>
                         <div className="grid">
                             <label htmlFor="frm-first">Prénom</label>
-                            <input
+                            <input className={"text-black"}
                                 id="frm-first"
                                 type="text"
                                 name="first"
@@ -51,7 +51,7 @@ export default function contactPage() {
                         </div>
                         <div className={"grid"}>
                             <label htmlFor="frm-last">Nom</label>
-                            <input
+                            <input className={"text-black"}
                                 id="frm-last"
                                 type="text"
                                 name="last"
@@ -62,7 +62,7 @@ export default function contactPage() {
                     </div>
                     <div className="grid">
                         <label htmlFor="frm-message">Message</label>
-                        <textarea id="frm-message" name="message"></textarea>
+                        <textarea id="frm-message" name="message" className={"text-black"}></textarea>
                     </div>
                     <div className="w-full">
                         <SubmitButton isDisabled={false} inputValue={"Envoyer"}/>

@@ -28,37 +28,51 @@ export default function EventForm() {
     const [organisation, setOrganisation] = useState<string>("");
     const [organisationSuggestion, setOrganisationSuggestion] = useState([]);
     const [isDisabled, setIsDisabled] = useState(false);
-    const [imageSrc, setImageSrc] = useState("");
-    const [uploadData, setUploadData] = useState({});
+    const [imageSrc, setImageSrc] = useState();
+    const [uploadData, setUploadData] = useState();
     const [filteredCities, setFilteredCities] = useState<string[]>([]);
     const [isCityOpen, setCityOpen] = useState(false);
 
     const router = useRouter();
     // @ts-ignore
     //const errorDigest = error.digest;
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const form = e.currentTarget
-        const fileInput: any = Array.from(form.elements).find((element: any) => element.name === "file")
-
-        const imgFormData = new FormData();
-        for (const file of fileInput.files) {
-            imgFormData.append("file", file);
+    const handleOnChange = (changeEvent: any) => {
+        const file = changeEvent.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (onLoadEvent: any) => {
+                setImageSrc(onLoadEvent?.target?.result);
+                setUploadData(undefined);
+            };
+            reader.readAsDataURL(file);
         }
-        imgFormData.append("upload_preset", "imgUpload")
-        const data = await fetch("https://api.cloudinary.com/v1_1/dsn7y9mu4/image/upload", {
-            method: "POST",
-            body: imgFormData,
-        }).then(r => r.json());
+    };
+    useEffect(() => {
+        console.log(imageSrc); // Check the updated imageSrc value
+    }, [imageSrc]);
 
-        setImageSrc(data.url)
-        setUploadData(data)
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+
         // envoyez la demande à l'API en utilisant FormData
         try {
+            const form = e.currentTarget
+            const fileInput : any = Array.from(form.elements).find((element: any) => element.name === "file")
+
+            const imgFormData = new FormData();
+            for (const file of fileInput.files) {
+                imgFormData.append("file", file);
+            }
+            imgFormData.append("upload_preset", "imgUpload")
+            const data = await fetch("https://api.cloudinary.com/v1_1/dsn7y9mu4/image/upload", {
+                method: "POST",
+                body: imgFormData,
+            }).then(r => r.json());
+
+            setImageSrc(data.url)
+            console.log(imageSrc)
+            setUploadData(data)
             const response = await axios.post("/api/event/newAddEvent", {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                },
                 method: "POST",
                 params: {
                     name,
@@ -70,13 +84,17 @@ export default function EventForm() {
                     commune,
                     cp,
                     facebookLink,
-                    imageSrc,
+                    imageSrc : data.url,
                     artist: query,
                     genre,
                     organisation
-                }
+                },
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+
             });
-            setIsDisabled(true)
+            //setIsDisabled(true)
             const {id} = response.data;
             router.push(`/events/${id}`);
 
@@ -84,6 +102,7 @@ export default function EventForm() {
             console.error(error);
             // Handle error here
         } finally {
+            setIsDisabled(true)
             setIsLoading(false)
         }
 
@@ -166,7 +185,7 @@ export default function EventForm() {
     return (
         <form onSubmit={handleSubmit}
               className={"flex flex-col gap-2 m-auto w-9/12 lg:max-w-[50vw] text-black"}
-              encType={"multipart/form-data"}>
+              >
             <label htmlFor="name" className={"text-white"}>Nom de l'événement</label>
             <input name={"name"} value={name} onChange={(e) => setName(e.target.value)}/>
             <label htmlFor="description" className={"text-white"}>Description</label>
@@ -310,9 +329,11 @@ export default function EventForm() {
                    onChange={(e) => setFacebookLink(e.target.value)}/>
             <label htmlFor="image" className={"text-white"}>Ajoutez une photo pour l'évenement</label>
             <p>
-                <input type="file" name={"file"}/>
+                <input type="file" name={"file"} onChange={handleOnChange}/>
             </p>
-            <SubmitButton isDisabled={isDisabled} inputValue={"Créer"}/>
+            <button type={"submit"}
+                    disabled={isDisabled}
+                    className={"bg-gray-800 px-4 py-2 disabled:opacity-20"}>Confirmer</button>
         </form>
     );
 }

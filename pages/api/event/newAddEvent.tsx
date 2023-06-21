@@ -9,7 +9,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         const session = await getServerSession(req, res, authOptions);
         const data = req.body.params
-        console.log(data)
         const user : any = await prisma.user.findFirst({
             where: {
                 email: session?.user?.email
@@ -191,10 +190,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             },
             unsignedArtists: unsignedArtists,
             facebookLink: formattedFacebookLink,
-            image:imageSrc,
             genres: formattedGenre !== undefined ? {connect: {id: formattedGenre}} : undefined,
+            ...(data.imageSrc.startsWith("http") && { image: data.imageSrc }),
 
         };
+
+        if (!data.imageSrc.startsWith("http")) {
+            return res.status(403).json({message: "L'image doit être une URL valide"});
+        }
         const result = await prisma.event.create({
             data: eventData,
         });

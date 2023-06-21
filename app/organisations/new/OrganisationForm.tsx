@@ -1,5 +1,5 @@
 "use client"
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 export default function newTest(){
     const [imageSrc, setImageSrc] = useState();
@@ -8,14 +8,21 @@ export default function newTest(){
     const [description, setDescription] = useState("");
     const [isDisabled, setIsDisabled] = useState(false);
 
-    const handleOnChange = (changeEvent: any)  => {
-        const reader = new FileReader();
-        reader.onload = (onLoadEvent : any) => {
-            setImageSrc(onLoadEvent?.target?.result);
-            setUploadData(undefined)
+    const handleOnChange = (changeEvent: any) => {
+        const file = changeEvent.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (onLoadEvent: any) => {
+                setImageSrc(onLoadEvent?.target?.result);
+                console.log(imageSrc)
+                setUploadData(undefined);
+            };
+            reader.readAsDataURL(file);
         }
-        reader.readAsDataURL(changeEvent.target.files[0]);
-    }
+    };
+    useEffect(() => {
+        console.log(imageSrc); // Check the updated imageSrc value
+    }, [imageSrc]);
     const handleOnSubmit = async (e: any) => {
         e.preventDefault();
         const form = e.currentTarget
@@ -51,15 +58,15 @@ export default function newTest(){
     }
     return (
         <>
-            <form className={"flex flex-col  items-center gap-2"} method={"post"} onChange={handleOnChange} onSubmit={handleOnSubmit}>
+            <form className={"flex flex-col  items-center gap-2"} method={"post"} onSubmit={handleOnSubmit}>
                 <label htmlFor="organisationName"  className={"text-white"}>Nom de l'organisation</label>
-                <input type="text" name={"organisationName"}
+                <input type="text" name={"organisationName"} className={"text-black"}
                        onChange={(e) => setOrganisationName(e.target.value)}/>
                 <label htmlFor="description"  className={"text-white"}>Description</label>
-                <input type="text" name={"description"}
+                <input type="text" name={"description"} className={"text-black"}
                        onChange={(e) => setDescription(e.target.value)}/>
                 <p>
-                    <input type="file" name={"file"}/>
+                    <input type="file" name={"file"} onChange={handleOnChange}/>
                 </p>
                 <button type={"submit"}
                         disabled={isDisabled}
