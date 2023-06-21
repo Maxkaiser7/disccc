@@ -136,7 +136,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         } else {
             formattedFacebookLink = facebookLink;
         }
-        let formattedName: string | null | undefined;
+        let formattedName: string ;
 
         if (Array.isArray(name)) {
             formattedName = name.join(', ');
@@ -144,7 +144,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             formattedName = name;
         }
 
-        let formattedDescription: string | null | undefined;
+        let formattedDescription: string ;
 
         if (Array.isArray(description)) {
             formattedDescription = description.join(', ');
