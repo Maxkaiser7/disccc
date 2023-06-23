@@ -1,14 +1,25 @@
 import type {NextApiRequest, NextApiResponse} from "next";
 import prisma from "@/prisma/client";
+import {authOptions} from "@/pages/api/auth/[...nextauth]";
+import {getServerSession} from "next-auth";
 export const dynamic = 'force-dynamic'
 export default async function handler(
     req:NextApiRequest,
     res:NextApiResponse
 ){
-
     try {
+
         const artistId :string = req.body.params.artistId
-        const userId : string = req.body.params.userId
+        const session = await getServerSession(req, res, authOptions)
+
+        const user = await prisma.user.findFirst({
+            where: {
+                // @ts-ignore
+                email: session?.user?.email,
+            },
+        })
+        const userId = user?.id
+        console.log(userId)
         const prismaUser = await prisma.user.findUnique({
            where: {
                id: userId
