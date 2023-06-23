@@ -127,90 +127,90 @@ export default function SignInArtist() {
                 <form
                     onSubmit={submitPost}
                     encType={"multipart/form-data"}
-                    className={"flex flex-col  items-center gap-2"}
+                    className={"flex flex-col gap-2 m-auto w-9/12 lg:max-w-[50vw] text-black"}
                 >
                     <div className={"flex flex-col"}>
-                        <label htmlFor={"pseudo"}>Votre nom d'artiste</label>
+                        <label htmlFor={"pseudo"} className={"text-white"}>Votre nom d'artiste</label>
                         <input
                             type="text"
                             placeholder={"pseudo"}
                             name={"artistName"}
-                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
+                            className={"bg-slate-600 text-white"}
                             onChange={(e) => setArtistName(e.target.value)}
                             value={artistName}
                         />
                     </div>
                     <div className={"flex flex-col"}>
-                        <label htmlFor={"description"}>Description</label>
+                        <label htmlFor={"description"} className={"text-white"}>Description</label>
                         <textarea
                             name={"description"}
-                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
+                            className={"bg-slate-600 text-white p-2"}
                             placeholder={"Décrivez-vous..."}
                             onChange={(event) => setDescription(event.target.value)}
                         />
                     </div>
                     <div className={"flex flex-col"}>
-                        <label htmlFor="spotifyLink">Lien spotify</label>
+                        <label htmlFor="spotifyLink" className={"text-white"}>Lien spotify</label>
                         <input
                             type="text"
                             placeholder={"spotify"}
                             name={"spotifyLink"}
-                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
+                            className={"bg-slate-600 text-white"}
                             onChange={(e) => setSpotifyLink(e.target.value)}
                             value={spotifyLink}
                         />
                     </div>
                     <div className={"flex flex-col"}>
-                        <label htmlFor="instagramLink">Lien instagram</label>
+                        <label htmlFor="instagramLink" className={"text-white"}>Lien instagram</label>
                         <input
                             type="text"
                             placeholder={"instagram"}
                             name={"instagramLink"}
-                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
+                            className={"bg-slate-600 text-white"}
                             onChange={(e) => setInstagramLink(e.target.value)}
                             value={instagramLink}
                         />
                     </div>
                     <div className={"flex flex-col"}>
-                        <label htmlFor="soundcloudLink">Lien soundcloud</label>
+                        <label htmlFor="soundcloudLink" className={"text-white"}>Lien soundcloud</label>
                         <input
                             type="text"
                             placeholder={"soundcloud"}
                             name={"soundcloudLink"}
-                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
+                            className={"bg-slate-600 text-white"}
                             onChange={(e) => setSoundcloudLink(e.target.value)}
                             value={soundcloudLink}
                         />
                     </div>
                     <div className={"flex flex-col"}>
-                        <label htmlFor="twitterLink">Lien twitter</label>
+                        <label htmlFor="twitterLink" className={"text-white"}>Lien twitter</label>
                         <input
                             type="text"
                             placeholder={"twitter"}
                             name={"twitterLink"}
-                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
+                            className={"bg-slate-600 text-white"}
                             onChange={(e) => setTwitterLink(e.target.value)}
                             value={twitterLink}
                         />
                     </div>
                     <div className={"flex flex-col"}>
-                        <label htmlFor="appleLink">Lien apple</label>
+                        <label htmlFor="appleLink" className={"text-white"}>Lien apple</label>
                         <input
                             type="text"
                             placeholder={"apple"}
                             name={"appleLink"}
-                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
+                            className={"bg-slate-600 text-white"}
                             onChange={(e) => setAppleLink(e.target.value)}
                             value={appleLink}
                         />
                     </div>
                     <div className={"flex flex-col"}>
-                        <label htmlFor="tiktokLink">Lien tiktok</label>
+                        <label htmlFor="tiktokLink" className={"text-white"}>Lien tiktok</label>
                         <input
                             type="text"
                             placeholder={"tiktok"}
                             name={"tiktokLink"}
-                            className={"w-[70vw] py-2 px-4 text-black border-gray-950"}
+                            className={"bg-slate-600 text-white"}
                             onChange={(e) => setTiktokLink(e.target.value)}
                             value={tiktokLink}
                         />
@@ -218,12 +218,11 @@ export default function SignInArtist() {
                     <p>
                         <input type="file" name={"file"}/>
                     </p>
-                    <div className={"flex flex-col w-[70vw]"}>
-                        <label htmlFor={"genre"}>Genre</label>
+                        <label htmlFor={"genre"} className={"text-white"}>Genre</label>
                         <select
                             name="genre"
                             onChange={(event) => setGenre(event.target.value)}
-                            className={"px-4 py-2"}
+                            className={"px-4 py-2 bg-slate-600 text-white"}
                         >
                             <option value="">Choisissez un genre</option>
                             {formGenre?.map((genre : any) => (
@@ -232,7 +231,6 @@ export default function SignInArtist() {
                                 </option>
                             ))}
                         </select>
-                    </div>
                     <SubmitButton isDisabled={isDisabled} inputValue={"Créer"}/>
                 </form>
             )}

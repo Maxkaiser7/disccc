@@ -32,7 +32,7 @@ export default function EventForm() {
     const [uploadData, setUploadData] = useState();
     const [filteredCities, setFilteredCities] = useState<string[]>([]);
     const [isCityOpen, setCityOpen] = useState(false);
-
+    const [selectedArtist, setSelectedArtist] = useState('');
     const router = useRouter();
     // @ts-ignore
     //const errorDigest = error.digest;
@@ -109,7 +109,7 @@ export default function EventForm() {
     };
     const searchArtists = async (query: string) => {
         try {
-            const response = await axios.get(`/api/artists/searchArtists?artistName=${query}`);
+            const response = await axios.get(`/api/artists/searchArtists?artistName=${selectedArtist}`);
             setArtistSuggestions(response.data);
         } catch (error) {
             console.error(error);
@@ -181,7 +181,12 @@ export default function EventForm() {
             setCityOpen(false); // Aucune ville filtrée, désactive la liste déroulante
         }
     };
-
+    const handleChange = (event : any) => {
+        const value = event.target.value;
+        setQuery(value);
+        setSelectedArtist('');
+        searchArtists(value);
+    };
     return (
         <form onSubmit={handleSubmit}
               className={"flex flex-col gap-2 m-auto w-9/12 lg:max-w-[50vw] text-black"}
@@ -200,12 +205,8 @@ export default function EventForm() {
                 className={"bg-slate-600 text-white"}
                 type="text"
                 name="artist"
-                value={query}
-                onChange={(event) => {
-                    const value = event.target.value;
-                    setQuery(value);
-                    searchArtists(value);
-                }}
+                value={query || selectedArtist}
+                onChange={handleChange}
                 onClick={handleInputClick}
             />
 
@@ -290,7 +291,7 @@ export default function EventForm() {
                 />
                 <div className={"flex gap-4"}>
                                         <span className={"grid"}>
-                        <label htmlFor="cp" className={"text-white"}>Code postal</label>
+                                            <label htmlFor="cp" className={"text-white"}>Code postal</label>
                 <input
                     name={"cp"}
                     type={"string"}

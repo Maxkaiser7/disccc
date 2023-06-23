@@ -10,6 +10,7 @@ import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import Image from "next/image";
 import {Prisma} from "@prisma/client";
 import GenreCard from "@/app/components/Cards/GenreCard";
+import EventCard from "@/app/components/Cards/EventCard";
 export const dynamic = 'force-dynamic'
 
 interface Props {
@@ -56,7 +57,6 @@ export default async function ArtistPage({params}: Props) {
     `;
     const artistArray: any = await artistData;
     const artist = artistArray[0]
-
     const genreData: Prisma.PrismaPromise<unknown> = prisma.genres.findMany({
         where: {
             id: artist.genresId
@@ -64,12 +64,19 @@ export default async function ArtistPage({params}: Props) {
     })
     const genres: any = await genreData
 
-    const eventsData: Prisma.PrismaPromise<unknown> = prisma.event.findMany({
+    const eventsData: Prisma.PrismaPromise<unknown> = prisma.artistsOnEvents.findMany({
         where: {
             artistId: artist.id
         }
     })
-    const events: any = await eventsData
+    const artistsOnEvents: any = await eventsData
+    const events = await prisma.event.findMany({
+        where: {
+            id: {
+                in: artistsOnEvents.map((artist : any) => artist.eventId)
+            }
+        }
+    })
     const imageClassname = 'object-cover w-screen max-h-[35vw]'
 
     const session = await getServerSession(authOptions);
@@ -157,10 +164,8 @@ export default async function ArtistPage({params}: Props) {
                         </span>
                     )}
                 </div>
-                {events && (
-                    // @ts-ignore
-                    <EventsComing events={events}/>
-                )} {!events && <p>Aucun évènement à venir</p>}
+                {events && events.map((event: any) => <EventCard overflow={false} featured={false} event={event} />)}
+                {!events && <p>Aucun évènement à venir</p>}
             </div>
         </main>
     )

@@ -118,13 +118,18 @@ export default async function EventPage({
     const rue = event?.address?.jsonAdress?.rue;
     // @ts-ignore
     const cp = event?.address?.jsonAdress?.cp;
+    let artistsNames : any = [];
+    artists.map((artist) => {
+        const artistNameLower = artist.artistName.toLowerCase()
+        const artistName = artistNameLower.replace(/\s+/g, "")
+        artistsNames.push(artistName)
+    })
     return (
         <div className={"p8  max-w-[45rem] ml-auto mr-auto"}>
             {event && (
                 <>
                     <h2 className={"text-3xl"}>{event.name}</h2>
                     <p>
-
                         le {dateStr} à {commune} {rue},{" "}{cp}
                     </p>
                     {isExternalImage && event.image && (
@@ -139,8 +144,8 @@ export default async function EventPage({
                     />)}
 
                     <span className={"flex gap-4 mt-2 text-xl"}>
-            {artists.map((artist) => (
-                <Link href={`/artists/${artist.id}`} key={artist.id} className={"bg-violet-900 py-2 px-4 hover:scale-110 duration-75"}>
+            {artists.map((artist, index) => (
+                <Link href={`/artist/${artistsNames[index]}`} key={artist.id} className={"bg-violet-900 py-2 px-4 hover:scale-110 duration-75"}>
                     {artist.artistName}
                 </Link>
             ))}

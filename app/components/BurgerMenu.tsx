@@ -17,10 +17,6 @@ export default function BurgerMenu({propsSession, propsUser}: BurgerMenuProps) {
     let username = ""; // Définir une valeur par défaut pour la variable username
     const ulClassName = isOpen ? "flex flex-col absolute bg-black py-6 px-[3rem] mr-0 font-light text-2xl right-0 gap-4 z-10" : "hidden lg:flex flex-col absolute bg-black py-6 px-[3rem] mr-0 font-light text-2xl right-0 gap-4 z-10 lg:flex-row lg:bg-transparent lg:top-2 lg:right-12 lg:text-sm lg:items-center";
 
-    /* const session = props.propsSession
-     const user = props.propsUser
-
-     */
     const session = propsSession
     if (session) {
         const usernameSession = session.user.name.toLowerCase()

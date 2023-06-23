@@ -56,7 +56,8 @@ export default function EventCard(props: EventCardProps): JSX.Element {
                     </span>
                 </div>
                 {isExternalImage && (<img src={event.image} alt={event.name} className={imageClassname}/>)}
-                {!isExternalImage &&(                    <Image
+                {!isExternalImage &&(
+                    <Image
                     src={imageSource}
                     alt={event.name || "evenement"}
                     className={imageClassname}

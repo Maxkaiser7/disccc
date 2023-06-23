@@ -46,7 +46,6 @@ export default async function ProfilPage({params, searchParams,}: {
     return (
         <div className={"flex flex-col content-center flex-wrap items-center"}>
             <h1 className={"text-3xl"}>Profil</h1>
-            // @ts-ignore
             <Image width={500} height={500} className={"w-3/12 rounded-full max-w-[10rem]"}   src={imgSrc ?? 'default-image-url'}
                    alt={session?.user?.name ?? 'default-name'}/>
             <h2>{session?.user?.name}</h2>
