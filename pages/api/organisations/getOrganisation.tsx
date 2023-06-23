@@ -8,9 +8,11 @@ export default async function handler(
     try {
         const {organisationName} = req.query
         const currentDate = new Date();
-        const organisation = await prisma.$queryRaw`
+        const organisationData =  prisma.$queryRaw`
         SELECT * FROM "Organisation"
         WHERE LOWER(REPLACE("organisationName", ' ', '')) = LOWER(REPLACE(${organisationName}, ' ', ''))`
+        const organisationArray: any = await organisationData
+        const organisation = organisationArray[0]
         const events = await prisma.event.findMany({
             where: {
                 // @ts-ignore

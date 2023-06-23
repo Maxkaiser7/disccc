@@ -14,8 +14,7 @@ export default async function Events() {
    // const events = await prisma.event.findMany()
     let user: any = []
     let likes: any = []
-    let eventsLiked: any = []
-    if (session){
+    //let eventsLiked: any = []
          user = await prisma.user.findUnique({
             where: {
                 // @ts-ignore
@@ -24,37 +23,35 @@ export default async function Events() {
         })
         likes = await prisma.likes.findMany({
             where: {
-                User: {
-                    email: session?.user?.email
-                },
+                userId: user.id,
                 type: "event"
             }
         })
-        /*
-        if (likes && likes.length > 0) {
-            const eventIds = likes.map((like: { eventId: string }) => like.eventId);
-            eventsLiked = await prisma.event.findMany({
-                where: {
-                    id: {
-                        in: eventIds
-                    }
-                }
-            });
-        }*/
+        const likeIds = likes
+            .filter((like: any) => like.userId === user.id && like.type === 'event')
+            .map((like : any) => like.eventId);
+
+        console.log(likeIds)
+
+        const eventsLiked = await prisma.event.findMany({
+            where: {
+                id: {
+                    in: likeIds,
+                },
+            },
+        });
+        console.log(likeIds)
 
 
 
-
-
-    }
-
+    console.log(eventsLiked)
 
     return (
         <main>
             {eventsLiked.length > 0 && (
                 <>
                     <h2 className={"text-3xl text-center"}>Vos évenements à venir</h2>
-                    <div className={"flex gap-4 overflow-x-scroll justify-center"}>
+                    <div className={"flex gap-4  justify-center"}>
                         {eventsLiked.map((event : any) =>
                             <EventCard featured={false} event={event} key={event.id} overflow={true}/>
                         )}

@@ -16,6 +16,7 @@ export default async function handler(
       SELECT * FROM "Artist"
       WHERE LOWER(REPLACE("artistName", ' ', '')) = LOWER(REPLACE(${artistName}, ' ', ''))
     `;
+        console.log(artist)
         if (!artist) {
             return res.status(404).json("Artiste non trouvé");
         }

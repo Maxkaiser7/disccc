@@ -29,21 +29,21 @@ export default async function Organisations(){
         })
         likes = await prisma.likes.findMany({
             where: {
-                User: {
-                    email: session?.user?.email
-                },
+                userId: user?.id ,
                 type: "organisation"
             }
         })
-        likedOrganisations = await prisma.organisation.findMany({
-            where: {
-                id:{
-                    in: likes.map((like:any) => {
-                        like.organisationId
-                    })
+        console.log(likes)
+        if (likes.length > 0){
+            likedOrganisations = await prisma.organisation.findMany({
+                where: {
+                    id: {
+                        in: likes.map((like: any) => like.organisationId)
+                    }
                 }
-            }
-        })
+            })
+        }
+        console.log(likedOrganisations)
 
     }
 

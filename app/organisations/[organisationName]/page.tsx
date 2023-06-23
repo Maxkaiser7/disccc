@@ -10,9 +10,9 @@ import {log} from "util";
 export const dynamic = 'force-dynamic'
 
 export default function OrganisationPage({
-                                            params,
-                                            searchParams,
-                                        }: {
+                                             params,
+                                             searchParams,
+                                         }: {
     params: { organisationName: string };
     searchParams: { [key: string]: string | string[] | undefined };
 }){
@@ -27,7 +27,7 @@ export default function OrganisationPage({
     const fetchData = async () => {
         const response = await fetch(url);
         const data = await response.json();
-        const organisationData = data.organisation[0]
+        const organisationData = data.organisation
         const eventsData = data.events;
         const liked = data.like
         if (liked) {
@@ -68,7 +68,7 @@ export default function OrganisationPage({
     return(
         <div className={"w-[75%] max-w-[45rem] mx-auto"}>
             {isLoading ? (<p>Chargement...</p>)
-            : ( organisation && (
+                : ( organisation && (
                     <div className={"p-8"}>
                         <div className={"grid justify-center"}>
                             <h2 className={"text-3xl"}>{organisation?.organisationName}</h2>
